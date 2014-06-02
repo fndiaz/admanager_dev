@@ -1,0 +1,33 @@
+<div class="sidebar-nav nav-collapse collapse navbar-collapse">
+	<ul class="nav main-menu">
+				
+		{{
+			menu 	= 	db(db.f_menu).select(orderby=db.f_menu.ordem)
+			for dado in menu:
+				#print dado
+				if dado.submenu == False:
+					if (auth.has_membership(dado.nome) or auth.has_membership('administrador')):}}
+						<li><a href="{{=URL(a='admanager', c=dado.controller, f=dado.funcao)}}"><i class="{{=dado.icone}}"></i><span class="hidden-sm text"> {{=dado.nome}}</span></a></li>
+					{{pass
+				pass
+				if dado.submenu == True:
+					if (auth.has_membership(dado.nome) or auth.has_membership('administrador')):}}
+						<li>
+						<a class="dropmenu" href="ui-sliders-progress.html#"><i class="icon-list-alt"></i><span class="hidden-sm text"> {{=dado.nome}}</span> <span class="chevron closed"></span></a>
+					{{pass
+				pass
+
+				query = (dado.id == db.f_submenu.menu_ref)
+				submenu = db(query).select(orderby=db.f_submenu.ordem)}}
+				<ul>
+				{{for sub in submenu:
+					#print sub
+					if (auth.has_membership(sub.nome) or auth.has_membership('administrador')):}}
+					<li><a class="submenu" href="{{=URL(a='admanager', c=sub.controller, f=sub.funcao)}}"><i class="{{=sub.icone}}"></i><span class="hidden-sm text"> {{=sub.nome}}</span></a></li>
+					{{pass
+				pass}}
+				</ul>		 
+			{{pass
+		}}
+	</ul>
+</div>

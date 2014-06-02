@@ -1,0 +1,20 @@
+routers = dict(
+
+    # base router
+    BASE=dict(
+        default_application='',
+        applications=['admanager']
+    ),
+
+
+    admanager=dict(
+        default_controller='initial',
+        default_function='principal',
+        controllers=['initial', 'funcional'],
+        functions=['home', 'contact', 'about', 'user', 'log', 'account', 'profile', 'change_password', 'request_reset_password', 'posts',
+            'user', 'register', 'login', 'principal', 'log_out', 'log_in', 'users', 'form_users', 'groups', 'membership', 'not_authorized', 'no_authorized', 'f_troncos', 'f_troncos_fisicos', 'f_troncos_form', 'f_troncos_fisicos_form', 'f_destinos', 'f_destinos_form', 'f_empresa', 'insert_permissao_menu','f_empresa_form', 'f_tarifacao', 'f_tarifacao_form', 'f_rotas', 'f_rotas_form', 'delete', 'f_menu', 'f_submenu', 'f_permissao_menu_form', 'f_menu_form', 'f_submenu_form', 'f_bilhetes_chamadas', 'f_bilhetes_chamadas_form' ]
+
+
+    )
+
+)

@@ -1,0 +1,420 @@
+# coding=UTF-8
+import random
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def fisico_sip_iax_form():
+	response.title = 'Autenticação SIP/IAX'
+	
+	if request.vars.id_edit is None:
+		form 	=	SQLFORM(db.fisico_sip_iax)
+		form.element(_name='usuario')['_value'] = gera_sip_iax()
+		form.element(_name='secret')['_value'] = gera_senha()
+	else:
+		form 	=	SQLFORM(db.fisico_sip_iax, request.vars.id_edit)
+	
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+	form.element(_name='extras')['_rows'] = "4"
+	form.element(_name='extras')['_style'] = "width:303px"
+
+	if form.process().accepted:
+		escreve_sip_iax()
+		redirect(URL('show_sip'))
+
+	return response.render("ramais/form_sip_iax.html", form=form)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def lote_fisico_form():
+	response.title = 'Lote SIP/IAX'
+	form = SQLFORM.factory(
+		Field('tecnologia', requires=
+			IS_IN_SET(["SIP", "IAX"], error_message=T("não nulo"))),
+		Field('simbolo', requires=
+			IS_IN_SET(["S", "G", "-"], error_message=T("não nulo"))),
+		Field('inicio', requires=[
+			IS_NOT_EMPTY(error_message=T("não nulo")),
+			IS_INT_IN_RANGE(1000, 9999, error_message=T("fora da range"))]),
+		Field('fim', requires=[
+			IS_NOT_EMPTY(error_message=T("não nulo")),
+			IS_INT_IN_RANGE(1000, 9999, error_message=T("fora da range"))]),
+		Field('senha'),
+		Field('gerar_senha', type='boolean')
+	)
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process().accepted:
+		if insert_lote_fisico(form.vars) == False:
+			response.alerta_erro = 'Erro, verifique a range'
+		else:
+			escreve_sip_iax()
+			response.alerta_sucesso = 'Lote criado com sucesso'
+		#print form.vars.inicio + 1
+	elif form.errors:
+		print form.vars
+		#response.flash = 'erros'
+		response.alerta_erro = 'Algo não está correto'
+	return response.render("ramais/form_lote_fisico.html", form=form)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def fisico_dahdi_khomp_form():
+	response.title = 'Canais DAHDI/KHOMP'
+	##DAHDI
+	form_dahdi = SQLFORM.factory(
+		Field('porta', requires=IS_NOT_IN_DB(db, 'fisico_dahdi_khomp.porta')),
+		Field('context', requires=IS_NOT_EMPTY())
+	)
+	for input in form_dahdi.elements():
+		input['_class'] = 'form-control'
+	form_dahdi.element(_name='context')['_value'] = 'ramais'
+	form_dahdi.element(_name='porta')['_value'] = gera_dahdi()
+
+	##KHOMP
+	form_khomp = SQLFORM.factory(
+		Field('dispositivo', 
+			requires=
+			IS_IN_SET(["b0", "b1", 
+					   "b2", "b3", 
+					   "b4", "b5", 
+					   "b6", "b7",
+					   "b8", "b9"]),
+			default=gera_khomp())
+	)
+
+	for input in form_khomp.elements():
+		input['_class'] = 'form-control'
+
+	##DAHDI
+	if form_dahdi.process(formname='form_dahdi').accepted:
+		insert_dahdi(request.vars)
+		session.alerta_sucesso = 'criado com sucesso'
+		escreve_dahdi()
+		redirect(URL('fisico_dahdi_khomp_form'))
+	elif form_dahdi.errors:
+		response.alerta_erro = 'Erros'
+		print 'dahdi error'
+
+	##KHOMP
+	if form_khomp.process(formname='form_khomp').accepted:
+		if verifica_khomp(request.vars) == True:
+			print 'passou'
+			insert_khomp(request.vars)
+			session.alerta_sucesso = 'criado com sucesso'
+			redirect(URL('fisico_dahdi_khomp_form'))
+		else:
+			print 'nao'
+			response.alerta_erro = 'Erro, verifique a range'
+		#redirect(URL('fisico_dahdi_khomp_form'))
+	elif form_khomp.errors:
+		response.alerta_erro = 'Erros'
+
+	return response.render("ramais/form_dahdi_khomp.html", 
+		form_dahdi=form_dahdi, form_khomp=form_khomp)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def lote_dahdi_form():
+	response.title = 'Lote SIP/IAX'
+	form = SQLFORM.factory(
+		Field('inicio', requires=[
+			IS_NOT_EMPTY(error_message=T("não nulo")),
+			IS_INT_IN_RANGE(1, 500, error_message=T("fora da range"))]),
+		Field('fim', requires=[
+			IS_NOT_EMPTY(error_message=T("não nulo")),
+			IS_INT_IN_RANGE(1, 500, error_message=T("fora da range"))]),
+		Field('context', requires=IS_NOT_EMPTY(), default='ramais')
+	)
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process().accepted:
+		if insert_lote_dahdi(form.vars) == False:
+			response.alerta_erro = 'Erro, verifique a range'
+		else:
+			escreve_dahdi()
+			response.alerta_sucesso = 'Lote criado com sucesso'
+		print form.vars
+	elif form.errors:
+		print form.vars
+		#response.flash = 'erros'
+		response.alerta_erro = 'Algo não está correto'
+	return response.render("ramais/form_lote_dahdi.html", form=form)
+
+
+##Extras
+def gera_senha():
+	caracteres = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	tamanho = 8
+	senha = ''
+
+	for i in range(tamanho):
+		next_index = random.randrange(len(caracteres))
+		senha = senha + caracteres[next_index]
+
+	return senha
+
+#gera sip iax
+def gera_sip_iax():
+	n=1000
+	s='S'
+	var='%s%i' %(s,n)
+
+	lista=[]
+	con = db(db.fisico_sip_iax).select(db.fisico_sip_iax.usuario)
+	for data in con:
+		lista.append(data.usuario)
+
+	for i in range(8999):
+		if var in lista:
+			n=n+1
+			var='%s%i' %(s,n)
+		else:
+			fisico = var
+			break
+
+	return fisico
+
+# gera lote fisico iax
+@auth.requires_login() 
+def insert_lote_fisico(var):
+	print var
+	num=var.inicio
+	simb=var.simbolo
+	if var.inicio > var.fim:
+		return False #erro na range
+
+	total = (var.fim - var.inicio)+1
+	for i in range(total):
+		fisico='%s%i' %(simb, num)
+		print fisico
+		if not db(db.fisico_sip_iax.usuario == str(fisico)).isempty():
+			return False #ramal contem na range
+		num = num + 1
+
+	num=var.inicio
+	for i in range(total):
+		#if var.senha == '':
+		fisico='%s%i' %(simb, num)
+		db.fisico_sip_iax.insert(
+			usuario=fisico,
+			secret=var.senha, 
+			tecnologia=var.tecnologia, 
+			type_f="friend", 
+			host_f="dynamic", 
+			context="ramais",
+			qualify=True,
+			disallow=["all"],
+			allow=["ulaw", "alaw", "g729"],
+			nat=False,
+			aut_externa=False,
+			tronco=False)
+		if var.gerar_senha == True:
+			db(db.fisico_sip_iax.usuario==fisico).update(secret=gera_senha())
+		num = num + 1
+
+@auth.requires_login() 
+def escreve_sip_iax():
+	ramais = db(db.fisico_sip_iax).select(orderby=db.fisico_sip_iax.usuario)
+	sip = open('/tmp/sip_admanager.conf','w')
+	iax = open('/tmp/iax_admanager.conf','w')
+	ips=db(db.f_parametros).select(db.f_parametros.faixa_ip_interna)[0].faixa_ip_interna
+
+	for ramal in ramais:
+		if ramal.tecnologia == 'SIP':
+			texto = sip
+			print 'escrevendo SIP/%s' %(ramal.usuario)
+		if ramal.tecnologia == 'IAX':
+			texto = iax
+			print 'escrevendo IAX/%s' %(ramal.usuario)
+	
+		texto.write('[%s]\n' %(ramal.usuario))
+		texto.write('type=%s\n' %(ramal.type_f))
+		texto.write('host=%s\n' %(ramal.host_f))
+		texto.write('secret=%s\n' %(ramal.secret))
+		texto.write('context=%s\n' %(ramal.context))
+		if ramal.qualify == True:
+			texto.write('qualify=yes\n')
+		else:
+			texto.write('qualify=no\n')
+		texto.write('deny=0.0.0.0/0.0.0.0\n')
+		if ramal.aut_externa == True:
+			texto.write('permit=0.0.0.0/0.0.0.0\n')
+		else:
+			print '--ip--'
+			print ips
+			print '--ip--'
+			for ip in str(ips).split('\n'):
+				if ip != '':
+					texto.write('permit=%s\n' %(ip))
+		texto.write('disallow=%s\n' %(','.join(ramal.disallow)))
+		texto.write('allow=%s\n' %(','.join(ramal.allow)))
+		if ramal.nat == True:
+			texto.write('nat=yes\n')
+		else:
+			texto.write('nat=no\n')
+		print '--extra--'
+		print ramal.extras
+		print '--extra--'
+		for extra in str(ramal.extras).split('\n'):
+			if extra != '':
+				texto.write('%s\n' %(extra))
+			#else:
+			#	print '%s-nulo'%(extra)
+		texto.write('\n')
+					
+	sip.close()
+	iax.close()
+
+@auth.requires_login() 
+def gera_dahdi():
+	con = db(db.fisico_dahdi_khomp).select(db.fisico_dahdi_khomp.porta)
+	lista=[]
+	for data in con:
+		lista.append(data.porta)
+
+	for i in range(500):
+		porta=i+1
+		if str(porta) in lista:
+			dahdi= 'porta:%s' %(porta)
+		else:
+			dahdi = porta
+			break
+
+	return str(dahdi)
+
+@auth.requires_login() 
+def insert_dahdi(var):
+	db.fisico_dahdi_khomp.insert(
+		tecnologia='dahdi',
+		porta=var.porta,
+		context=var.context)
+
+@auth.requires_login() 
+def gera_khomp():
+	con = db(db.fisico_dahdi_khomp.porta.like('b%')).select(db.fisico_dahdi_khomp.porta)
+	#print con
+	lista=[]
+	for data in con:
+		lista.append(data.porta)
+	#print lista
+	for i in range(10):
+		porta='b%sc1' %(i)
+		#print porta
+		if porta in lista:
+			print 'porta existe:%s' %(porta)
+		else:
+			#print 'porta não existe:%s' %(porta)
+			khomp=porta[0] + porta[1]
+			break
+
+	return str(khomp)
+
+@auth.requires_login() 
+def insert_khomp(var):
+	for i in range(24):
+		porta=i+1
+		#print '%sc%s' %(var.dispositivo,porta)
+		db.fisico_dahdi_khomp.insert(
+			tecnologia='khomp',
+			porta='%sc%s' %(var.dispositivo,porta),
+			context=var.context)
+
+@auth.requires_login()
+def verifica_khomp(var):
+	con = db(db.fisico_dahdi_khomp.porta.like('b%')).select(db.fisico_dahdi_khomp.porta)
+	lista=[]
+	for data in con:
+		lista.append(data.porta)
+
+	if '%sc1' %(var.dispositivo) in lista:
+		return False
+	else:
+		return True
+
+@auth.requires_login()
+def insert_lote_dahdi(var):
+	inicio=var.inicio
+	fim=var.fim
+	if inicio > fim:
+		return False #erro na range
+
+	total = (fim - inicio)+1
+	for i in range(total):
+		if not db(db.fisico_dahdi_khomp.porta == str(inicio)).isempty():
+			return False #ramal contem na range
+		inicio = inicio + 1
+
+	inicio=var.inicio
+	for i in range(total):
+		db.fisico_dahdi_khomp.insert(
+			tecnologia='dahdi',
+			porta=inicio,
+			context=var.context)
+		inicio = inicio + 1
+
+@auth.requires_login()
+def escreve_dahdi():
+	ramais = db(db.fisico_dahdi_khomp.tecnologia == 'dahdi').select(orderby=db.fisico_dahdi_khomp.porta)
+	dahdi = open('/tmp/chan_dahdi_admanager.conf','w')
+	for ramal in ramais:
+		print ramal.porta
+		dahdi.write('signalling=fxo_ks\n')
+		dahdi.write('context=%s\n' %(ramal.context))
+		dahdi.write('faxdetect=both\n')
+		dahdi.write('faxbuffers=>6,full\n')
+		dahdi.write('channel=>%s\n\n' %(ramal.porta))
+
+#SHOW
+@auth.requires_login()
+def show_sip():
+	response.title = 'Usuários SIP/IAX'
+	editor 	= 	permissao()
+	url 	=	URL('admanager', 'ramais', 'fisico_sip_iax_form')
+	con = db(db.fisico_sip_iax).select()
+
+	return response.render("ramais/show_sip.html", 
+					con=con, url=url, editor=editor)
+
+@auth.requires_login()
+def show_dahdi():
+	response.title = 'Portas DAHDI'
+	editor 	=	permissao()
+	url 	= 	URL('admanager', 'ramais', 'fisico_dahdi_khomp_form')
+	con = db(db.fisico_dahdi_khomp.tecnologia == 'dahdi').select()
+	con2 = db(db.fisico_dahdi_khomp.tecnologia == 'khomp').select(orderby=db.fisico_dahdi_khomp.porta)
+
+	return response.render("ramais/show_dahdi.html",
+				con2=con2, con=con, url=url, editor=editor)
+
+@auth.requires_login()
+def delete():
+	print request.vars
+	funcao 	=	request.vars['tabela']
+	id_tab	=	request.vars['id_tab']
+	if funcao 	== "fisico_sip_iax":
+		tabela 	=	 db.fisico_sip_iax.id
+		funcao  = 	 'show_sip'
+	if funcao 	== "fisico_dahdi_khomp":
+		tabela 	= 	db.fisico_dahdi_khomp.id
+		funcao 	= 	'show_dahdi'
+
+	db(tabela == id_tab).delete()
+	if funcao == 'show_sip':
+		escreve_sip_iax()
+	elif funcao == 'show_dahdi':
+		escreve_dahdi()
+	redirect(URL(funcao))
+
+@auth.requires_login()
+def delete_khomp():
+	dispositivo = request.vars.porta.split('c')[0]
+	for i in range(24):
+		porta=i+1
+		print 'delete %sc%s' %(dispositivo,porta)
+		var = '%sc%s' %(dispositivo,porta)
+		db(db.fisico_dahdi_khomp.porta == var).delete()	
+	
+	redirect(URL('show_dahdi'))
+
+
+

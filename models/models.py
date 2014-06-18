@@ -4,6 +4,14 @@
 ## Declaração do Banco de dados
 #########################################################################
 
+db.define_table('f_empresa',
+	Field("id"),
+	Field("empresa"),
+	####Field("faixa_ramal"),
+	format="%(empresa)s",
+	migrate=False
+	)
+
 db.define_table('f_troncos',
 	Field("id"),
 	Field("tronco", "string", length="20"),
@@ -20,6 +28,7 @@ db.define_table('f_troncos',
 	Field("ramal_principal", "string", length="10"),
 	Field("ura", "boolean"),
 	Field("add_zero", "boolean"),
+	Field("id_empresa", db.f_empresa),
 	format="%(tronco)s",
 	migrate=False
 	)
@@ -39,14 +48,6 @@ db.define_table('f_destinos',
 	Field("tamanho_max", "integer"),
 	Field("tarifado", "boolean"),
 	format="%(tipo_chamada)s",
-	migrate=False
-	)
-
-db.define_table('f_empresa',
-	Field("id"),
-	Field("empresa"),
-	####Field("faixa_ramal"),
-	format="%(empresa)s",
 	migrate=False
 	)
 
@@ -82,7 +83,7 @@ db.define_table('f_rotas',
 	Field("id_horario", db.f_horario),
 	Field("add_csp", "boolean"),
 	format="%(rota)s",
-	migrate=True
+	migrate=False
 	)
 
 db.define_table("f_parametros",
@@ -134,6 +135,30 @@ db.define_table("f_bilhetes_chamadas",
     format="%(origem)s",
     migrate=False)
 
+####--SIP/IAX
+db.define_table("fisico_sip_iax",
+	Field("usuario"),
+	Field("secret"),
+	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX"])),
+	Field("type_f", "string", default="friend"),
+	Field("host_f", "string", default="dynamic"),
+	Field("context", "string", default="ramais"),
+	Field("qualify", "boolean"),
+	Field("disallow", "list:string"),
+	Field("allow", "list:string"),
+	Field("nat", "boolean"),
+	Field("aut_externa", "boolean"),
+	Field("tronco", "boolean", default=False),
+	Field("extras", "text", default='requirecalltoken=no\ncanreinvite=no\n'),
+	format="%(usuario)s",
+	migrate=True)
+
+db.define_table("fisico_dahdi_khomp",
+	Field("tecnologia"),
+	Field("porta"),
+	Field("context"),
+	format="%()s",
+	migrate=True)
 
 ####--Menus Permissões
 db.define_table('f_menu',

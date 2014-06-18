@@ -88,7 +88,7 @@ def f_destinos():
 	return response.render("funcional/show_destinos.html", 
 				url=url, editor=editor, destinos=destinos)
 
-@auth.requires_login()
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_destinos_form():
 	response.title = 'Destinos'
 	id_destino	= 	request.vars['id_destino']
@@ -120,7 +120,7 @@ def f_empresa():
 	return response.render("funcional/show_empresa.html", 
 				url=url, editor=editor, empresa=empresa)
 
-@auth.requires_login()
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_empresa_form():
 	response.title = 'Empresa'
 	id_empresa	= 	request.vars['id_empresa']
@@ -151,7 +151,7 @@ def f_tarifacao():
 	return response.render("funcional/show_tarifacao.html", 
 				editor=editor, url=url, tarifacao=tarifacao)
 
-@auth.requires_login()
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_tarifacao_form():
 	response.title = 'Tarifação'
 	id_tarifacao=	request.vars['id_tarifacao']
@@ -182,7 +182,7 @@ def f_rotas():
 	return response.render("funcional/show_rotas.html", 
 						editor=editor, url=url, rota=rota)
 
-@auth.requires_login()
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_rotas_form():
 	response.title = 'Rotas'
 	id_rota 	= 	request.vars['id_rota']
@@ -221,7 +221,7 @@ def f_horario():
 	return response.render("funcional/show_horario.html", 
 					editor=editor, url=url, horario=horario)
 
-@auth.requires_login()
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_horario_form():
 	response.title = 'Horário'
 	id_rota 	= 	request.vars['id_horario']
@@ -258,7 +258,7 @@ def f_bilhetes_chamadas():
 					editor=editor, url=url, bilhetes=bilhetes)
 
 ######-PARAMETROS
-@auth.requires_login()
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_parametros_form():
 	response.title = 'Parâmetros'
 	id_parametro=	request.vars['id_parametro']

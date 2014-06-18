@@ -44,6 +44,7 @@
 </head>
 
 <body>
+
 		<!-- start: Header -->
 	<header class="navbar">
 		<div class="flash">{{=response.flash or ''}}</div>
@@ -348,7 +349,7 @@
 	
 		<div class="container">
 		<div class="row">
-				
+
 			<!-- start: Main Menu -->
 			<div id="sidebar-left" class="col-lg-2 col-sm-1 ">
 								
@@ -373,6 +374,11 @@
 							<h2><i class="icon-tasks"></i>{{=response.title or ''}}</h2>
 						</div>
 						<div class="box-content">
+
+						<div style="position: fixed; right: 30px; top: 50px; width: 200px">
+							{{include 'includes/alertas.html'}}
+						</div>
+
 							{{include}}
 								{{block center}}
 							{{end}}
@@ -444,7 +450,8 @@
 		
 	<![endif]-->
 	<script src="{{=URL(a='admanager', c='static', f='js')}}/jquery-migrate-1.2.1.min.js"></script>
-	<script src="{{=URL(a='admanager', c='static', f='js')}}/bootstrap.min.js"></script>	
+	<script src="{{=URL(a='admanager', c='static', f='js')}}/bootstrap.min.js"></script>
+	<!--<script src="{{=URL(a='admanager', c='static', f='js')}}/jquery.js"></script>-->	
 	
 	<!-- page scripts -->
 	<script src="{{=URL(a='admanager', c='static', f='js')}}/jquery-ui-1.10.3.custom.min.js"></script>
@@ -459,6 +466,9 @@
 	<script src="{{=URL(a='admanager', c='static', f='js')}}/pages/ui-sliders-progress.js"></script>
 	
 	<!-- end: JavaScript-->
+
+{{block jquery}}
+{{end}}
 	
 </body>
 </html>

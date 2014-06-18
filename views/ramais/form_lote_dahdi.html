@@ -1,0 +1,98 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class='row'>
+<div class="col-lg-12">
+{{=form.custom.begin}}
+
+
+<label>Início:</label>
+<input type="number" class="form-control" min="1" max="300" step="1" id="number" name="inicio">
+<br>
+
+<label>Fim:</label> 
+<input type="number" class="form-control" min="1" max="300" step="1" id="number2" name="fim">
+<br>
+
+<div id="rangeSlider"></div><br>
+<br>
+
+<label>Contexto:</label>
+<div>{{=form.custom.widget.context}}</div>
+<br>
+<br><br>
+
+
+<button type="submit" class="btn btn-primary">Enviar</button>
+{{=form.custom.end}}
+</div><!--col-lg-3-->
+</div><!--row-->
+<br>
+
+{{end}}
+
+{{block jquery}}
+<link href="{{=URL(a='admanager', c='static', f='css')}}/nouslider/jquery.nouislider.css" rel="stylesheet">
+<script src="{{=URL(a='admanager', c='static', f='js')}}/nouslider/jquery.nouislider.min.js"></script>
+
+<script>
+$( document ).ready(function() {
+      $("#rangeSlider").noUiSlider({
+        start: [ 1, 24 ],
+        step: 1,
+        range: {
+          'min': 1,
+          'max': 300
+        },
+        connect: true,
+        serialization: {
+          lower: [
+            $.Link({
+              target: $("#number"),
+              type: number,
+              format: {
+                decimals: 0,
+              }
+            }),
+            $.Link({
+              target: $(".inputClass"),
+            }),         
+          ],
+          upper: [
+            $.Link({
+              target: $("#number2"),
+              type: number,
+              format: {
+                decimals: 0,
+              }
+            }),
+          ], 
+        }
+      }); 
+
+      });
+
+$("#no_table_gerar_senha").change(function() {
+    if(this.checked) {
+        $('#input_senha').toggle('slow', function() {
+    // Animation complete.
+  });
+    }
+    else{
+    	$('#input_senha').toggle('slow', function() {
+    // Animation complete.
+  });
+    }
+});
+
+//lock enter
+$(document).ready(function () {
+   $('input').keypress(function (e) {
+        var code = null;
+        code = (e.keyCode ? e.keyCode : e.which);                
+        return (code == 13) ? false : true;
+   });
+});
+
+</script>
+{{end}}

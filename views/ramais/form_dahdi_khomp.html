@@ -1,0 +1,49 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">DAHDI</a></li>
+    <li><a href="#tab2" data-toggle="tab">KHOMP</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+
+{{=form_dahdi.custom.begin}}
+<br>
+<label>Porta:</label>
+<div>{{=form_dahdi.custom.widget.porta}}</div>
+<br>
+
+<label>Contexto:</label>
+<div>{{=form_dahdi.custom.widget.context}}</div>
+<br>
+
+<button type="submit" class="btn btn-primary">Enviar</button>
+<br><br>
+{{=form_dahdi.custom.end}}
+
+  </div>
+
+
+    <div class="tab-pane" id="tab2">
+
+{{=form_khomp.custom.begin}}
+
+<br>
+<label>Contexto:</label>
+<div>{{=form_khomp.custom.widget.dispositivo}}</div>
+<br>
+
+<button type="submit" class="btn btn-primary">Enviar</button>
+<br><br>
+{{=form_khomp.custom.end}}
+
+    </div>
+  </div>
+</div>
+
+
+{{end}}

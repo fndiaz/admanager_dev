@@ -1,0 +1,81 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> com este registro você irá fazer autenticação do seu ramal, lembre-se do usuário e senha   
+</div>
+
+<div class="direita">
+   <button type="button" class="btn btn-primary" onclick=location.href="lote_fisico_form" >Criar lote</button>
+</div><br><br>
+
+
+<div class='row'>
+<div class="col-lg-7">
+{{=form.custom.begin}}
+<label>Tecnologia:</label>
+<div>{{=form.custom.widget.tecnologia}}</div>
+<br>
+
+<label>Usuário:</label> 
+<div>{{=form.custom.widget.usuario}}</div>
+<br>
+
+<label>Senha:</label> 
+<div>{{=form.custom.widget.secret}}</div>
+<br>
+
+<label>Desabilitar codecs:</label> 
+<div>{{=form.custom.widget.disallow}}</div>
+<br>
+
+<label>Qualify:</label> 
+<div>{{=form.custom.widget.qualify}}</div>
+<br>
+
+<label>Nat:</label> 
+<div>{{=form.custom.widget.nat}}</div>
+<br>
+
+<label>Autenticação externa:</label> 
+<div>{{=form.custom.widget.aut_externa}}</div>
+<br>
+
+
+<br>
+<button type="submit" class="btn btn-primary">Enviar</button>
+</div><!--col-lg-7-->
+
+<div class="col-lg-3">
+
+<label>Type:</label> 
+<div>{{=form.custom.widget.type_f}}</div>
+<br>
+
+<label>Host:</label> 
+<div>{{=form.custom.widget.host_f}}</div>
+<br>
+
+<label>Contexto:</label> 
+<div>{{=form.custom.widget.context}}</div>
+<br>
+
+<label>Habilitar codecs:</label> 
+<div>{{=form.custom.widget.allow}}</div>
+<br>
+
+<label>Extras:</label> 
+<div>{{=form.custom.widget.extras}}</div>
+<br>
+
+{{=form.custom.end}}
+</div><!--col-lg-3-->
+
+</div><!--row-->
+<br>
+
+
+{{end}}

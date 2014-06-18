@@ -3,7 +3,9 @@
 {{block center}}
 <br>
 <div class="direita">
+    {{if editor == True:}}
    <button type="button" class="btn btn-primary" onclick=location.href="{{=url}}" >Adicionar</button>
+   {{pass}}
 </div>
 <table class="tabela-forip">
     <thead>

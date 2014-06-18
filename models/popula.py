@@ -47,9 +47,9 @@ if db(db.f_menu).isempty():
 
 if db(db.f_submenu).isempty():
 	id_acessos = db(db.f_menu.nome == 'Acessos').select()[0].id
-	db.f_submenu.insert(nome="Usuários", controller="inital", funcao="users", icone="icon-chevron-right", ordem="1", menu_ref=id_acessos)
+	db.f_submenu.insert(nome="Usuários", controller="initial", funcao="users", icone="icon-chevron-right", ordem="1", menu_ref=id_acessos)
 	auth.add_group('Usuários', '')
-	db.f_submenu.insert(nome="Grupos", controller="inital", funcao="groups", icone="icon-chevron-right", ordem="2", menu_ref=id_acessos)
+	db.f_submenu.insert(nome="Grupos", controller="initial", funcao="groups", icone="icon-chevron-right", ordem="2", menu_ref=id_acessos)
 	auth.add_group('Grupos', '')
-	db.f_submenu.insert(nome="Permissões", controller="inital", funcao="membership", icone="icon-chevron-right", ordem="3", menu_ref=id_acessos)
+	db.f_submenu.insert(nome="Permissões", controller="initial", funcao="membership", icone="icon-chevron-right", ordem="3", menu_ref=id_acessos)
 	auth.add_group('Permissões', '')

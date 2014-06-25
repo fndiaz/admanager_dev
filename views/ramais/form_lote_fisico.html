@@ -1,7 +1,15 @@
 {{extend 'layout.html'}}
 
 {{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Aqui você pode criar vários "SIP/IAX" de uma só vez, definindo uma range que ainda não exista.
+</div>
+
+
 <div class='row'>
+
 <div class="col-lg-12">
 {{=form.custom.begin}}
 
@@ -30,14 +38,25 @@
 Gerar senha automática
 <br><br>
 
-
-<button type="submit" class="btn btn-primary">Enviar</button>
-{{=form.custom.end}}
 </div><!--col-lg-3-->
+
+<div class="row"><!--row botoes-->
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary">Enviar</button>
+</div>
+
+<div class="botao_direita">
+   <button type="button" class="btn btn-primary" onclick=location.href="fisico_sip_iax_form" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div><!-- row botoes-->
+
 </div><!--row-->
-<br>
+{{=form.custom.end}}
 
 {{end}}
+
+
+
 
 {{block jquery}}
 <link href="{{=URL(a='admanager', c='static', f='css')}}/nouslider/jquery.nouislider.css" rel="stylesheet">

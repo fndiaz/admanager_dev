@@ -2,7 +2,7 @@
 
 {{block center}}
 <div class='row'>
-<div class="col-lg-7">
+<div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
 <label>Rota:</label>
 <div>{{=form.custom.widget.rota}}</div>
@@ -24,11 +24,13 @@
 <div>{{=form.custom.widget.id_tarifacao}}</div>
 <br>
 
+<label>add_csp:</label> 
+<div>{{=form.custom.widget.add_csp}}</div>
 <br>
-<button type="submit" class="btn btn-primary">Enviar</button>
+
 </div><!--col-lg-7-->
 
-<div class="col-lg-3">
+<div class="coluna_form_direita_b0">
 <label>Adiciona antes:</label> 
 <div>{{=form.custom.widget.adiciona_antes}}</div>
 <br>
@@ -49,15 +51,21 @@
 <div>{{=form.custom.widget.id_horario}}</div>
 <br>
 
-<label>add_csp:</label> 
-<div>{{=form.custom.widget.add_csp}}</div>
-<br>
-
-{{=form.custom.end}}
 </div><!--col-lg-3-->
 
 </div><!--row-->
-<br>
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_rotas" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
 
 
 

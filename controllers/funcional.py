@@ -25,17 +25,10 @@ def f_troncos_form():
 		form 	=	SQLFORM(db.f_troncos, id_tronco, 
 								submit_button='Editar')
 
-	form.element(_name='tronco')['_class'] = "form-control"
-	form.element(_name='dispositivo')['_class'] = "form-control"
-	form.element(_name='chamadas_simultaneas')['_class'] = "form-control"
-	form.element(_name='qtde_max_minutos')['_class'] = "form-control"
-	form.element(_name='transbordo')['_class'] = "form-control"
-	form.element(_name='csp')['_class'] = "form-control"
-	form.element(_name='ddd')['_class'] = "form-control"
-	form.element(_name='prefixo')['_class'] = "form-control"
-	form.element(_name='chave')['_class'] = "form-control"
+	for input in form.elements():
+		input['_class'] = 'form-control'
 	form.element(_name='habilitado')['_class'] = "checkbox"
-	form.element(_name='ciclo_conta')['_class'] = "form-control"
+
 	#form.element(_name='ciclo_conta')['_value'] = "teste"
 	if form.process().accepted:
 		redirect(URL('f_troncos'))
@@ -105,6 +98,7 @@ def f_destinos_form():
 	form.element(_name='destino')['_class'] = "form-control"
 	form.element(_name='tamanho_max')['_class'] = "form-control"
 	if form.process().accepted:
+		escreve_destino()
 		redirect(URL('f_destinos'))
 
 	return response.render("funcional/form_destinos.html", form=form)
@@ -224,7 +218,7 @@ def f_horario():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_horario_form():
 	response.title = 'Horário'
-	id_rota 	= 	request.vars['id_horario']
+	id_horario 	= 	request.vars['id_horario']
 
 	if id_horario is None:
 		form 	=	SQLFORM(db.f_horario)
@@ -238,7 +232,7 @@ def f_horario_form():
 	if form.process().accepted:
 		redirect(URL('f_horario'))
 
-	return response.render("funcional/form_rotas.html", form=form)
+	return response.render("funcional/form_horario.html", form=form)
 
 ######-BILHETES-CHAMADAS
 # coding=UTF-8
@@ -299,3 +293,42 @@ def f_parametros_form():
 		redirect(URL('f_parametros_form'))
 
 	return response.render("funcional/form_parametros.html", form=form)
+
+@auth.requires_login()
+def delete():
+	print request.vars
+	funcao 	=	request.vars['tabela']
+	id_tab	=	request.vars['id_tab']
+	if funcao 	== "f_troncos":
+		tabela 	=	 db.f_troncos.id
+	if funcao 	==	"f_troncos_fisicos":
+		tabela 	= 	db.f_troncos_fisicos.id
+	if funcao 	== "f_tarifacao":
+		tabela 	= 	db.f_tarifacao.id
+	if funcao 	== "f_rotas":
+		tabela 	= 	db.f_rotas.id
+	if funcao 	== 	"f_tarifacao":
+		tabela 	=	db.f_tarifacao.id
+	if funcao 	== 	"f_empresa":
+		tabela 	= db.f_empresa.id
+	if funcao 	== 	"f_destinos":
+		tabela 	= 	db.f_destinos.id
+	if funcao 	== 	"f_horario":
+		tabela 	= 	db.f_horario.id
+
+	db(tabela == id_tab).delete()
+	if funcao == "f_destinos":
+		escreve_destino()
+	redirect(URL(funcao))
+
+def escreve_destino():
+	destinos = db(db.f_destinos).select(orderby=db.f_destinos.id)
+	arq = open('/tmp/entrada.ael','w')
+	for destino in destinos:
+		print destino.tipo_chamada
+		arq.write('%s => { \n' %(destino.tipo_chamada))
+		arq.write('	Set(__id_destino=%s);\n' %(destino.id))
+		arq.write('	AGI(rastreamento.php,${CHANNEL},${CDR(linkedid)},${STRFTIME(${EPOCH},,%F %T)},${CUT(CHANNEL,-,1)},${EXTEN},Context:${CONTEXT} | [id_destino=${id_destino}]); \n')
+		arq.write('	goto ${proximo_contexto}|${EXTEN}|1;\n')
+		arq.write('};\n\n')
+	arq.close()

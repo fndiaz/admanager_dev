@@ -260,20 +260,6 @@ def delete():
 	print request.vars
 	funcao 	=	request.vars['tabela']
 	id_tab	=	request.vars['id_tab']
-	if funcao 	== "f_troncos":
-		tabela 	=	 db.f_troncos.id
-	if funcao 	==	"f_troncos_fisicos":
-		tabela 	= 	db.f_troncos_fisicos.id
-	if funcao 	== "f_tarifacao":
-		tabela 	= 	db.f_tarifacao.id
-	if funcao 	== "f_rotas":
-		tabela 	= 	db.f_rotas.id
-	if funcao 	== 	"f_tarifacao":
-		tabela 	=	db.f_tarifacao.id
-	if funcao 	== 	"f_empresa":
-		tabela 	= db.f_empresa.id
-	if funcao 	== 	"f_destinos":
-		tabela 	= 	db.f_destinos.id
 	if funcao 	== 	"auth_user":
 		tabela 	= 	db.auth_user.id
 		funcao 	=	"users"

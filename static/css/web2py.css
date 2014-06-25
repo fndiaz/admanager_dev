@@ -345,8 +345,54 @@ table.tabela-forip td{
     padding-bottom: 8px;
 }
 
+/*resposta flash*/
 .resposta{
     float:right;
     width: 200px;
     padding-bottom: 8px;
+}
+
+/*colunas form*/
+.coluna_form_esquerda{
+    float:left; 
+    width:40%; 
+    margin-left:45px; 
+    margin-bottom:40px
+}
+
+.coluna_form_direita{
+    float:right; 
+    width:40%; 
+    margin-right:0; 
+    margin-bottom:40px
+}
+
+.coluna_form_esquerda_b0{
+    float:left; 
+    width:40%; 
+    margin-left:45px; 
+    margin-bottom:0px
+}
+
+.coluna_form_direita_b0{
+    float:right; 
+    width:40%; 
+    margin-right:0; 
+    margin-bottom:0px
+}
+
+
+/*botoes*/
+.botao_esquerda{
+    float:left; 
+    margin-left:35px; 
+    padding:5px; 
+    margin-bottom:25px;
+}
+
+.botao_direita{
+    float:right; 
+    margin-right:55px; 
+    padding:5px; 
+    margin-bottom:25px;
 }

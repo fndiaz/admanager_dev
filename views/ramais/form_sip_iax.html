@@ -2,19 +2,99 @@
 
 {{block center}}
 
-
 <div class="alert alert-info">
 <button type="button" class="close" data-dismiss="alert">×</button>
 <strong>Dica!</strong> com este registro você irá fazer autenticação do seu ramal, lembre-se do usuário e senha   
 </div>
 
-<div class="direita">
-   <button type="button" class="btn btn-primary" onclick=location.href="lote_fisico_form" >Criar lote</button>
+<div class="row">
+
+<div class="row">
+<div class="botao_esquerda">
+	<button type="button" class="btn btn-primary" onclick=location.href="lote_fisico_form" ><i class="icon-sitemap"></i>&nbsp;Criar lote</button>
+</div>
+</div>
+
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+<label>Tecnologia:</label>
+<div>{{=form.custom.widget.tecnologia}}</div>
+<br>
+
+<label>Usuário:</label> 
+<div>{{=form.custom.widget.usuario}}</div>
+<br>
+
+<label>Senha:</label> 
+<div>{{=form.custom.widget.secret}}</div>
+<br>
+
+<label>Desabilitar codecs:</label> 
+<div>{{=form.custom.widget.disallow}}</div>
+<br>
+
+<label>Qualify:</label> 
+<div>{{=form.custom.widget.qualify}}</div>
+<br>
+
+<label>Nat:</label> 
+<div>{{=form.custom.widget.nat}}</div>
+<br>
+
+<label>Autenticação externa:</label> 
+<div>{{=form.custom.widget.aut_externa}}</div>
+<br>
+
+</div>
+
+<div class="coluna_form_direita_b0">
+
+<label>Type:</label> 
+<div>{{=form.custom.widget.type_f}}</div>
+<br>
+
+<label>Host:</label> 
+<div>{{=form.custom.widget.host_f}}</div>
+<br>
+
+<label>Contexto:</label> 
+<div>{{=form.custom.widget.context}}</div>
+<br>
+
+<label>Habilitar codecs:</label> 
+<div>{{=form.custom.widget.allow}}</div>
+<br>
+
+<label>Extras:</label> 
+<div>{{=form.custom.widget.extras}}</div>
+</div>
+
+</div>
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="show_sip" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+
+
+{{end}}
+
+
+<!--<div class="direita">
+   <button type="button" class="btn btn-primary" onclick=location.href="lote_fisico_form" ><i class="icon-sitemap"></i>&nbsp;Criar lote</button>
+    <button type="button" class="btn btn-primary" onclick=location.href="" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
 </div><br><br>
 
 
 <div class='row'>
-<div class="col-lg-7">
+<div class="col-lg-7" style="margin-left:15px">
 {{=form.custom.begin}}
 <label>Tecnologia:</label>
 <div>{{=form.custom.widget.tecnologia}}</div>
@@ -46,8 +126,11 @@
 
 
 <br>
-<button type="submit" class="btn btn-primary">Enviar</button>
-</div><!--col-lg-7-->
+<button type="button" class="btn btn-warning" onclick=location.href="" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>&nbsp;&nbsp;
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+
+</div>
+
 
 <div class="col-lg-3">
 
@@ -72,10 +155,11 @@
 <br>
 
 {{=form.custom.end}}
-</div><!--col-lg-3-->
+</div>
 
-</div><!--row-->
-<br>
+</div><-->
 
-
-{{end}}
+<!--<div class="col-lg-12">
+<button type="button" class="btn btn-warning" onclick=location.href="" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+<button style="margin-left:75%" type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>-->

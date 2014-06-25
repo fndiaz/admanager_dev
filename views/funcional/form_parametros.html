@@ -1,8 +1,14 @@
 {{extend 'layout.html'}}
 
 {{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Aqui serão preenchidos os requisitos básicos do sitema, alguns deles são essencias para seu funcionamento, certifique-se que os dados submetidos estejam corretos, caso exista dúvida entre em contato com o administrador de TI. 
+</div>
+
 <div class='row'>
-<div class="col-lg-7">
+<div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
 <label>Empresa:</label>
 <div>{{=form.custom.widget.empresa}}</div>
@@ -44,7 +50,7 @@
 <div>{{=form.custom.widget.email_admin}}</div>
 <br>
 
-<div style="margin-left:0px; margin-right:300px">
+<div style="margin-left:0px; margin-right:130px">
 <label>Faixa interna IP:</label> 
 <div>{{=form.custom.widget.faixa_ip_interna}}</div>
 </div>
@@ -62,11 +68,9 @@
 <div>{{=form.custom.widget.tempo_chamada_transf}}</div>
 <br>
 
-<br>
-<button type="submit" class="btn btn-primary">Enviar</button>
 </div><!--col-lg-7-->
 
-<div class="col-lg-3">
+<div class="coluna_form_direita_b0">
 <label>Toque sipheader:</label> 
 <div>{{=form.custom.widget.toque_diff_sipheader}}</div>
 <br>
@@ -79,12 +83,16 @@
 <div>{{=form.custom.widget.spy_senha}}</div>
 <br>
 
+<div style="margin-left:0px; margin-right:130px">
 <label>Spy blacklist:</label> 
-<div>{{=form.custom.widget.spy_ramal_proibe_monitora}}</div>
+<div >{{=form.custom.widget.spy_ramal_proibe_monitora}}</div>
+</div>
 <br>
 
+<div style="margin-left:0px; margin-right:130px">
 <label>Spy espião:</label> 
 <div>{{=form.custom.widget.spy_ramal_espiao}}</div>
+</div>
 <br>
 
 <label>Tamanho PIN:</label> 
@@ -115,12 +123,21 @@
 <div>{{=form.custom.widget.rechamada}}</div>
 <br>
 
-{{=form.custom.end}}
 </div><!--col-lg-3-->
 
 </div><!--row-->
-<br>
 
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_troncos" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
 
 
 {{end}}

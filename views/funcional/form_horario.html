@@ -1,0 +1,37 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class='row'>
+<div class="col-lg-12">
+{{=form.custom.begin}}
+<label>Dia da semana:</label>
+<div>{{=form.custom.widget.dia_semana}}</div>
+<br>
+
+<label>Horário:</label> 
+<div>{{=form.custom.widget.horario}}</div>
+<br>
+
+<label>Ação negativa:</label> 
+<div>{{=form.custom.widget.acao_negativa}}</div>
+<br>
+
+<label>Descrição:</label> 
+<div>{{=form.custom.widget.descricao}}</div>
+<br>
+
+</div><!--col-lg-3-->
+
+<!--Submit-->
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary">Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_horario" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+
+</div><!--row-->
+
+{{end}}

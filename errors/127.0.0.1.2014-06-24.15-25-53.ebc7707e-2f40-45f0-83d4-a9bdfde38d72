@@ -1,0 +1,540 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.TypeError'> unbound method formatter() must be called with IS_NOT_EMPTY instance as first argument (got str instance instead)"
+p3
+sS'layer'
+p4
+S'/home/fernando/web2py/applications/admanager/controllers/ramais.py'
+p5
+sS'code'
+p6
+S'# coding=UTF-8\nimport random\n\n@auth.requires(auth.has_membership(\'gerenciador\') or auth.has_membership(\'administrador\'))\ndef fisico_sip_iax_form():\n\tresponse.title = \'Autentica\xc3\xa7\xc3\xa3o SIP/IAX\'\n\t\n\tif request.vars.id_edit is None:\n\t\tform \t=\tSQLFORM(db.fisico_sip_iax)\n\t\tform.element(_name=\'usuario\')[\'_value\'] = gera_sip_iax()\n\t\tform.element(_name=\'secret\')[\'_value\'] = gera_senha()\n\telse:\n\t\tform \t=\tSQLFORM(db.fisico_sip_iax, request.vars.id_edit)\n\t\n\n\tfor input in form.elements():\n\t\tinput[\'_class\'] = \'form-control\'\n\tform.element(_name=\'extras\')[\'_rows\'] = "4"\n\tform.element(_name=\'extras\')[\'_style\'] = "width:303px"\n\n\tif form.process().accepted:\n\t\tescreve_sip_iax()\n\t\tredirect(URL(\'show_sip\'))\n\n\treturn response.render("ramais/form_sip_iax.html", form=form)\n\n@auth.requires(auth.has_membership(\'gerenciador\') or auth.has_membership(\'administrador\'))\ndef fisico_tronco_form():\n\tresponse.title = \'Tronco SIP/IAX\'\n\tdb.fisico_sip_iax.aut_externa.default = True\n\tdb.fisico_sip_iax.tronco.default = True\n\n\tif request.vars.id_edit is None:\n\t\tform \t=\tSQLFORM(db.fisico_sip_iax)\n\telse:\n\t\tform \t=\tSQLFORM(db.fisico_sip_iax, request.vars.id_edit)\n\t\n\n\tfor input in form.elements():\n\t\tinput[\'_class\'] = \'form-control\'\n\tform.element(_name=\'extras\')[\'_rows\'] = "4"\n\tform.element(_name=\'extras\')[\'_style\'] = "width:303px"\n\tform.element(_name=\'aut_externa\')[\'_type\'] = "hidden"\n\tform.element(_name=\'tronco\')[\'_type\'] = "hidden"\n\tform.element(_name=\'host_f\')[\'_value\'] = ""\n\n\tif form.process().accepted:\n\t\tescreve_sip_iax()\n\t\tredirect(URL(\'show_sip\'))\n\telse:\n\t\tprint request.vars\n\n\treturn response.render("ramais/form_tronco.html", form=form)\n\n@auth.requires(auth.has_membership(\'gerenciador\') or auth.has_membership(\'administrador\'))\ndef lote_fisico_form():\n\tresponse.title = \'Lote SIP/IAX\'\n\tform = SQLFORM.factory(\n\t\tField(\'tecnologia\', requires=\n\t\t\tIS_IN_SET(["SIP", "IAX"], error_message=T("n\xc3\xa3o nulo"))),\n\t\tField(\'simbolo\', requires=\n\t\t\tIS_IN_SET(["S", "G", "-"], error_message=T("n\xc3\xa3o nulo"))),\n\t\tField(\'inicio\', requires=[\n\t\t\tIS_NOT_EMPTY(error_message=T("n\xc3\xa3o nulo")),\n\t\t\tIS_INT_IN_RANGE(1000, 9999, error_message=T("fora da range"))]),\n\t\tField(\'fim\', requires=[\n\t\t\tIS_NOT_EMPTY(error_message=T("n\xc3\xa3o nulo")),\n\t\t\tIS_INT_IN_RANGE(1000, 9999, error_message=T("fora da range"))]),\n\t\tField(\'senha\'),\n\t\tField(\'gerar_senha\', type=\'boolean\')\n\t)\n\tfor input in form.elements():\n\t\tinput[\'_class\'] = \'form-control\'\n\n\tif form.process().accepted:\n\t\tif insert_lote_fisico(form.vars) == False:\n\t\t\tresponse.alerta_erro = \'Erro, verifique a range\'\n\t\telse:\n\t\t\tescreve_sip_iax()\n\t\t\tresponse.alerta_sucesso = \'Lote criado com sucesso\'\n\t\t#print form.vars.inicio + 1\n\telif form.errors:\n\t\tprint form.vars\n\t\t#response.flash = \'erros\'\n\t\tresponse.alerta_erro = \'Algo n\xc3\xa3o est\xc3\xa1 correto\'\n\treturn response.render("ramais/form_lote_fisico.html", form=form)\n\n@auth.requires(auth.has_membership(\'gerenciador\') or auth.has_membership(\'administrador\'))\ndef fisico_dahdi_khomp_form():\n\tresponse.title = \'Canais DAHDI/KHOMP\'\n\t##DAHDI\n\tform_dahdi = SQLFORM.factory(\n\t\tField(\'porta\', requires=IS_NOT_IN_DB(db, \'fisico_dahdi_khomp.porta\')),\n\t\tField(\'context\', requires=IS_NOT_EMPTY())\n\t)\n\tfor input in form_dahdi.elements():\n\t\tinput[\'_class\'] = \'form-control\'\n\tform_dahdi.element(_name=\'context\')[\'_value\'] = \'ramais\'\n\tform_dahdi.element(_name=\'porta\')[\'_value\'] = gera_dahdi()\n\n\t##KHOMP\n\tform_khomp = SQLFORM.factory(\n\t\tField(\'dispositivo\', \n\t\t\trequires=\n\t\t\tIS_IN_SET(["b0", "b1", \n\t\t\t\t\t   "b2", "b3", \n\t\t\t\t\t   "b4", "b5", \n\t\t\t\t\t   "b6", "b7",\n\t\t\t\t\t   "b8", "b9"]),\n\t\t\tdefault=gera_khomp())\n\t)\n\n\tfor input in form_khomp.elements():\n\t\tinput[\'_class\'] = \'form-control\'\n\n\t##DAHDI\n\tif form_dahdi.process(formname=\'form_dahdi\').accepted:\n\t\tinsert_dahdi(request.vars)\n\t\tsession.alerta_sucesso = \'criado com sucesso\'\n\t\tescreve_dahdi()\n\t\tredirect(URL(\'fisico_dahdi_khomp_form\'))\n\telif form_dahdi.errors:\n\t\tresponse.alerta_erro = \'Erros\'\n\t\tprint \'dahdi error\'\n\n\t##KHOMP\n\tif form_khomp.process(formname=\'form_khomp\').accepted:\n\t\tif verifica_khomp(request.vars) == True:\n\t\t\tprint \'passou\'\n\t\t\tinsert_khomp(request.vars)\n\t\t\tsession.alerta_sucesso = \'criado com sucesso\'\n\t\t\tredirect(URL(\'fisico_dahdi_khomp_form\'))\n\t\telse:\n\t\t\tprint \'nao\'\n\t\t\tresponse.alerta_erro = \'Erro, verifique a range\'\n\t\t#redirect(URL(\'fisico_dahdi_khomp_form\'))\n\telif form_khomp.errors:\n\t\tresponse.alerta_erro = \'Erros\'\n\n\treturn response.render("ramais/form_dahdi_khomp.html", \n\t\tform_dahdi=form_dahdi, form_khomp=form_khomp)\n\n@auth.requires(auth.has_membership(\'gerenciador\') or auth.has_membership(\'administrador\'))\ndef lote_dahdi_form():\n\tresponse.title = \'Lote SIP/IAX\'\n\tform = SQLFORM.factory(\n\t\tField(\'inicio\', requires=[\n\t\t\tIS_NOT_EMPTY(error_message=T("n\xc3\xa3o nulo")),\n\t\t\tIS_INT_IN_RANGE(1, 500, error_message=T("fora da range"))]),\n\t\tField(\'fim\', requires=[\n\t\t\tIS_NOT_EMPTY(error_message=T("n\xc3\xa3o nulo")),\n\t\t\tIS_INT_IN_RANGE(1, 500, error_message=T("fora da range"))]),\n\t\tField(\'context\', requires=IS_NOT_EMPTY(), default=\'ramais\')\n\t)\n\tfor input in form.elements():\n\t\tinput[\'_class\'] = \'form-control\'\n\n\tif form.process().accepted:\n\t\tif insert_lote_dahdi(form.vars) == False:\n\t\t\tresponse.alerta_erro = \'Erro, verifique a range\'\n\t\telse:\n\t\t\tescreve_dahdi()\n\t\t\tresponse.alerta_sucesso = \'Lote criado com sucesso\'\n\t\tprint form.vars\n\telif form.errors:\n\t\tprint form.vars\n\t\t#response.flash = \'erros\'\n\t\tresponse.alerta_erro = \'Algo n\xc3\xa3o est\xc3\xa1 correto\'\n\treturn response.render("ramais/form_lote_dahdi.html", form=form)\n\n\n##Extras\ndef gera_senha():\n\tcaracteres = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"\n\ttamanho = 8\n\tsenha = \'\'\n\n\tfor i in range(tamanho):\n\t\tnext_index = random.randrange(len(caracteres))\n\t\tsenha = senha + caracteres[next_index]\n\n\treturn senha\n\n#gera sip iax\ndef gera_sip_iax():\n\tn=1000\n\ts=\'S\'\n\tvar=\'%s%i\' %(s,n)\n\n\tlista=[]\n\tcon = db(db.fisico_sip_iax).select(db.fisico_sip_iax.usuario)\n\tfor data in con:\n\t\tlista.append(data.usuario)\n\n\tfor i in range(8999):\n\t\tif var in lista:\n\t\t\tn=n+1\n\t\t\tvar=\'%s%i\' %(s,n)\n\t\telse:\n\t\t\tfisico = var\n\t\t\tbreak\n\n\treturn fisico\n\n# gera lote fisico iax\n@auth.requires_login() \ndef insert_lote_fisico(var):\n\tprint var\n\tnum=var.inicio\n\tsimb=var.simbolo\n\tif var.inicio > var.fim:\n\t\treturn False #erro na range\n\n\ttotal = (var.fim - var.inicio)+1\n\tfor i in range(total):\n\t\tfisico=\'%s%i\' %(simb, num)\n\t\tprint fisico\n\t\tif not db(db.fisico_sip_iax.usuario == str(fisico)).isempty():\n\t\t\treturn False #ramal contem na range\n\t\tnum = num + 1\n\n\tnum=var.inicio\n\tfor i in range(total):\n\t\t#if var.senha == \'\':\n\t\tfisico=\'%s%i\' %(simb, num)\n\t\tdb.fisico_sip_iax.insert(\n\t\t\tusuario=fisico,\n\t\t\tsecret=var.senha, \n\t\t\ttecnologia=var.tecnologia, \n\t\t\ttype_f="friend", \n\t\t\thost_f="dynamic", \n\t\t\tcontext="ramais",\n\t\t\tqualify=True,\n\t\t\tdisallow=["all"],\n\t\t\tallow=["ulaw", "alaw", "g729"],\n\t\t\tnat=False,\n\t\t\taut_externa=False,\n\t\t\ttronco=False)\n\t\tif var.gerar_senha == True:\n\t\t\tdb(db.fisico_sip_iax.usuario==fisico).update(secret=gera_senha())\n\t\tnum = num + 1\n\n@auth.requires_login() \ndef escreve_sip_iax():\n\tramais = db(db.fisico_sip_iax).select(orderby=db.fisico_sip_iax.usuario)\n\tsip = open(\'/tmp/sip_admanager.conf\',\'w\')\n\tiax = open(\'/tmp/iax_admanager.conf\',\'w\')\n\tips=db(db.f_parametros).select(db.f_parametros.faixa_ip_interna)[0].faixa_ip_interna\n\n\tfor ramal in ramais:\n\t\tif ramal.tecnologia == \'SIP\':\n\t\t\ttexto = sip\n\t\t\tprint \'escrevendo SIP/%s\' %(ramal.usuario)\n\t\tif ramal.tecnologia == \'IAX\':\n\t\t\ttexto = iax\n\t\t\tprint \'escrevendo IAX/%s\' %(ramal.usuario)\n\t\n\t\ttexto.write(\'[%s]\\n\' %(ramal.usuario))\n\t\ttexto.write(\'type=%s\\n\' %(ramal.type_f))\n\t\ttexto.write(\'host=%s\\n\' %(ramal.host_f))\n\t\ttexto.write(\'secret=%s\\n\' %(ramal.secret))\n\t\ttexto.write(\'context=%s\\n\' %(ramal.context))\n\t\tif ramal.qualify == True:\n\t\t\ttexto.write(\'qualify=yes\\n\')\n\t\telse:\n\t\t\ttexto.write(\'qualify=no\\n\')\n\t\ttexto.write(\'deny=0.0.0.0/0.0.0.0\\n\')\n\t\tif ramal.aut_externa == True:\n\t\t\ttexto.write(\'permit=0.0.0.0/0.0.0.0\\n\')\n\t\telse:\n\t\t\tprint ips\n\t\t\tfor ip in str(ips).split(\'\\n\'):\n\t\t\t\tif ip != \'\':\n\t\t\t\t\ttexto.write(\'permit=%s\\n\' %(ip))\n\t\ttexto.write(\'disallow=%s\\n\' %(\',\'.join(ramal.disallow)))\n\t\ttexto.write(\'allow=%s\\n\' %(\',\'.join(ramal.allow)))\n\t\tif ramal.nat == True:\n\t\t\ttexto.write(\'nat=yes\\n\')\n\t\telse:\n\t\t\ttexto.write(\'nat=no\\n\')\n\t\tprint \'--extra--\'\n\t\tprint ramal.extras\n\t\tprint \'--extra--\'\n\t\tfor extra in str(ramal.extras).split(\'\\n\'):\n\t\t\tif extra != \'\':\n\t\t\t\ttexto.write(\'%s\\n\' %(extra))\n\t\t\t#else:\n\t\t\t#\tprint \'%s-nulo\'%(extra)\n\t\ttexto.write(\'\\n\')\n\t\t\t\t\t\n\tsip.close()\n\tiax.close()\n\n@auth.requires_login() \ndef gera_dahdi():\n\tcon = db(db.fisico_dahdi_khomp).select(db.fisico_dahdi_khomp.porta)\n\tlista=[]\n\tfor data in con:\n\t\tlista.append(data.porta)\n\n\tfor i in range(500):\n\t\tporta=i+1\n\t\tif str(porta) in lista:\n\t\t\tdahdi= \'porta:%s\' %(porta)\n\t\telse:\n\t\t\tdahdi = porta\n\t\t\tbreak\n\n\treturn str(dahdi)\n\n@auth.requires_login() \ndef insert_dahdi(var):\n\tdb.fisico_dahdi_khomp.insert(\n\t\ttecnologia=\'dahdi\',\n\t\tporta=var.porta,\n\t\tcontext=var.context)\n\n@auth.requires_login() \ndef gera_khomp():\n\tcon = db(db.fisico_dahdi_khomp.porta.like(\'b%\')).select(db.fisico_dahdi_khomp.porta)\n\t#print con\n\tlista=[]\n\tfor data in con:\n\t\tlista.append(data.porta)\n\t#print lista\n\tfor i in range(10):\n\t\tporta=\'b%sc1\' %(i)\n\t\t#print porta\n\t\tif porta in lista:\n\t\t\tprint \'porta existe:%s\' %(porta)\n\t\telse:\n\t\t\t#print \'porta n\xc3\xa3o existe:%s\' %(porta)\n\t\t\tkhomp=porta[0] + porta[1]\n\t\t\tbreak\n\n\treturn str(khomp)\n\n@auth.requires_login() \ndef insert_khomp(var):\n\tfor i in range(24):\n\t\tporta=i+1\n\t\t#print \'%sc%s\' %(var.dispositivo,porta)\n\t\tdb.fisico_dahdi_khomp.insert(\n\t\t\ttecnologia=\'khomp\',\n\t\t\tporta=\'%sc%s\' %(var.dispositivo,porta),\n\t\t\tcontext=var.context)\n\n@auth.requires_login()\ndef verifica_khomp(var):\n\tcon = db(db.fisico_dahdi_khomp.porta.like(\'b%\')).select(db.fisico_dahdi_khomp.porta)\n\tlista=[]\n\tfor data in con:\n\t\tlista.append(data.porta)\n\n\tif \'%sc1\' %(var.dispositivo) in lista:\n\t\treturn False\n\telse:\n\t\treturn True\n\n@auth.requires_login()\ndef insert_lote_dahdi(var):\n\tinicio=var.inicio\n\tfim=var.fim\n\tif inicio > fim:\n\t\treturn False #erro na range\n\n\ttotal = (fim - inicio)+1\n\tfor i in range(total):\n\t\tif not db(db.fisico_dahdi_khomp.porta == str(inicio)).isempty():\n\t\t\treturn False #ramal contem na range\n\t\tinicio = inicio + 1\n\n\tinicio=var.inicio\n\tfor i in range(total):\n\t\tdb.fisico_dahdi_khomp.insert(\n\t\t\ttecnologia=\'dahdi\',\n\t\t\tporta=inicio,\n\t\t\tcontext=var.context)\n\t\tinicio = inicio + 1\n\n@auth.requires_login()\ndef escreve_dahdi():\n\tramais = db(db.fisico_dahdi_khomp.tecnologia == \'dahdi\').select(orderby=db.fisico_dahdi_khomp.porta)\n\tdahdi = open(\'/tmp/chan_dahdi_admanager.conf\',\'w\')\n\tfor ramal in ramais:\n\t\tprint ramal.porta\n\t\tdahdi.write(\'signalling=fxo_ks\\n\')\n\t\tdahdi.write(\'context=%s\\n\' %(ramal.context))\n\t\tdahdi.write(\'faxdetect=both\\n\')\n\t\tdahdi.write(\'faxbuffers=>6,full\\n\')\n\t\tdahdi.write(\'channel=>%s\\n\\n\' %(ramal.porta))\n\n@auth.requires_login()\ndef escreve_tronco():\n\ttroncos = db(db.fisico_sip_iax.tronco == True).select(orderby=db.fisico_sip_iax.usuario)\n\tarq_sip = open(\'/tmp/sip_trunk_admanager.conf\',\'w\')\n\tarq_iax = open(\'/tmp/iax_trunk_admanager.conf\',\'w\')\n\tfor tronco in troncos:\n\t\tif tronco.tecnolofia == \'sip\':\n\t\t\tarq_sip.write(\'register=> %s:%s@%s/%s\\n\' \n\t\t\t\t%(tronco.usuario, tronco.secret, tronco.host_f, tronco.usuario))\n\t\tif tronco.tecnologia == \'iax\':\n\t\t\tarq_iax.write(\'register=> %s:%s@%s/%s\\n\' \n\t\t\t\t%(tronco.usuario, tronco.secret, tronco.host_f, tronco.usuario))\n\n\n#SHOW\n@auth.requires_login()\ndef show_sip():\n\tresponse.title = \'Usu\xc3\xa1rios SIP/IAX\'\n\teditor \t= \tpermissao()\n\turl \t=\tURL(\'admanager\', \'ramais\', \'fisico_sip_iax_form\')\n\tcon = db(db.fisico_sip_iax).select()\n\n\treturn response.render("ramais/show_sip.html", \n\t\t\t\t\tcon=con, url=url, editor=editor)\n\n@auth.requires_login()\ndef show_dahdi():\n\tresponse.title = \'Portas DAHDI\'\n\teditor \t=\tpermissao()\n\turl \t= \tURL(\'admanager\', \'ramais\', \'fisico_dahdi_khomp_form\')\n\tcon = db(db.fisico_dahdi_khomp.tecnologia == \'dahdi\').select()\n\tcon2 = db(db.fisico_dahdi_khomp.tecnologia == \'khomp\').select(orderby=db.fisico_dahdi_khomp.porta)\n\n\treturn response.render("ramais/show_dahdi.html",\n\t\t\t\tcon2=con2, con=con, url=url, editor=editor)\n\n@auth.requires_login()\ndef delete():\n\tprint request.vars\n\tfuncao \t=\trequest.vars[\'tabela\']\n\tid_tab\t=\trequest.vars[\'id_tab\']\n\tif funcao \t== "fisico_sip_iax":\n\t\ttabela \t=\t db.fisico_sip_iax.id\n\t\tfuncao  = \t \'show_sip\'\n\tif funcao \t== "fisico_dahdi_khomp":\n\t\ttabela \t= \tdb.fisico_dahdi_khomp.id\n\t\tfuncao \t= \t\'show_dahdi\'\n\n\tdb(tabela == id_tab).delete()\n\tif funcao == \'show_sip\':\n\t\tescreve_sip_iax()\n\telif funcao == \'show_dahdi\':\n\t\tescreve_dahdi()\n\tredirect(URL(funcao))\n\n@auth.requires_login()\ndef delete_khomp():\n\tdispositivo = request.vars.porta.split(\'c\')[0]\n\tfor i in range(24):\n\t\tporta=i+1\n\t\tprint \'delete %sc%s\' %(dispositivo,porta)\n\t\tvar = \'%sc%s\' %(dispositivo,porta)\n\t\tdb(db.fisico_dahdi_khomp.porta == var).delete()\t\n\t\n\tredirect(URL(\'show_dahdi\'))\n\n\n\n\nresponse._vars=response._caller(fisico_tronco_form)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.TypeError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.TypeError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.TypeError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.TypeError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.TypeError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.TypeError object>'
+p23
+sS'args'
+p24
+S"('unbound method formatter() must be called with I...ance as first argument (got str instance instead)',)"
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.TypeError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.TypeError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.TypeError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.TypeError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.TypeError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.TypeError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.TypeError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.TypeError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.TypeError object>'
+p47
+sS'__doc__'
+p48
+S"'Inappropriate argument type.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.TypeError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S'unbound method formatter() must be called with IS_NOT_EMPTY instance as first argument (got str instance instead)'
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S'sV\\\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">ajax</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">application</td><td valign="top">:</td><td><div>admanager</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">args</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x7ffec40cdd18&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cid</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">client</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">controller</td><td valign="top">:</td><td><div>ramais</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">PHPSESSID</td><td valign="top">:</td><td><div>a9o4e6hnbr9qal4kr8huh84sm5<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">acgroupswithpersist</td><td valign="top">:</td><td><div>nada<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">acopendivids</td><td valign="top">:</td><td><div>avancado<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_admanager</td><td valign="top">:</td><td><div>127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_admin</td><td valign="top">:</td><td><div>127.0.0.1-9b848255-133a-47cf-92ef-700147d8b762<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">env</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/fernando/web2py/applications/admin/&#x27;, &#x27;/home/fernando/web2py/applications/admanager/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_args</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_options</td><td valign="top">:</td><td><div>&lt;Values at 0x7ffec7afca28: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;fernando-pc&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/fernando/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;winservice&#x27;: &#x27;&#x27;, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;profiler_filename&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;123456&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;interfaces&#x27;: None, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_encoding</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_language</td><td valign="top">:</td><td><div>pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cache_control</td><td valign="top">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_connection</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cookie</td><td valign="top">:</td><td><div>PHPSESSID=a9o4e6hnbr9qal4kr8huh84sm5; acopendivids=avancado; acgroupswithpersist=nada; session_id_admin=127.0.0.1-9b848255-133a-47cf-92ef-700147d8b762; session_id_admanager=127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_host</td><td valign="top">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_user_agent</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>fernando-pc</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path_info</td><td valign="top">:</td><td><div>/admanager/ramais/fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">query_string</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_addr</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_port</td><td valign="top">:</td><td><div>56794</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_method</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_uri</td><td valign="top">:</td><td><div>/admanager/ramais/fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">script_name</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_name</td><td valign="top">:</td><td><div>fernando-pc</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_port</td><td valign="top">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_protocol</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_software</td><td valign="top">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_original_uri</td><td valign="top">:</td><td><div>/admanager/ramais/fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_path</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7ffecbe6a1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_file_wrapper</td><td valign="top">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7ffec7b79120&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_input</td><td valign="top">:</td><td><div>&lt;socket._fileobject object at 0x7ffeaca67350&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multithread</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_version</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">extension</td><td valign="top">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">folder</td><td valign="top">:</td><td><div>/home/fernando/web2py/applications/admanager/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">function</td><td valign="top">:</td><td><div>fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">get_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">global_settings</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/fernando/web2py/applications/admin/&#x27;, &#x27;/home/fernando/web2py/applications/admanager/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_args</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_options</td><td valign="top">:</td><td><div>&lt;Values at 0x7ffec7afca28: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;fernando-pc&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/fernando/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;winservice&#x27;: &#x27;&#x27;, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;profiler_filename&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;123456&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;interfaces&#x27;: None, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>fernando-pc</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_https</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_local</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_restful</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">now</td><td valign="top">:</td><td><div>datetime.datetime(2014, 6, 24, 15, 25, 53, 858700)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">post_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">url</td><td valign="top">:</td><td><div>/admanager/ramais/fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">utcnow</td><td valign="top">:</td><td><div>datetime.datetime(2014, 6, 24, 18, 25, 53, 858727)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">uuid</td><td valign="top">:</td><td><div>admanager/127.0.0.1.2014-06-24.15-25-53.ebc7707e-2f40-45f0-83d4-a9bdfde38d72</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">environ</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_ENCODING</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_LANGUAGE</td><td valign="top">:</td><td><div>pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CACHE_CONTROL</td><td valign="top">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CONNECTION</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_COOKIE</td><td valign="top">:</td><td><div>PHPSESSID=a9o4e6hnbr9qal4kr8huh84sm5; acopendivids=avancado; acgroupswithpersist=nada; session_id_admin=127.0.0.1-9b848255-133a-47cf-92ef-700147d8b762; session_id_admanager=127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_HOST</td><td valign="top">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_USER_AGENT</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">PATH_INFO</td><td valign="top">:</td><td><div>/admanager/ramais/fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">QUERY_STRING</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_ADDR</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_PORT</td><td valign="top">:</td><td><div>56794</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_METHOD</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_URI</td><td valign="top">:</td><td><div>/admanager/ramais/fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SCRIPT_NAME</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_NAME</td><td valign="top">:</td><td><div>fernando-pc</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PORT</td><td valign="top">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PROTOCOL</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_SOFTWARE</td><td valign="top">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">WEB2PY_ORIGINAL_URI</td><td valign="top">:</td><td><div>/admanager/ramais/fisico_tronco_form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7ffecbe6a1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.file_wrapper</td><td valign="top">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7ffec7b79120&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.input</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x7ffec40cdd18&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multithread</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.version</td><td valign="top">:</td><td><div>1</div></td></tr></table></div></td></tr></table></div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/fernando/web2py/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, 'CENTER': <class 'gluon.html.CENTER'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x7ffec44cc0b0, file "/...cations/admanager/controllers/ramais.py", line 2>'
+p69
+ssS'lnum'
+p70
+I212
+sS'lines'
+p71
+(dp72
+I207
+S'    try:'
+p73
+sI208
+S'        if isinstance(code, types.CodeType):'
+p74
+sI209
+S'            ccode = code'
+p75
+sI210
+S'        else:'
+p76
+sI211
+S'            ccode = compile2(code, layer)'
+p77
+sI212
+S'        exec ccode in environment'
+p78
+sI213
+S'    except HTTP:'
+p79
+sI214
+S'        raise'
+p80
+sI215
+S'    except RestrictedError:'
+p81
+sI216
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S"(code='# coding=UTF-8\\nimport random\\n\\n@auth.requires(aut...ponse._vars=response._caller(fisico_tronco_form)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, 'CENTER': <class 'gluon.html.CENTER'>, ...}, layer='/home/fernando/web2py/applications/admanager/controllers/ramais.py')"
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/fernando/web2py/applications/admanager/controllers/ramais.py'
+p88
+sg64
+(dp89
+sg70
+I462
+sg71
+(dp90
+I451
+S'\tfor i in range(24):'
+p91
+sI452
+S'\t\tporta=i+1'
+p92
+sI453
+S"\t\tprint 'delete %sc%s' %(dispositivo,porta)"
+p93
+sI454
+S"\t\tvar = '%sc%s' %(dispositivo,porta)"
+p94
+sI455
+S'\t\tdb(db.fisico_dahdi_khomp.porta == var).delete()'
+p95
+sI456
+S''
+sI457
+S"\tredirect(URL('show_dahdi'))"
+p96
+sI458
+S''
+sI459
+S''
+sI460
+S''
+ssg83
+S'()'
+p97
+sg85
+S'<module>'
+p98
+sa(dp99
+g62
+S'/home/fernando/web2py/gluon/globals.py'
+p100
+sg64
+(dp101
+S'self'
+p102
+S'undefined'
+p103
+sS'f'
+S'<function fisico_tronco_form>'
+p104
+ssg70
+I194
+sg71
+(dp105
+I192
+S"        self.delimiters = ('{{', '}}')"
+p106
+sI193
+S'        self._vars = None'
+p107
+sI194
+S'        self._caller = lambda f: f()'
+p108
+sI195
+S'        self._view_environment = None'
+p109
+sI196
+S'        self._custom_commit = None'
+p110
+sI197
+S'        self._custom_rollback = None'
+p111
+sI198
+S''
+sI189
+S'        self.menu = []             # used by the default view layout'
+p112
+sI190
+S'        self.files = []            # used by web2py_ajax.html'
+p113
+sI191
+S'        self.generic_patterns = []  # patterns to allow generic views'
+p114
+ssg83
+S'(f=<function fisico_tronco_form>)'
+p115
+sg85
+S'<lambda>'
+p116
+sa(dp117
+g62
+S'/home/fernando/web2py/gluon/tools.py'
+p118
+sg64
+(dp119
+S'action'
+p120
+S'<function fisico_tronco_form>'
+p121
+sS'a'
+S'()'
+p122
+sS'b'
+g45
+ssg70
+I3022
+sg71
+(dp123
+I3017
+S'                    flag = condition'
+p124
+sI3018
+S'                if not flag:'
+p125
+sI3019
+S'                    current.session.flash = self.messages.access_denied'
+p126
+sI3020
+S'                    return call_or_redirect('
+p127
+sI3021
+S'                        self.settings.on_failed_authorization)'
+p128
+sI3022
+S'                return action(*a, **b)'
+p129
+sI3023
+S'            f.__doc__ = action.__doc__'
+p130
+sI3024
+S'            f.__name__ = action.__name__'
+p131
+sI3025
+S'            f.__dict__.update(action.__dict__)'
+p132
+sI3026
+S'            return f'
+p133
+ssg83
+S'(*a=(), **b={})'
+p134
+sg85
+S'f'
+sa(dp135
+g62
+S'/home/fernando/web2py/applications/admanager/controllers/ramais.py'
+p136
+sg64
+(dp137
+S'global db'
+p138
+S'<DAL uri="postgres:pg8000:******@127.0.0.1/admanager_dev">'
+p139
+sS'global SQLFORM'
+p140
+S"<class 'gluon.sqlhtml.SQLFORM'>"
+p141
+sS'db.fisico_sip_iax'
+p142
+S'<Table fisico_sip_iax (id,usuario,secret,tecnolo...fy,disallow,allow,nat,aut_externa,tronco,extras)>'
+p143
+sS'form'
+p144
+g103
+ssg70
+I34
+sg71
+(dp145
+I32
+S''
+sI33
+S'\tif request.vars.id_edit is None:'
+p146
+sI34
+S'\t\tform \t=\tSQLFORM(db.fisico_sip_iax)'
+p147
+sI35
+S'\telse:'
+p148
+sI36
+S'\t\tform \t=\tSQLFORM(db.fisico_sip_iax, request.vars.id_edit)'
+p149
+sI37
+S''
+sI38
+S''
+sI29
+S"\tresponse.title = 'Tronco SIP/IAX'"
+p150
+sI30
+S'\tdb.fisico_sip_iax.aut_externa.default = True'
+p151
+sI31
+S'\tdb.fisico_sip_iax.tronco.default = True'
+p152
+ssg83
+S'()'
+p153
+sg85
+S'fisico_tronco_form'
+p154
+sa(dp155
+g62
+S'/home/fernando/web2py/gluon/sqlhtml.py'
+p156
+sg64
+(dp157
+S'default'
+p158
+S"'dynamic'"
+p159
+sS'field'
+p160
+S'<gluon.dal.Field object>'
+p161
+sS'field.formatter'
+p162
+S'<bound method Field.formatter of <gluon.dal.Field object>>'
+p163
+ssg70
+I1104
+sg71
+(dp164
+I1099
+S''
+sI1100
+S'            cond = readonly or \\'
+p165
+sI1101
+S'                (not ignore_rw and not field.writable and field.readable)'
+p166
+sI1102
+S''
+sI1103
+S'            if default is not None and not cond:'
+p167
+sI1104
+S'                default = field.formatter(default)'
+p168
+sI1105
+S'            dspval = default'
+p169
+sI1106
+S'            inpval = default'
+p170
+sI1107
+S''
+sI1108
+S'            if cond:'
+p171
+ssg83
+S"(self=<gluon.sqlhtml.SQLFORM object>, table=<Table fisico_sip_iax (id,usuario,secret,tecnolo...fy,disallow,allow,nat,aut_externa,tronco,extras)>, record=None, deletable=False, linkto=None, upload=None, fields=['id', 'usuario', 'secret', 'tecnologia', 'type_f', 'host_f', 'context', 'qualify', 'disallow', 'allow', 'nat', 'aut_externa', 'tronco', 'extras'], labels=None, col3={}, submit_button='Submit', delete_label='Check to delete', showid=True, readonly=False, comments=True, keepopts=[], ignore_rw=False, record_id=None, formstyle='table3cols', buttons=['submit'], separator=': ', **attributes={})"
+p172
+sg85
+g50
+sa(dp173
+g62
+S'/home/fernando/web2py/gluon/dal.py'
+p174
+sg64
+(dp175
+S'item'
+p176
+S"<class 'gluon.validators.IS_NOT_EMPTY'>"
+p177
+sS'item.formatter'
+p178
+S'<unbound method IS_NOT_EMPTY.formatter>'
+p179
+sS'value'
+p180
+S"'dynamic'"
+p181
+ssg70
+I9492
+sg71
+(dp182
+I9487
+S'        else:'
+p183
+sI9488
+S'            requires = copy.copy(requires)'
+p184
+sI9489
+S'        requires.reverse()'
+p185
+sI9490
+S'        for item in requires:'
+p186
+sI9491
+S"            if hasattr(item, 'formatter'):"
+p187
+sI9492
+S'                value = item.formatter(value)'
+p188
+sI9493
+S'        return value'
+p189
+sI9494
+S''
+sI9495
+S'    def validate(self, value):'
+p190
+sI9496
+S'        if not self.requires or self.requires == DEFAULT:'
+p191
+ssg83
+S"(self=<gluon.dal.Field object>, value='dynamic')"
+p192
+sg85
+S'formatter'
+p193
+sasS'pyver'
+p194
+S'Python 2.7.6: /usr/bin/python (prefix: /usr)'
+p195
+sS'session'
+p196
+g57
+(S's[\x08\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">auth</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">expiration</td><td valign="top">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">hmac_key</td><td valign="top">:</td><td><div>798bbc51-9066-4be4-81a8-9dc23a8a3fc1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_visit</td><td valign="top">:</td><td><div>datetime.datetime(2014, 6, 24, 15, 24, 43, 52622)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remember</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">email</td><td valign="top">:</td><td><div>root@forip.com.br</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">first_name</td><td valign="top">:</td><td><div>root</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">id</td><td valign="top">:</td><td><div>1L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_name</td><td valign="top">:</td><td><div>root</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">ramal</td><td valign="top">:</td><td><div>0000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_id</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_key</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">reset_password_key</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user_groups</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">1</td><td valign="top">:</td><td><div>administrador</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div>None</div></td></tr></table></div>'
+tRp197
+sS'etype'
+p198
+S"<type 'exceptions.TypeError'>"
+p199
+sS'date'
+p200
+S'Tue Jun 24 15:25:53 2014'
+p201
+sS'response'
+p202
+g57
+(S's\x00\x13\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x7ffeac6c9960&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_admanager</td><td valign="top">:</td><td><div>127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">delimiters</td><td valign="top">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">files</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generic_patterns</td><td valign="top">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">headers</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">X-Powered-By</td><td valign="top">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">menu</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">meta</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">keywords</td><td valign="top">:</td><td><div>chave, outra, e outra</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">models_to_run</td><td valign="top">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^ramais/\\w+\\.py$</div></td></tr><tr><td><div>^ramais/fisico_tronco_form/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">postprocessing</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_cookie_expires</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_data_name</td><td valign="top">:</td><td><div>session_data_admanager</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_file</td><td valign="top">:</td><td><div>&lt;open file &#x27;/home/fernando/web2py/applications/admanager/sessions/127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73&#x27;, mode &#x27;rb+&#x27; at 0x7ffec43ffc90&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_filename</td><td valign="top">:</td><td><div>/home/fernando/web2py/applications/admanager/sessions/127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id</td><td valign="top">:</td><td><div>127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_name</td><td valign="top">:</td><td><div>session_id_admanager</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_locked</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_new</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_storage_type</td><td valign="top">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">status</td><td valign="top">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">title</td><td valign="top">:</td><td><div>Tronco SIP/IAX</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">view</td><td valign="top">:</td><td><div>ramais/fisico_tronco_form.html</div></td></tr></table></div>'
+tRp203
+sS'locals'
+p204
+(dp205
+S'item'
+p206
+S"<class 'gluon.validators.IS_NOT_EMPTY'>"
+p207
+sS'self'
+p208
+S'<gluon.dal.Field object>'
+p209
+sS'requires'
+p210
+S"[<class 'gluon.validators.IS_NOT_EMPTY'>]"
+p211
+sS'value'
+p212
+S"'dynamic'"
+p213
+sssS'traceback'
+p214
+S'Traceback (most recent call last):\n  File "/home/fernando/web2py/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/home/fernando/web2py/applications/admanager/controllers/ramais.py", line 462, in <module>\n  File "/home/fernando/web2py/gluon/globals.py", line 194, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/fernando/web2py/gluon/tools.py", line 3022, in f\n    return action(*a, **b)\n  File "/home/fernando/web2py/applications/admanager/controllers/ramais.py", line 34, in fisico_tronco_form\n    form \t=\tSQLFORM(db.fisico_sip_iax)\n  File "/home/fernando/web2py/gluon/sqlhtml.py", line 1104, in __init__\n    default = field.formatter(default)\n  File "/home/fernando/web2py/gluon/dal.py", line 9492, in formatter\n    value = item.formatter(value)\nTypeError: unbound method formatter() must be called with IS_NOT_EMPTY instance as first argument (got str instance instead)\n'
+p215
+s.

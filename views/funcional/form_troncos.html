@@ -2,7 +2,7 @@
 
 {{block center}}
 <div class='row'>
-<div class="col-lg-7">
+<div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
 <label>Tronco:</label>
 <div>{{=form.custom.widget.tronco}}</div>
@@ -24,14 +24,17 @@
 <div>{{=form.custom.widget.transbordo}}</div>
 <br>
 
-<label>Habilitado:</label><br>
-<div>{{=form.custom.widget.habilitado}}</div>
+<label>Empresa</label>
+<div>{{=form.custom.widget.id_empresa}}</div>
 <br>
 
-<button type="submit" class="btn btn-primary">Enviar</button>
-</div><!--col-lg-7-->
+<label>Ramal principal</label>
+<div>{{=form.custom.widget.ramal_principal}}</div>
+<br>
 
-<div class="col-lg-3">
+</div><!--esquerda-->
+
+<div class="coluna_form_direita_b0">
 <label>Ddd:</label> 
 <div>{{=form.custom.widget.ddd}}</div>
 <br>
@@ -52,11 +55,33 @@
 <div>{{=form.custom.widget.csp}}</div>
 <br>
 
-{{=form.custom.end}}
-</div><!--col-lg-3-->
+<label>Habilitado:</label><br>
+<div>{{=form.custom.widget.habilitado}}</div>
+<br>
+
+<label>Ura:</label><br>
+<div>{{=form.custom.widget.ura}}</div>
+<br>
+
+<label>Add zero:</label><br>
+<div>{{=form.custom.widget.add_zero}}</div>
+<br>
+
+</div><!--direita-->
 
 </div><!--row-->
-<br>
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_troncos" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
 
 
 

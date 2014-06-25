@@ -1,0 +1,425 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.UnboundLocalError'> local variable 'tabela' referenced before assignment"
+p3
+sS'layer'
+p4
+S'/home/fernando/web2py/applications/admanager/controllers/initial.py'
+p5
+sS'code'
+p6
+S'# coding=UTF-8\n\n@auth.requires_login()\ndef principal():\n\tresponse.title = \'Padr\xc3\xa3o\'\n\tteste = \'sim\'\n\t\n\treturn response.render("initial/principal.html", teste=teste)\n\n##--Parte de Login e Usu\xc3\xa1rios--##\ndef user():\n\t#\t#if request.args(0) == \'register\':\n\t#  \tdb.auth_user.bio.writable = db.auth_user.bio.readable = False\n\tprint \'user\'\n\tprint request.args(0)\n\tif request.args(0) == \'not_authorized\':\n\t\tredirect (URL(\'initial\', \'not_authorized\'))\n\n\tif request.args(0) == \'login\':\n\t\tredirect(URL(\'initial\', \'login\'))\n\treturn response.render("initial/user.html", user=auth())\n\ndef register():\n\tform = auth.register()\n\tform.element(_name=\'email\')[\'_class\'] = "form-control"\n\tform.element(_name=\'first_name\')[\'_class\'] = "form-control"\n\tform.element(_name=\'last_name\')[\'_class\'] = "form-control"\n\tform.element(_name=\'password\')[\'_class\'] = "form-control"\n\tform.element(_name=\'password_two\')[\'_class\'] = "form-control"\n\n\treturn response.render("initial/register.html", form=form)\n\ndef profile():\n\tresponse.title = \'Profile\'\n\tform = auth.profile()\n\tform.element(_name=\'email\')[\'_class\'] = "form-control"\n\tform.element(_name=\'first_name\')[\'_class\'] = "form-control"\n\tform.element(_name=\'last_name\')[\'_class\'] = "form-control"\n\n\treturn response.render("initial/profile.html", form=form)\n\ndef not_authorized():\n\treturn response.render("initial/not_authorized.html")\n\ndef change_password():\n\tresponse.title = \'Alterar Senha\'\n\tform = auth.change_password()\n\tform.element(_name=\'old_password\')[\'_class\'] = "form-control"\n\tform.element(_name=\'new_password\')[\'_class\'] = "form-control"\n\tform.element(_name=\'new_password2\')[\'_class\'] = "form-control"\n\n\treturn response.render("initial/change_password.html", form=form)\n\ndef request_reset_password():\n\tform = auth.request_reset_password()\n\tform.element(_name=\'email\')[\'_class\'] = "form-control"\n\n\treturn response.render("initial/request_reset_password.html", form=form)\n\ndef login():\n\tprint \'login\'\n\tform = auth.login()\n\tform.element(_name=\'email\')[\'_class\'] = "form-control"\n\tform.element(_name=\'password\')[\'_class\'] = "form-control"\n\n\treturn response.render("initial/login.html", form=form)\n\ndef users():\n\tgrid \t= SQLFORM.grid(db.auth_user, user_signature=False, _class="dataTables_wrapper form-inline")\n\teditor = permissao()\n\tusuarios= db(db.auth_user).select()\n\tlogger.debug("acesso a usuarios")\n\t\n\treturn response.render("initial/show_usuarios.html", \n\t\t\t\tgrid=grid,\teditor=editor, usuarios=usuarios)\n\ndef form_users():\n\tresponse.title = \'Usu\xc3\xa1rios\'\n\tid_usuario = request.vars[\'id_usuario\']\n\t\n\tif id_usuario is None:\n\t\tform \t=\tSQLFORM(db.auth_user,  \n\t\t\t\tsubmit_button=\'Adicionar\')\n\telse:\n\t\tform \t=\tSQLFORM(db.auth_user, id_usuario, \n\t\t\t\t\t\t\t\tsubmit_button=\'Editar\')\n\n\tform.element(_name=\'first_name\')[\'_class\'] = "form-control"\n\tform.element(_name=\'last_name\')[\'_class\'] = "form-control"\n\tform.element(_name=\'email\')[\'_class\'] = "form-control"\n\tform.element(_name=\'ramal\')[\'_class\'] = "form-control"\n\tform.element(_name=\'password\')[\'_class\'] = "form-control"\n\n\tif form.process().accepted:\n\t\tnome = request.vars[\'first_name\']\n\t\tid_user = db(db.auth_user.first_name == nome).select(db.auth_user.id)\n\t\tredirect(URL(a=\'admanager\', c=\'initial\', f=\'f_permissao_menu_form\', \n\t\t\t\t\t\t\t\t\t\tvars=dict(id_usuario=id_user[0].id)))\n\n\treturn response.render("initial/form_usuarios.html", \n\t\t\t\t\t\t\t\t\t\t\t\t\tform=form)\n\ndef groups():\n    grid = SQLFORM.grid(db.auth_group)\n    return response.render("initial/show_grid.html", grid=grid)\n\ndef membership():\n    grid = SQLFORM.grid(db.auth_membership)\n    return response.render("initial/show_grid.html", grid=grid)\n\ndef log():\n\tform = auth.user\n\treturn response.render("initial/log.html", form=form)\n\t\ndef download():\n\treturn response.download(request, db)\n\n\n##--Parte de Menus e Submenus--##\ndef f_menu():\n\tresponse.title = \'Menu\'\n\teditor \t= \tpermissao()\n\tmenu \t= \tdb(db.f_menu).select()\n\n\treturn response.render("initial/show_menu.html", \n\t\t\t\t\t\t\teditor=editor, menu=menu)\n\ndef f_menu_form():\n\tresponse.title \t= \t\'Menu\'\n\tid_menu\t\t\t= \trequest.vars[\'id_menu\']\n\ttesta \t\t\t=\tTrue\n\t\n\tif id_menu is None:\n\t\tform \t=\tSQLFORM(db.f_menu,  \n\t\t\t\tsubmit_button=\'Adicionar\')\n\telse:\n\t\ttesta \t= \tFalse\n\t\tform \t=\tSQLFORM(db.f_menu, id_menu, \n\t\t\t\t\t\t\t\tsubmit_button=\'Editar\')\n\t\tform.element(_name=\'nome\')[\'_readonly\'] = "readonly"\n\n\tform.element(_name=\'nome\')[\'_class\'] = "form-control"\n\tform.element(_name=\'icone\')[\'_class\'] = "form-control"\n\tform.element(_name=\'funcao\')[\'_class\'] = "form-control"\n\tform.element(_name=\'controller\')[\'_class\'] = "form-control"\n\tform.element(_name=\'ordem\')[\'_class\'] = "form-control"\n\tform.element(_name=\'submenu\')[\'_class\'] = "form-control"\n\t\n\tif form.process().accepted:\n\t\tif testa == True: \n\t\t\tauth.add_group(request.vars[\'nome\'], \'\')\n\t\tredirect(URL(\'f_menu\'))\n\n\treturn response.render("initial/form_menu.html", form=form)\n\ndef f_submenu():\n\tresponse.title = \'Submenu\'\n\teditor \t= \tpermissao()\n\tquery \t= \t(db.f_menu.id == db.f_submenu.menu_ref)\n\tvar\t= \tdb(query).select(orderby=db.f_submenu.menu_ref)\n\n\treturn response.render("initial/show_submenu.html", \n\t\t\t\t\t\t\t\teditor=editor, var=var)\n\ndef f_submenu_form():\n\tresponse.title \t= \t\'Submenu\'\n\tid_submenu\t\t= \trequest.vars[\'id_submenu\']\n\ttesta \t\t\t= \tTrue\n\t\n\tif id_submenu is None:\n\t\tform \t=\tSQLFORM(db.f_submenu,  \n\t\t\t\tsubmit_button=\'Adicionar\')\n\telse:\n\t\ttesta \t=\tFalse\n\t\tform \t=\tSQLFORM(db.f_submenu, id_submenu, \n\t\t\t\t\t\t\t\tsubmit_button=\'Editar\')\n\t\tform.element(_name=\'nome\')[\'_readonly\'] = "readonly"\n\n\tform.element(_name=\'nome\')[\'_class\'] = "form-control"\n\tform.element(_name=\'menu_ref\')[\'_class\'] = "form-control"\n\tform.element(_name=\'icone\')[\'_class\'] = "form-control"\n\tform.element(_name=\'controller\')[\'_class\'] = "form-control"\n\tform.element(_name=\'funcao\')[\'_class\'] = "form-control"\n\tform.element(_name=\'ordem\')[\'_class\'] = "form-control"\n\t\n\tif form.process().accepted:\n\t\tif testa == True: \n\t\t\tauth.add_group(request.vars[\'nome\'], \'\')\n\t\tredirect(URL(\'f_submenu\'))\n\n\treturn response.render("initial/form_submenu.html", form=form)\n\ndef f_permissao_menu_form():\n\tresponse.title = \'Permissao menu\'\n\tid_usuario = request.vars[\'id_usuario\']\n\tcheck_ger = ""\n\n\tif auth.has_membership(\'gerenciador\', id_usuario):\n\t\tcheck_ger = "checked"\n\n\treturn response.render("initial/form_permissao_menu.html",\n\t\tid_usuario=id_usuario, check_ger=check_ger)\n\ndef insert_permissao_menu():\n\tprint request.vars\n\tid_usuario = request.vars[\'id_usuario\']\n\n\tif request.vars.gerenciador == \'on\':\n\t\tprint \'adicionando gerenciador\'\n\t\tauth.add_membership(auth.id_group(\'gerenciador\'), id_usuario)\n\t\tauth.del_membership(auth.id_group(\'comum\'), id_usuario)\n\telse:\n\t\tprint \'del gerenciador\'\n\t\tauth.del_membership(auth.id_group(\'gerenciador\'), id_usuario)\n\t\tauth.add_membership(auth.id_group(\'comum\'), id_usuario)\n\n\tmenu \t= \tdb(db.f_menu).select()\n\t##Faz o loop retornando menus\n\tfor dado in menu:\n\t\tquery = (db.auth_group.role == dado.nome)\n\t\tid_grupo = db(query).select()\n\t\tid_grupo = id_grupo[0].id\n\t\tprint id_grupo\n\n\t\t##verifica se menu est\xc3\xa1 ticado e adiciona no membership\n\t\tvar = request.vars[\'%s\' %(dado.nome)]\n\t\tif var == \'on\':\n\t\t\tauth.add_membership(id_grupo, id_usuario)\n\t\telse:\n\t\t\tauth.del_membership(id_grupo, id_usuario)\n\n\t##Faz o loop retornando submenus\n\tsubmenu = \tdb(db.f_submenu).select()\n\tfor dado in submenu:\n\t\tquery = (db.auth_group.role == dado.nome)\n\t\tid_grupo = db(query).select()\n\t\tid_grupo = id_grupo[0].id\n\t\t#print id_grupo\n\n\t\t##verifica se submenu est\xc3\xa1 ticado e adiciona no membership\n\t\tvar = request.vars[\'%s\' %(dado.nome)]\n\t\tif var == \'on\':\n\t\t\tauth.add_membership(id_grupo, id_usuario)\n\t\telse:\n\t\t\tauth.del_membership(id_grupo, id_usuario)\n\tredirect(URL(\'users\'))\n\n\n##-- Extras --##\ndef permissao():\n\teditor = False\n\tfor row in session.auth.user_groups:\n\t\tgrupo = session.auth.user_groups[row]\n\t\tif (grupo == "gerenciador") or (grupo == "administrador"):\n\t\t\teditor = True\n\treturn editor\n\n@auth.requires_login()\ndef delete():\n\tprint request.vars\n\tfuncao \t=\trequest.vars[\'tabela\']\n\tid_tab\t=\trequest.vars[\'id_tab\']\n\tif funcao \t== \t"auth_user":\n\t\ttabela \t= \tdb.auth_user.id\n\t\tfuncao \t=\t"users"\n\tif funcao \t== \t"f_menu": \n\t\tdelete_role(request.vars[\'nome\'], request.vars[\'tipo\'])\n\t\t#role\t= \trequest.vars[\'nome\']\n\t\t#id_role\t= \tdb(db.auth_group.role == role).select(db.auth_group.id) \n\t\t#auth.del_group(id_role[0].id)\n\t\ttabela \t= \tdb.f_menu.id\n\tif funcao \t== \t"f_submenu":\n\t\tdelete_role(request.vars[\'nome\'], request.vars[\'tipo\'])\n\t\t#role\t= \trequest.vars[\'nome\']\n\t\t#id_role\t= \tdb(db.auth_group.role == role).select(db.auth_group.id) \n\t\t#auth.del_group(id_role[0].id)\n\t\ttabela \t= \tdb.f_submenu.id\n\n\tdb(tabela == id_tab).delete()\t\n\tredirect(URL(funcao))\n\ndef delete_role(nome, tipo):\n\tprint \'entrou\'\n\tprint nome\n\tprint tipo\n\tid_role\t= \tdb(db.auth_group.role == nome).select(db.auth_group.id)\n\tauth.del_group(id_role[0].id)\n\tif tipo == "menu":\n\t\tmenu = db(db.f_menu.nome == nome).select()\n\t\tif menu[0].submenu == True:\n\t\t\tvar = db(db.f_submenu.menu_ref == menu[0].id).select()\n\t\t\tfor dado in var:\n\t\t\t\tprint dado\n\t\t\t\tid_role\t= db(db.auth_group.role == dado.nome).select(db.auth_group.id)\n\t\t\t\tprint id_role\n\t\t\t\tauth.del_group(id_role[0])\nresponse._vars=response._caller(delete)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.UnboundLocalError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.UnboundLocalError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.UnboundLocalError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.UnboundLocalError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.UnboundLocalError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.UnboundLocalError object>'
+p23
+sS'args'
+p24
+S'("local variable \'tabela\' referenced before assignment",)'
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.UnboundLocalError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.UnboundLocalError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.UnboundLocalError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.UnboundLocalError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.UnboundLocalError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.UnboundLocalError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.UnboundLocalError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.UnboundLocalError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.UnboundLocalError object>'
+p47
+sS'__doc__'
+p48
+S"'Local name referenced but not bound to a value.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.UnboundLocalError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S"local variable 'tabela' referenced before assignment"
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S's\x96^\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">ajax</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">application</td><td valign="top">:</td><td><div>admanager</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">args</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x7fe4985e58b8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cid</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">client</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">controller</td><td valign="top">:</td><td><div>initial</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">PHPSESSID</td><td valign="top">:</td><td><div>a9o4e6hnbr9qal4kr8huh84sm5<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">acgroupswithpersist</td><td valign="top">:</td><td><div>nada<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">acopendivids</td><td valign="top">:</td><td><div>avancado<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_admanager</td><td valign="top">:</td><td><div>127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_admin</td><td valign="top">:</td><td><div>127.0.0.1-9b848255-133a-47cf-92ef-700147d8b762<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">env</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/fernando/web2py/applications/admin/&#x27;, &#x27;/home/fernando/web2py/applications/admanager/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_args</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_options</td><td valign="top">:</td><td><div>&lt;Values at 0x7fe4b3656a28: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;fernando-pc&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/fernando/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;winservice&#x27;: &#x27;&#x27;, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;profiler_filename&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;123456&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;interfaces&#x27;: None, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_encoding</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_language</td><td valign="top">:</td><td><div>pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_connection</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cookie</td><td valign="top">:</td><td><div>PHPSESSID=a9o4e6hnbr9qal4kr8huh84sm5; acopendivids=avancado; acgroupswithpersist=nada; session_id_admin=127.0.0.1-9b848255-133a-47cf-92ef-700147d8b762; session_id_admanager=127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_host</td><td valign="top">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_referer</td><td valign="top">:</td><td><div>http://127.0.0.1:8000/admanager/funcional/f_horario</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_user_agent</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>fernando-pc</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path_info</td><td valign="top">:</td><td><div>/admanager/delete</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">query_string</td><td valign="top">:</td><td><div>id_tab=2&amp;tabela=f_rotas;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_addr</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_port</td><td valign="top">:</td><td><div>52853</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_method</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_uri</td><td valign="top">:</td><td><div>/admanager/initial/delete?id_tab=2&amp;tabela=f_rotas;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">script_name</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_name</td><td valign="top">:</td><td><div>fernando-pc</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_port</td><td valign="top">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_protocol</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_software</td><td valign="top">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_original_uri</td><td valign="top">:</td><td><div>/admanager/delete?id_tab=2&amp;tabela=f_rotas;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_path</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7fe4b79c41e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_file_wrapper</td><td valign="top">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7fe4b36d3120&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_input</td><td valign="top">:</td><td><div>&lt;socket._fileobject object at 0x7fe49859dcd0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multithread</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_version</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">extension</td><td valign="top">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">folder</td><td valign="top">:</td><td><div>/home/fernando/web2py/applications/admanager/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">function</td><td valign="top">:</td><td><div>delete</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">get_vars</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">id_tab</td><td valign="top">:</td><td><div>2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">tabela</td><td valign="top">:</td><td><div>f_rotas</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">global_settings</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/fernando/web2py/applications/admin/&#x27;, &#x27;/home/fernando/web2py/applications/admanager/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_args</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cmd_options</td><td valign="top">:</td><td><div>&lt;Values at 0x7fe4b3656a28: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;fernando-pc&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/fernando/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;winservice&#x27;: &#x27;&#x27;, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;profiler_filename&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;scheduler_groups&#x27;: None, &#x27;password&#x27;: &#x27;123456&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;interfaces&#x27;: None, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/fernando/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>fernando-pc</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_https</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_local</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_restful</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">now</td><td valign="top">:</td><td><div>datetime.datetime(2014, 6, 24, 10, 43, 16, 508902)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">post_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">url</td><td valign="top">:</td><td><div>/admanager/delete</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">utcnow</td><td valign="top">:</td><td><div>datetime.datetime(2014, 6, 24, 13, 43, 16, 508929)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">uuid</td><td valign="top">:</td><td><div>admanager/127.0.0.1.2014-06-24.10-43-16.a9972875-5a01-4d19-a3c9-57506c4891b5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">vars</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">id_tab</td><td valign="top">:</td><td><div>2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">tabela</td><td valign="top">:</td><td><div>f_rotas</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">environ</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_ENCODING</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_LANGUAGE</td><td valign="top">:</td><td><div>pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CONNECTION</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_COOKIE</td><td valign="top">:</td><td><div>PHPSESSID=a9o4e6hnbr9qal4kr8huh84sm5; acopendivids=avancado; acgroupswithpersist=nada; session_id_admin=127.0.0.1-9b848255-133a-47cf-92ef-700147d8b762; session_id_admanager=127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_HOST</td><td valign="top">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_REFERER</td><td valign="top">:</td><td><div>http://127.0.0.1:8000/admanager/funcional/f_horario</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_USER_AGENT</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">PATH_INFO</td><td valign="top">:</td><td><div>/admanager/delete</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">QUERY_STRING</td><td valign="top">:</td><td><div>id_tab=2&amp;tabela=f_rotas;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_ADDR</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_PORT</td><td valign="top">:</td><td><div>52853</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_METHOD</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_URI</td><td valign="top">:</td><td><div>/admanager/initial/delete?id_tab=2&amp;tabela=f_rotas;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SCRIPT_NAME</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_NAME</td><td valign="top">:</td><td><div>fernando-pc</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PORT</td><td valign="top">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PROTOCOL</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_SOFTWARE</td><td valign="top">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">WEB2PY_ORIGINAL_URI</td><td valign="top">:</td><td><div>/admanager/delete?id_tab=2&amp;tabela=f_rotas;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7fe4b79c41e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.file_wrapper</td><td valign="top">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7fe4b36d3120&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.input</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x7fe4985e58b8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multithread</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.version</td><td valign="top">:</td><td><div>1</div></td></tr></table></div></td></tr></table></div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/fernando/web2py/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, 'CENTER': <class 'gluon.html.CENTER'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x7fe498970830, file "/...ations/admanager/controllers/initial.py", line 3>'
+p69
+ssS'lnum'
+p70
+I212
+sS'lines'
+p71
+(dp72
+I207
+S'    try:'
+p73
+sI208
+S'        if isinstance(code, types.CodeType):'
+p74
+sI209
+S'            ccode = code'
+p75
+sI210
+S'        else:'
+p76
+sI211
+S'            ccode = compile2(code, layer)'
+p77
+sI212
+S'        exec ccode in environment'
+p78
+sI213
+S'    except HTTP:'
+p79
+sI214
+S'        raise'
+p80
+sI215
+S'    except RestrictedError:'
+p81
+sI216
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S"(code='# coding=UTF-8\\n\\n@auth.requires_login()\\ndef princ...role[0])\\nresponse._vars=response._caller(delete)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, 'CENTER': <class 'gluon.html.CENTER'>, ...}, layer='/home/fernando/web2py/applications/admanager/controllers/initial.py')"
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/fernando/web2py/applications/admanager/controllers/initial.py'
+p88
+sg64
+(dp89
+sg70
+I297
+sg71
+(dp90
+I288
+S'\tif tipo == "menu":'
+p91
+sI289
+S'\t\tmenu = db(db.f_menu.nome == nome).select()'
+p92
+sI290
+S'\t\tif menu[0].submenu == True:'
+p93
+sI291
+S'\t\t\tvar = db(db.f_submenu.menu_ref == menu[0].id).select()'
+p94
+sI292
+S'\t\t\tfor dado in var:'
+p95
+sI293
+S'\t\t\t\tprint dado'
+p96
+sI294
+S'\t\t\t\tid_role\t= db(db.auth_group.role == dado.nome).select(db.auth_group.id)'
+p97
+sI295
+S'\t\t\t\tprint id_role'
+p98
+sI296
+S'\t\t\t\tauth.del_group(id_role[0])'
+p99
+sI287
+S'\tauth.del_group(id_role[0].id)'
+p100
+ssg83
+S'()'
+p101
+sg85
+S'<module>'
+p102
+sa(dp103
+g62
+S'/home/fernando/web2py/gluon/globals.py'
+p104
+sg64
+(dp105
+S'self'
+p106
+S'undefined'
+p107
+sS'f'
+S'<function delete>'
+p108
+ssg70
+I194
+sg71
+(dp109
+I192
+S"        self.delimiters = ('{{', '}}')"
+p110
+sI193
+S'        self._vars = None'
+p111
+sI194
+S'        self._caller = lambda f: f()'
+p112
+sI195
+S'        self._view_environment = None'
+p113
+sI196
+S'        self._custom_commit = None'
+p114
+sI197
+S'        self._custom_rollback = None'
+p115
+sI198
+S''
+sI189
+S'        self.menu = []             # used by the default view layout'
+p116
+sI190
+S'        self.files = []            # used by web2py_ajax.html'
+p117
+sI191
+S'        self.generic_patterns = []  # patterns to allow generic views'
+p118
+ssg83
+S'(f=<function delete>)'
+p119
+sg85
+S'<lambda>'
+p120
+sa(dp121
+g62
+S'/home/fernando/web2py/gluon/tools.py'
+p122
+sg64
+(dp123
+S'action'
+p124
+S'<function delete>'
+p125
+sS'a'
+S'()'
+p126
+sS'b'
+g45
+ssg70
+I3022
+sg71
+(dp127
+I3017
+S'                    flag = condition'
+p128
+sI3018
+S'                if not flag:'
+p129
+sI3019
+S'                    current.session.flash = self.messages.access_denied'
+p130
+sI3020
+S'                    return call_or_redirect('
+p131
+sI3021
+S'                        self.settings.on_failed_authorization)'
+p132
+sI3022
+S'                return action(*a, **b)'
+p133
+sI3023
+S'            f.__doc__ = action.__doc__'
+p134
+sI3024
+S'            f.__name__ = action.__name__'
+p135
+sI3025
+S'            f.__dict__.update(action.__dict__)'
+p136
+sI3026
+S'            return f'
+p137
+ssg83
+S'(*a=(), **b={})'
+p138
+sg85
+S'f'
+sa(dp139
+g62
+S'/home/fernando/web2py/applications/admanager/controllers/initial.py'
+p140
+sg64
+(dp141
+S'global db'
+p142
+S'<DAL uri="postgres:pg8000:******@127.0.0.1/admanager_dev">'
+p143
+sS'tabela'
+p144
+g107
+sS').delete'
+p145
+g107
+sS'id_tab'
+p146
+S"'2'"
+p147
+ssg70
+I279
+sg71
+(dp148
+I274
+S"\t\t#role\t= \trequest.vars['nome']"
+p149
+sI275
+S'\t\t#id_role\t= \tdb(db.auth_group.role == role).select(db.auth_group.id)'
+p150
+sI276
+S'\t\t#auth.del_group(id_role[0].id)'
+p151
+sI277
+S'\t\ttabela \t= \tdb.f_submenu.id'
+p152
+sI278
+S''
+sI279
+S'\tdb(tabela == id_tab).delete()'
+p153
+sI280
+S'\tredirect(URL(funcao))'
+p154
+sI281
+S''
+sI282
+S'def delete_role(nome, tipo):'
+p155
+sI283
+S"\tprint 'entrou'"
+p156
+ssg83
+S'()'
+p157
+sg85
+S'delete'
+p158
+sasS'pyver'
+p159
+S'Python 2.7.6: /usr/bin/python (prefix: /usr)'
+p160
+sS'session'
+p161
+g57
+(S's\\\x08\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">auth</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">expiration</td><td valign="top">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">hmac_key</td><td valign="top">:</td><td><div>2a6819fa-ae95-4e59-9ed6-09328e18b797</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_visit</td><td valign="top">:</td><td><div>datetime.datetime(2014, 6, 24, 10, 42, 57, 432256)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remember</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">email</td><td valign="top">:</td><td><div>root@forip.com.br</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">first_name</td><td valign="top">:</td><td><div>root</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">id</td><td valign="top">:</td><td><div>1L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_name</td><td valign="top">:</td><td><div>root</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">ramal</td><td valign="top">:</td><td><div>0000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_id</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_key</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">reset_password_key</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user_groups</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">1</td><td valign="top">:</td><td><div>administrador</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div>None</div></td></tr></table></div>'
+tRp162
+sS'etype'
+p163
+S"<type 'exceptions.UnboundLocalError'>"
+p164
+sS'date'
+p165
+S'Tue Jun 24 10:43:16 2014'
+p166
+sS'response'
+p167
+g57
+(S's\xec\x12\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x7fe4989b68b8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_admanager</td><td valign="top">:</td><td><div>127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">delimiters</td><td valign="top">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">files</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generic_patterns</td><td valign="top">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">headers</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">X-Powered-By</td><td valign="top">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">menu</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">meta</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">keywords</td><td valign="top">:</td><td><div>chave, outra, e outra</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">models_to_run</td><td valign="top">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^initial/\\w+\\.py$</div></td></tr><tr><td><div>^initial/delete/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">postprocessing</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_cookie_expires</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_data_name</td><td valign="top">:</td><td><div>session_data_admanager</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_file</td><td valign="top">:</td><td><div>&lt;open file &#x27;/home/fernando/web2py/applications/admanager/sessions/127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73&#x27;, mode &#x27;rb+&#x27; at 0x7fe498bc2a50&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_filename</td><td valign="top">:</td><td><div>/home/fernando/web2py/applications/admanager/sessions/127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id</td><td valign="top">:</td><td><div>127.0.0.1-1d5c4243-29fa-40f4-8e32-70fcc2294d73</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_name</td><td valign="top">:</td><td><div>session_id_admanager</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_locked</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_new</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_storage_type</td><td valign="top">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">status</td><td valign="top">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">title</td><td valign="top">:</td><td><div>titulo response</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">view</td><td valign="top">:</td><td><div>initial/delete.html</div></td></tr></table></div>'
+tRp168
+sS'locals'
+p169
+(dp170
+S'id_tab'
+p171
+S"'2'"
+p172
+sS'funcao'
+p173
+S"'f_rotas'"
+p174
+sssS'traceback'
+p175
+S'Traceback (most recent call last):\n  File "/home/fernando/web2py/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/home/fernando/web2py/applications/admanager/controllers/initial.py", line 297, in <module>\n  File "/home/fernando/web2py/gluon/globals.py", line 194, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/fernando/web2py/gluon/tools.py", line 3022, in f\n    return action(*a, **b)\n  File "/home/fernando/web2py/applications/admanager/controllers/initial.py", line 279, in delete\n    db(tabela == id_tab).delete()\nUnboundLocalError: local variable \'tabela\' referenced before assignment\n'
+p176
+s.

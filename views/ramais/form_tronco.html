@@ -1,0 +1,87 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> com este registro você irá criar uma autenticação Tronco, lembre-se do usuário e senha   
+</div>
+
+<div class="row">
+
+
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+<label>Tecnologia:</label>
+<div>{{=form.custom.widget.tecnologia}}</div>
+<br>
+
+<label>Usuário:</label> 
+<div>{{=form.custom.widget.usuario}}</div>
+<br>
+
+<label>Senha:</label> 
+<div>{{=form.custom.widget.secret}}</div>
+<br>
+
+<label>Desabilitar codecs:</label> 
+<div>{{=form.custom.widget.disallow}}</div>
+<br>
+
+<label>Qualify:</label> 
+<div>{{=form.custom.widget.qualify}}</div>
+<br>
+
+<label>Nat:</label> 
+<div>{{=form.custom.widget.nat}}</div>
+<br>
+
+<label>Register:</label> 
+<div>{{=form.custom.widget.register}}</div>
+
+<div>{{=form.custom.widget.aut_externa}}</div>
+<div>{{=form.custom.widget.tronco}}</div>
+
+</div>
+
+<div class="coluna_form_direita_b0">
+
+<label>Type:</label> 
+<div>{{=form.custom.widget.type_f}}</div>
+<br>
+
+<label>Host:</label> 
+<div>{{=form.custom.widget.host_f}}</div>
+<br>
+
+<label>Contexto:</label> 
+<div>{{=form.custom.widget.context}}</div>
+<br>
+
+<label>Habilitar codecs:</label> 
+<div>{{=form.custom.widget.allow}}</div>
+<br>
+
+<label>Extras:</label> 
+<div>{{=form.custom.widget.extras}}</div>
+</div>
+<br>
+
+</div>
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="show_tronco" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+
+
+{{end}}
+
+

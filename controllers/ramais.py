@@ -25,6 +25,36 @@ def fisico_sip_iax_form():
 	return response.render("ramais/form_sip_iax.html", form=form)
 
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def fisico_tronco_form():
+	response.title = 'Tronco SIP/IAX'
+	db.fisico_sip_iax.tronco.default = True
+
+	if request.vars.id_edit is None:
+		db.fisico_sip_iax.aut_externa.default = True
+		db.fisico_sip_iax.tronco.default = True
+		form 	=	SQLFORM(db.fisico_sip_iax)
+		form.element(_name='host_f')['_value'] = ""
+	else:
+		form 	=	SQLFORM(db.fisico_sip_iax, request.vars.id_edit)
+	
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+	form.element(_name='extras')['_rows'] = "4"
+	form.element(_name='extras')['_style'] = "width:303px"
+	form.element(_name='aut_externa')['_type'] = "hidden"
+	form.element(_name='tronco')['_type'] = "hidden"
+
+	if form.process().accepted:
+		escreve_sip_iax()
+		escreve_tronco()
+		redirect(URL('show_tronco'))
+	else:
+		print request.vars
+
+	return response.render("ramais/form_tronco.html", form=form)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def lote_fisico_form():
 	response.title = 'Lote SIP/IAX'
 	form = SQLFORM.factory(
@@ -240,9 +270,7 @@ def escreve_sip_iax():
 		if ramal.aut_externa == True:
 			texto.write('permit=0.0.0.0/0.0.0.0\n')
 		else:
-			print '--ip--'
 			print ips
-			print '--ip--'
 			for ip in str(ips).split('\n'):
 				if ip != '':
 					texto.write('permit=%s\n' %(ip))
@@ -364,15 +392,46 @@ def escreve_dahdi():
 		dahdi.write('faxbuffers=>6,full\n')
 		dahdi.write('channel=>%s\n\n' %(ramal.porta))
 
+	dahdi.close()
+
+@auth.requires_login()
+def escreve_tronco():
+	troncos = db(db.fisico_sip_iax.tronco == True).select(orderby=db.fisico_sip_iax.usuario)
+	arq_sip = open('/tmp/sip_trunk_admanager.conf','w')
+	arq_iax = open('/tmp/iax_trunk_admanager.conf','w')
+	for tronco in troncos:
+		if tronco.register == True:
+			if tronco.tecnologia == 'SIP':
+				arq_sip.write('register=> %s:%s@%s/%s\n' 
+				%(tronco.usuario, tronco.secret, tronco.host_f, tronco.usuario))
+			if tronco.tecnologia == 'IAX':
+				arq_iax.write('register=> %s:%s@%s/%s\n' 
+				%(tronco.usuario, tronco.secret, tronco.host_f, tronco.usuario))
+	arq_sip.close()
+	arq_iax.close()
+
+
 #SHOW
 @auth.requires_login()
 def show_sip():
 	response.title = 'Usuários SIP/IAX'
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'ramais', 'fisico_sip_iax_form')
-	con = db(db.fisico_sip_iax).select()
+	query 	= 	(db.fisico_sip_iax.tronco != True)
+	con = db(query).select()
 
 	return response.render("ramais/show_sip.html", 
+					con=con, url=url, editor=editor)
+
+@auth.requires_login()
+def show_tronco():
+	response.title = 'Troncos SIP/IAX'
+	editor 	= 	permissao()
+	url 	=	URL('admanager', 'ramais', 'fisico_tronco_form')
+	query = (db.fisico_sip_iax.tronco == True)
+	con = db(query).select()
+
+	return response.render("ramais/show_tronco.html", 
 					con=con, url=url, editor=editor)
 
 @auth.requires_login()
@@ -394,13 +453,17 @@ def delete():
 	if funcao 	== "fisico_sip_iax":
 		tabela 	=	 db.fisico_sip_iax.id
 		funcao  = 	 'show_sip'
+	if funcao 	== "fisico_tronco":
+		tabela 	=	 db.fisico_sip_iax.id
+		funcao  = 	 'show_tronco'
 	if funcao 	== "fisico_dahdi_khomp":
 		tabela 	= 	db.fisico_dahdi_khomp.id
 		funcao 	= 	'show_dahdi'
 
 	db(tabela == id_tab).delete()
-	if funcao == 'show_sip':
+	if (funcao == 'show_sip') or (funcao == 'show_tronco'):
 		escreve_sip_iax()
+		escreve_tronco()
 	elif funcao == 'show_dahdi':
 		escreve_dahdi()
 	redirect(URL(funcao))

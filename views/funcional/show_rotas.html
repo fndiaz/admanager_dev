@@ -28,12 +28,12 @@
     {{for dado in rota:}}
         <tr>
             <td>{{=dado.rota}}</td>
-            <td>{{=dado.id_tronco}}</td>
+            <td>{{=db(db.f_troncos.id == dado.id_tronco).select(db.f_troncos.tronco)[0].tronco}}</td>
             <td>{{=dado.prioridade}}</td>
             <!--<td>{{=dado.id_destino}}</td>-->
             <td>
                 {{for item in dado.id_destino:}}
-                {{=db(db.f_destinos.id == item).select(db.f_destinos.destino)[0].destino}}<br>
+                {{=db(db.f_destinos.id == item).select(db.f_destinos.tipo_chamada)[0].tipo_chamada}}<br>
                 {{pass}}
             </td>
             <td>{{=dado.exclui_antes}}</td>
@@ -75,7 +75,7 @@ for (x in links) {
     var tabela= data_attr.tabela;
     decisao = confirm("Tem certeza que deseja remover o item "+nome);
         if(decisao){
-            location.href="{{=URL(a='admanager', c='initial', f='delete')}}?id_tab="+id+"&tabela="+tabela+";"
+            location.href="{{=URL(a='admanager', c='funcional', f='delete')}}?id_tab="+id+"&tabela="+tabela+";"
         }
     return false;
     }

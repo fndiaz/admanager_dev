@@ -43,13 +43,22 @@ if db(db.f_menu).isempty():
 	auth.add_group('Horário', '')
 	db.f_menu.insert(nome="Parâmetros", controller="funcional", funcao="f_parametros_form", icone="icon-list-alt", ordem="14", submenu=False)
 	auth.add_group('Parâmetros', '')
+	db.f_menu.insert(nome="Ramais", controller="", funcao="", icone="icon-list-alt", ordem="15", submenu=True)
+	auth.add_group('Ramais', '')
 	db.commit()
 
 if db(db.f_submenu).isempty():
 	id_acessos = db(db.f_menu.nome == 'Acessos').select()[0].id
+	id_ramais = db(db.f_menu.nome == 'Ramais').select()[0].id
 	db.f_submenu.insert(nome="Usuários", controller="initial", funcao="users", icone="icon-chevron-right", ordem="1", menu_ref=id_acessos)
 	auth.add_group('Usuários', '')
 	db.f_submenu.insert(nome="Grupos", controller="initial", funcao="groups", icone="icon-chevron-right", ordem="2", menu_ref=id_acessos)
 	auth.add_group('Grupos', '')
 	db.f_submenu.insert(nome="Permissões", controller="initial", funcao="membership", icone="icon-chevron-right", ordem="3", menu_ref=id_acessos)
 	auth.add_group('Permissões', '')
+	db.f_submenu.insert(nome="SIP/IAX", controller="ramais", funcao="show_sip", icone="icon-chevron-right", ordem="1", menu_ref=id_ramais)
+	auth.add_group('SIP/IAX', '')
+	db.f_submenu.insert(nome="DAHDI/KHOMP", controller="ramais", funcao="show_dahdi", icone="icon-chevron-right", ordem="2", menu_ref=id_ramais)
+	auth.add_group('DAHDI/KHOMP', '')
+	db.f_submenu.insert(nome="Troncos SIP/IAX", controller="ramais", funcao="show_tronco", icone="icon-chevron-right", ordem="3", menu_ref=id_ramais)
+	auth.add_group('Troncos SIP/IAX', '')

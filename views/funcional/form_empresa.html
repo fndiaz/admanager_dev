@@ -2,20 +2,23 @@
 
 {{block center}}
 <div class='row'>
-<div class="col-lg-4">
+<div class="col-lg-12">
 {{=form.custom.begin}}
 <label>Empresa:</label>
 <div>{{=form.custom.widget.empresa}}</div>
-<br>
+<br><br>
 
-<!--<label>Faixa ramal:</label> 
-<div>{{=form.custom.widget.faixa_ramal}}</div>
-<br>-->
 
+<!--Submit-->
+<div class="botao_esquerda">
 <button type="submit" class="btn btn-primary">Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_empresa" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+<!--Submit-->
 {{=form.custom.end}}
 </div><!--col-lg-3-->
 </div><!--row-->
-<br>
 
 {{end}}

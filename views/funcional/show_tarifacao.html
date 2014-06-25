@@ -50,7 +50,7 @@ for (x in links) {
     var tabela= data_attr.tabela;
     decisao = confirm("Tem certeza que deseja remover o item "+nome);
         if(decisao){
-            location.href="{{=URL(a='admanager', c='initial', f='delete')}}?id_tab="+id+"&tabela="+tabela+";"
+            location.href="{{=URL(a='admanager', c='funcional', f='delete')}}?id_tab="+id+"&tabela="+tabela+";"
         }
     return false;
     }

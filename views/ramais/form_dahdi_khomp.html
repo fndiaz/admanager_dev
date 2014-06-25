@@ -11,6 +11,10 @@
   <div class="tab-content">
     <div class="tab-pane active" id="tab1">
 
+<br>
+<button type="button" class="btn btn-primary" onclick=location.href="lote_dahdi_form" ><i class="icon-sitemap"></i>&nbsp;Criar lote</button>
+
+
 {{=form_dahdi.custom.begin}}
 <br>
 <label>Porta:</label>
@@ -19,10 +23,17 @@
 
 <label>Contexto:</label>
 <div>{{=form_dahdi.custom.widget.context}}</div>
-<br>
-
-<button type="submit" class="btn btn-primary">Enviar</button>
 <br><br>
+
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+
+<div class="botao_direita">
+   <button type="button" class="btn btn-primary" onclick=location.href="show_dahdi" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
 {{=form_dahdi.custom.end}}
 
   </div>
@@ -35,10 +46,18 @@
 <br>
 <label>Contexto:</label>
 <div>{{=form_khomp.custom.widget.dispositivo}}</div>
-<br>
-
-<button type="submit" class="btn btn-primary">Enviar</button>
 <br><br>
+
+
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+
+<div class="botao_direita">
+   <button type="button" class="btn btn-primary" onclick=location.href="show_dahdi" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
 {{=form_khomp.custom.end}}
 
     </div>

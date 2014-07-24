@@ -1,0 +1,87 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<br>
+
+<div class="direita">
+    {{if editor == True:}}
+   <button type="button" class="btn btn-primary" onclick=location.href="{{=url}}" >Adicionar</button>
+   {{pass}}
+</div>
+
+<div class="esquerda">
+    {{if editor == True:}}
+   <button type="button" class="btn btn-primary" onclick=location.href="{{=URL(a='admanager', c='queues', f='queue')}}" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+   {{pass}}
+</div>
+
+<table class="tabela-forip">
+    <thead>
+        <tr>
+            <th>Fila</th>
+            <th>Interface</th>
+            <th>Penalty</th>
+            <th>Nome</th>
+            <th>Paused</th>
+            <th>#</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{for dado in con:}}
+        <tr>
+            <td>{{=dado.queue_name}}</td>
+            <td>{{=dado.interface}}</td>
+            <td>{{=dado.penalty}}</td>
+            <td>{{=dado.membername}}</td>
+            <td>{{=dado.paused}}</td>
+            <td>
+            {{if editor == True:}}
+                <a href="{{=url}}&id_edit={{=dado.id}}">
+                    <i class=" icon-edit"></i></a> &nbsp;&nbsp;
+
+                <a class="link" data-tabela="queue_members" data-queue="{{=request.vars.id_queue}}" data-nome="{{=dado.membername}}" data-value="{{=dado.uniqueid}}" href="#">
+                    <i class=" icon-trash"></i></a>
+            {{pass}}
+            </td>
+        </tr>
+    {{pass}}
+    </tbody>
+</table>
+<br><br>
+
+
+<script>
+var links = document.querySelectorAll('.link');
+for (x in links) {
+    links[x].onclick = function() { 
+    var data_attr = this.dataset;
+    //alert(data_attr.value);
+    var id   = data_attr.value;
+    var nome = data_attr.nome;
+    var tabela= data_attr.tabela;
+    var queue = data_attr.queue
+    decisao = confirm("Tem certeza que deseja remover o item "+nome);
+        if(decisao){
+            location.href="{{=URL(a='admanager', c='queues', f='delete')}}?id_tab="+id+"&tabela="+tabela+"&id_queue="+queue+";"
+        }
+    return false;
+    }
+}
+
+</script>
+
+{{end}}
+
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Filas").addClass("active");
+
+</script>
+
+{{end}}

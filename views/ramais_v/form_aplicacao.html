@@ -1,0 +1,92 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<div style="display:none">
+<label>id ramalv:</label>
+<div>{{=form.custom.widget.id_ramalvirtual}}</div>
+<br>
+</div>
+
+<label>Cadeado:</label>
+<div>{{=form.custom.widget.cadeado_ativo}}</div>
+<br>
+
+<label>Cadeado senha:</label>
+<div>{{=form.custom.widget.cadeado_senha}}</div>
+<br>
+
+<label>Cs ativo:</label>
+<div>{{=form.custom.widget.cs_ativo}}</div>
+<br>
+
+<label>Cs chamadaexterna:</label>
+<div>{{=form.custom.widget.cs_chamadaexterna}}</div>
+<br>
+
+<label>Cs chamadainterna:</label>
+<div>{{=form.custom.widget.cs_chamadainterna}}</div>
+<br>
+
+<label>Cs numero:</label>
+<div>{{=form.custom.widget.cs_numero}}</div>
+<br>
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+
+<label>Voicemail:</label>
+<div>{{=form.custom.widget.voicemail_ativo}}</div>
+<br>
+
+<label>Voicemail email:</label>
+<div>{{=form.custom.widget.voicemail_email}}</div>
+<br>
+
+<label>Voicemail senha:</label>
+<div>{{=form.custom.widget.voicemail_senha}}</div>
+<br>
+
+<label>Agenda cadastro</label>
+<div>{{=form.custom.widget.agenda_cadastro}}</div>
+<br>
+
+<label>Agenda senha</label>
+<div>{{=form.custom.widget.agenda_senha}}</div>
+<br>
+</div><!--col-lg-3-->
+
+</div><!--row-->
+
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_ramal_virtual" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Ramais").addClass("active");
+
+</script>
+
+{{end}}
+
+

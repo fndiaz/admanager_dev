@@ -1,0 +1,389 @@
+{{extend 'layout-principal.html'}}
+
+{{block principal}}
+
+<br><br>
+<div class="col-lg-8">
+					
+					<div class="row">
+						
+						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="box">
+								<div class="box-header">
+									<h2><i class="icon-check"></i>Server Info</h2>
+								</div>
+								<div class="box-content">
+									<div class="todo">
+										<ul class="todo-list ui-sortable">
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Distribuição:&nbsp;&nbsp;<b>{{=server['distribuicao']}} {{=server['versao']}}</b></span> 
+																
+											</li>
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Host:&nbsp;&nbsp;<b>{{=server['host']}}</b></span> 
+											</li>
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Memória:&nbsp;&nbsp;<b>{{=server['memory']}}&nbsp;MBytes</b>
+												</span> 
+											</li>
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Partição&nbsp;/&nbsp;:&nbsp;&nbsp;<b>{{=server['disk']}}</b>
+												</span> 
+											</li>
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Postgresql:&nbsp;&nbsp;<b>{{=server['postgresql']}}</b></span> 
+											</li>
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Python version:&nbsp;&nbsp;<b>{{=server['pythonv']}}</b></span> 
+											</li>
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Kernel:&nbsp;&nbsp;<b>{{=server['kernel']}}</b></span> 
+											</li>
+											<li>
+												<span class="todo-actions">
+													<i class="icon-ok"></i>
+												</span>
+												<span class="desc">Arquitetura:&nbsp;&nbsp;<b>{{=server['arch']}}</b></span> 
+											</li>
+										</ul>
+									</div>	
+								</div>
+								
+							</div>
+						</div><!--/col-->
+
+						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="box">
+								<div class="box-header">
+									<h2><i class="icon-list"></i>Chamadas de hoje</h2>
+									<div class="box-icon">
+										<!--<a href="widgets.html#" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+										<a href="widgets.html#" class="btn-close"><i class="icon-remove"></i></a>-->
+									</div>
+								</div>
+								<div class="box-content">
+									<ul class="dashboard-list">
+										<li>
+											<a href="widgets.html#">
+												<i class="icon-arrow-up green"></i>                               
+												<span class="green">{{=dict_ch_hoje['ch_sainte']}}</span>
+												Chamadas Saintes                                   
+											</a>
+										</li>
+									  <li>
+										<a href="widgets.html#">
+										  <i class="icon-arrow-down red"></i>
+										  <span class="red">{{=dict_ch_hoje['ch_entrante']}}</span>
+										  Chamadas entrantes
+										</a>
+									  </li>
+									  <li>
+										<a href="widgets.html#">
+										  <i class="icon-minus blue"></i>
+										  <span class="blue">{{=dict_ch_hoje['ch_ramal']}}</span>
+										  Ramal/Ramal                                    
+										</a>
+									  </li>
+									  <li>
+										<a href="widgets.html#">
+										  <i class="icon-arrow-up green"></i>
+										  <span class="green">{{=dict_ch_hoje['ch_localfixo']}}</span>
+										  Local Fixo                                    
+										</a>
+									  </li>
+									  <li>
+										<a href="widgets.html#">
+										  <i class="icon-arrow-up green"></i>                               
+										  <span class="green">{{=dict_ch_hoje['ch_localcelular']}}</span>
+										  Local Celuar                                 
+										</a>
+									  </li>
+									  <li>
+										<a href="widgets.html#">
+										  <i class="icon-arrow-up blue"></i>
+										  <span class="blue">{{=dict_ch_hoje['ch_dddfixo']}}</span>
+										  DDD Fixo
+										</a>
+									  </li>
+									  <li>
+										<a href="widgets.html#">
+										  <i class="icon-arrow-up blue"></i>
+										  <span class="blue">{{=dict_ch_hoje['ch_dddcelular']}}</span>
+										  DDD Celular                                    
+										</a>
+									  </li>
+									  <li>
+										<a href="widgets.html#">
+										  <i class="icon-comment yellow"></i>
+										  <span class="yellow">{{=dict_ch_hoje['ch_0800']}}</span>
+										  0800                                    
+										</a>
+									  </li>
+									</ul>
+								</div>
+							</div>
+						</div><!--/col-->
+						
+					</div><!--/row-->	
+					
+				</div>
+
+<div class="col-lg-4">
+					
+					<div class="row">	
+
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<div class="box">
+								<div class="box-header">
+									<h2><i class="icon-check"></i>Tempo real</h2>
+									<div class="box-icon">
+										<!--<a href="widgets.html#" class="btn-setting"><i class="icon-wrench"></i></a>
+										<a href="widgets.html#" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+										<a href="widgets.html#" class="btn-close"><i class="icon-remove"></i></a>-->
+									</div>
+								</div>
+								<div class="box-content">
+									<br><br><br>
+									<div id='chart_div' style="margin-left:30px"></div>	
+									<br><br><br><br><br>
+								</div>
+								
+							</div>
+						</div><!--/col-->			
+					</div>
+					
+				</div>
+
+<!--<div class="col-lg-4">
+					
+					<div class="row">	
+
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<div class="box">
+								<div class="box-header">
+									<h2><i class="icon-check"></i>To Do List</h2>
+									<div class="box-icon">
+										<a href="widgets.html#" class="btn-setting"><i class="icon-wrench"></i></a>
+										<a href="widgets.html#" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+										<a href="widgets.html#" class="btn-close"><i class="icon-remove"></i></a>
+									</div>
+								</div>
+								<div class="box-content">
+										<div id="chart_div3"></div>
+								</div>
+								
+							</div>
+						</div>			
+					</div>
+					
+				</div>-->
+
+
+<div class="col-lg-6">
+
+					<div class="box">
+						<div class="box-header">
+							<h2><i class="icon-list"></i>Ramais que mais originaram no mês</h2>
+							<div class="box-icon">
+								<!--<a href="widgets.html#" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+								<a href="widgets.html#" class="btn-close"><i class="icon-remove"></i></a>-->
+							</div>
+						</div>
+						<div class="box-content">
+
+							<div id="chart_div2" style="width: 460px; height: 247px;"></div>
+
+						</div>
+					</div>
+				</div><!--col-6-->
+
+
+
+<div class="col-lg-6">
+
+					<div class="box">
+						<div class="box-header">
+							<h2><i class="icon-list"></i>Últimas Chamadas</h2>
+							<div class="box-icon">
+								<!--<a href="widgets.html#" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+								<a href="widgets.html#" class="btn-close"><i class="icon-remove"></i></a>-->
+							</div>
+						</div>
+						<div class="box-content">
+							<table id='ult-ch' class="table bootstrap-datatable datatable small-font">
+								<thead>
+									<tr>
+										<th>Status</th>
+										<th>Data</th>
+										<th>Origem</th>
+										<th>Destino</th>
+										<th>Tempo</th>
+									</tr>
+								</thead>   
+								<tbody>
+									{{for dado in con:}}
+									<tr>
+										{{if (dado.status == 'ANSWER') or (dado.status == 'CONTINUE'):}}
+											<td><span class="label label-success">{{=dado.status}}</span></td>
+										{{pass}}
+										{{if (dado.status == 'BUSY') or (dado.status == 'NOANSWER'):}}
+											<td><span class="label label-important">{{=dado.status}}</span></td>
+										{{pass}}
+										<td>{{=dado.horario.strftime('%d/%m/%Y %H:%M')}}</td>
+										<td>{{=dado.origem}}</td>
+										<td>{{=dado.destino}}</td>
+										<td>{{=time.strftime('%H:%M:%S', time.gmtime(dado.tempo))}}</td>
+									</tr>
+									{{pass}}
+																			
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div><!--col-6-->
+
+
+
+{{end}}
+
+
+{{block jquery}}
+
+
+<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+
+      google.load('visualization', '1', {packages:['gauge']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Canais', 80],
+          ['Chamadas', 80]
+        ]);
+
+        var options = {
+          width: 400, height: 120,
+          redFrom: 90, redTo: 100,
+          yellowFrom:75, yellowTo: 90,
+          minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+        chart.draw(data, options);
+
+        //alert('aa')
+
+function poll() {
+$.ajax({
+method: "get",
+url: "gera_teste",
+dataType: "json",
+success: function(dado){
+	//alert(dado)
+	data.setValue(0, 1, dado);
+	data.setValue(1, 1, dado);
+	chart.draw(data, options);
+	
+}
+});
+}
+setInterval(poll, 1000);
+
+};//drawChart
+
+
+ 	  google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart2);
+      function drawChart2() {
+
+$.ajax({
+method: "get",
+url: "get_chart",
+dataType: "json",
+success: function(dado){
+
+        var data = google.visualization.arrayToDataTable(dado);
+
+        var options = {
+        //  title: 'Qtd chamadas',
+        //  hAxis: {title: 'Year', titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+        chart.draw(data, options);
+	
+	}//success
+	});//ajax
+
+
+}//drawChart2
+
+
+
+
+      google.load('visualization', '1.0', {'packages':['corechart']});
+      google.setOnLoadCallback(drawChart3);
+
+      function drawChart3() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 3],
+          ['Onions', 1],
+          ['Olives', 1],
+          ['Zucchini', 1],
+          ['Pepperoni', 2]
+        ]);
+
+        // Set chart options
+        var options = {'width':260,
+                       'height':100};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div3'));
+        chart.draw(data, options);
+      }//DrawChart3
+
+
+
+$(document).ready(function() {
+
+//$('#ult-ch tr:last').remove();
+//$('tr').eq(1).remove();
+
+ //$("#ult-ch").first().append("<tr><td><span class='label label-success'>OPAA</span></td><td>15/05/2014 11:03</td><td>Anonymous</td><td>6</td><td>00:00:51</td></tr>");
+
+ //$('tr').eq(1).append("<tr><td><span class='label label-success'>OPAA</span></td><td>15/05/2014 11:03</td><td>Anonymous</td><td>6</td><td>00:00:51</td></tr>");
+
+ });
+
+
+</script>
+
+
+{{end}}

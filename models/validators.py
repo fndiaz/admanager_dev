@@ -4,6 +4,9 @@
 ## Funcional
 #########################################################################
 
+##Empresas
+db.f_empresa.empresa.requires = IS_NOT_EMPTY()
+
 ##Troncos
 db.f_troncos.tronco.requires = IS_NOT_EMPTY()
 db.f_troncos.dispositivo.requires = IS_NOT_EMPTY()
@@ -34,14 +37,20 @@ db.f_rotas.id_horario.requires = IS_IN_DB(db, 'f_horario.id', '%(horario)s', zer
 					error_message=T("valor inválido"))
 db.f_rotas.id_empresa.requires = IS_IN_DB(db,'f_empresa.id',"%(empresa)s",
 					multiple=True, error_message=T("escolha uma opção"))
-db.f_rotas.id_destino.requires = IS_IN_DB(db,'f_destinos.id',"%(destino)s",
+db.f_rotas.id_destino.requires = IS_IN_DB(db,'f_destinos.id',"%(expressao)s",
 					multiple=True, error_message=T("escolha uma opção"))
 
 ##Horários
-db.f_horario.dia_semana.requires = IS_NOT_EMPTY()
+#dias={"mon": "Segunda Feira", "tue": "Terça Feira", "wed" : "Quarta Feira", "thu" : "Quinta Feira", "fri" : "Sexta Feira", "sat" : "Sábado", "sun" : "Domingo"}
+#db.f_horario.dia_semana.requires = IS_IN_SET(dias,
+#					multiple=True, error_message=T("escolha uma opção"))
 db.f_horario.horario.requires = IS_NOT_EMPTY()
 db.f_horario.acao_negativa.requires = IS_NOT_EMPTY()
 db.f_horario.descricao.requires = IS_NOT_EMPTY()
+
+##Ura
+db.f_ura.ramal_principal.requires = IS_NOT_EMPTY()
+db.f_ura.ura.requires = IS_NOT_EMPTY()
 
 ##Parametros
 db.f_parametros.faixa_ip_interna.requires = IS_NOT_EMPTY()
@@ -61,7 +70,47 @@ db.fisico_sip_iax.qualify.default = True
 db.fisico_sip_iax.usuario.requires = IS_NOT_IN_DB(db, 'fisico_sip_iax.usuario')
 db.fisico_sip_iax.host_f.requires = IS_NOT_EMPTY()
 
+#########################################################################
+## Ramais_v
+#########################################################################
+#Grupo Destinos
+db.f_grupo_destinos.id_destinos.requires =\
+IS_IN_DB(db,'f_destinos.id',"%(tipo_chamada)s",multiple=True)
+db.f_grupo_destinos.grupo_destino.requires = IS_NOT_EMPTY()
 
+#Departamentos
+db.f_departamentos.departamento.requires = IS_NOT_EMPTY()
+
+##Ramal Virtual
+db.f_ramal_virtual.ramal_virtual.requires = [
+IS_INT_IN_RANGE(0, 99999999999, error_message='somente números'),
+IS_NOT_IN_DB(db, 'f_ramal_virtual.ramal_virtual')
+]
+db.f_ramal_virtual.chamadas_simultaneas.requires = IS_INT_IN_RANGE(1,21)
+
+##Desvios
+dias={"mon": "Segunda Feira", "tue": "Terça Feira", "wed" : "Quarta Feira", "thu" : "Quinta Feira", "fri" : "Sexta Feira", "sat" : "Sábado", "sun" : "Domingo"}
+db.f_desvios.dia_semana.requires = IS_IN_SET(dias,
+					multiple=True, error_message=T("escolha uma opção"))
+db.f_desvios.horario_inicio.requires = IS_NOT_EMPTY()
+db.f_desvios.horario_fim.requires = IS_NOT_EMPTY()
+
+
+#########################################################################
+## Queues
+#########################################################################
+#Queue
+db.queue.name.requires = IS_NOT_EMPTY()
+
+#Queue Member
+db.queue_members.queue_name.requires = IS_NOT_EMPTY()
+db.queue_members.interface.requires = IS_NOT_EMPTY()
+db.queue_members.membername.requires = IS_NOT_EMPTY()
+
+#Fax
+db.f_fax.nome.requires = IS_NOT_EMPTY()
+db.f_fax.email.requires = IS_EMAIL()
+db.f_fax.numero.requires = IS_NOT_EMPTY()
 
 
 

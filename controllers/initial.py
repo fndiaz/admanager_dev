@@ -1,11 +1,188 @@
 # coding=UTF-8
+import os
+import commands
+from datetime import datetime
+import platform
+import urllib2
+import urllib
+import requests
+import cookielib
+from xml.etree.ElementTree import ElementTree
+
+def principal():
+	redirect(URL(dashboard))
 
 @auth.requires_login()
-def principal():
-	response.title = 'Padrão'
-	teste = 'sim'
+def dashboard():
+	response.title = 'Principal'
+	server = get_server()
+
+	print db(db.auth_user.first_name == session.auth.user.first_name).select(db.auth_user.photo)
+
+	#Ultimas chamadas
+	query = (db.f_bilhetes_chamadas.status == 'ANSWER')|\
+			(db.f_bilhetes_chamadas.status == 'CONTINUE')|\
+			(db.f_bilhetes_chamadas.status == 'BUSY')|\
+			(db.f_bilhetes_chamadas.status == 'NOANSWER')
+	con = db(query).select(orderby=~db.f_bilhetes_chamadas.id,limitby=(0,8))
+
+	##Chamadas de Hoje
+	dict_ch_hoje = {}
+	query_res = monta_query()
+
+	ch_entrante = db(query_res['query_entrante']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	ch_sainte = db(query_res['query_sainte']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	ch_ramal = db(query_res['query_ramal']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	ch_local_fixo = db(query_res['query_localfixo']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	ch_local_celular = db(query_res['query_localcelular']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	ch_ddd_fixo = db(query_res['query_dddfixo']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	ch_ddd_celular = db(query_res['query_dddcelular']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	ch_0800 = db(query_res['query_0800']).select(db.f_bilhetes_chamadas.linked_id ,groupby=db.f_bilhetes_chamadas.linked_id)
+	dict_ch_hoje['ch_entrante'] = len(ch_entrante.as_list())
+	dict_ch_hoje['ch_sainte'] = len(ch_sainte.as_list())
+	dict_ch_hoje['ch_ramal'] = len(ch_ramal.as_list())
+	dict_ch_hoje['ch_localfixo'] = len(ch_local_fixo.as_list())
+	dict_ch_hoje['ch_localcelular'] = len(ch_local_celular.as_list())
+	dict_ch_hoje['ch_dddfixo'] = len(ch_ddd_fixo.as_list())
+	dict_ch_hoje['ch_dddcelular'] = len(ch_ddd_celular.as_list())
+	dict_ch_hoje['ch_0800'] = len(ch_0800.as_list())
 	
-	return response.render("initial/principal.html", teste=teste)
+	return response.render("initial/principal.html", server=server, con=con,
+			dict_ch_hoje=dict_ch_hoje)
+
+def monta_query():
+	date = datetime.now()
+	date = date.strftime("%Y-%m-%d")
+	ano= date.split('-')[0]
+	dia= date.split('-')[1]
+	mes= date.split('-')[2]
+	#mes = session.data_hoje.split('-')[1]
+	dict_query = {}
+	query_padrao = (db.f_bilhetes_chamadas.horario.year()==ano)&\
+		   		   (db.f_bilhetes_chamadas.horario.month()==dia)&\
+		            (db.f_bilhetes_chamadas.horario.day()==mes)
+
+	dict_query['query_entrante']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino == -1)
+	dict_query['query_sainte']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino > 0)
+	dict_query['query_ramal']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino == 0)
+	id_destino = get_id_destino()
+	dict_query['query_localfixo']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_localfixo'])
+	dict_query['query_localcelular']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_localcelular'])
+	dict_query['query_dddfixo']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddfixo'])
+	dict_query['query_dddcelular']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular1'])&\
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular2'])&\
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular3'])
+	dict_query['query_0800']= query_padrao &\
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_0800'])
+
+	return dict_query
+
+
+def get_id_destino():
+	dict_id_dest = {}
+	id_localfixo = db(db.f_destinos.tipo_chamada == 'LOCAL_FIXO').select(db.f_destinos.id)
+	dict_id_dest['id_localfixo'] = id_localfixo[0].id
+	
+	id_localcelular = db(db.f_destinos.tipo_chamada == 'LOCAL_CELULAR').select(db.f_destinos.id)
+	dict_id_dest['id_localcelular'] = id_localcelular[0].id
+
+	id_dddfixo = db(db.f_destinos.tipo_chamada == 'DDD_FIXO').select(db.f_destinos.id)
+	dict_id_dest['id_dddfixo'] = id_dddfixo[0].id
+
+	id_0800 = db(db.f_destinos.tipo_chamada == '0800').select(db.f_destinos.id)
+	dict_id_dest['id_0800'] = id_0800[0].id
+
+	id_dddcelular = db(db.f_destinos.tipo_chamada == 'DDD_CELULAR').select(db.f_destinos.id)
+	i=1
+	n='id_dddcelular'
+	for dest in id_dddcelular:
+		nome=n+str(i)
+		dict_id_dest[nome] = dest.id
+		i=i+1
+	print dict_id_dest 
+
+	return dict_id_dest
+
+def get_server():
+	server = {}
+	var = platform.platform()
+	server['distribuicao'] = var.split('-')[6]
+	server['versao'] = var.split('-')[7]
+	server['arch'] = platform.processor()
+	server['host'] =  platform.uname()[1]
+	server['kernel'] =  platform.uname()[2]
+	server['pythonv'] = platform.python_version()
+	server['postgresql'] = commands.getoutput("psql --version")
+	server['memory'] = int(commands.getoutput("cat /proc/meminfo | grep MemTotal").split(':')[1].split('k')[0])/1000
+	disk = os.statvfs("/")
+	totalBytes = float(disk.f_bsize*disk.f_blocks)
+	server['disk'] = "%.2f GBytes" % (totalBytes/1024/1024/1024)
+
+	#var = commands.getoutput("atop | grep cpu")
+	print var
+	return server
+
+def gera_testee():
+	print "gera-teste"
+	cj = cookielib.CookieJar()
+	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+	opener.open("http://192.168.100.253:8088/asterisk/mxml?action=login&username=python&secret=123456")
+
+	tree = ElementTree(file=opener.open('http://192.168.100.253:8088/asterisk/mxml?action=CoreShowChannels'))
+
+	r = tree.getroot()
+	a=True
+	for child in r:
+		print child
+		for var in child:
+			if a == True:
+				print var.attrib['message']
+				a = False
+			else:
+				if var.attrib['event'] == 'CoreShowChannel':
+					print var.attrib['channel']
+				elif var.attrib['event'] == 'CoreShowChannelsComplete':
+					print 'fim'
+					total = var.attrib['listitems']
+					print total
+
+	return response.json(total)
+
+def get_chart():
+	date = datetime.now()
+	date = date.strftime("%Y-%m-%d")
+	ano= date.split('-')[0]
+	dia= date.split('-')[1]
+	mes= date.split('-')[2]
+
+	count = db.f_bilhetes_chamadas.origem.count()
+	query = (db.f_bilhetes_chamadas.horario.year()==ano)&\
+		   	(db.f_bilhetes_chamadas.horario.month()==mes)&\
+		   	(db.f_bilhetes_chamadas.id_destino > 1)
+	result = db(query).select(db.f_bilhetes_chamadas.origem, count, 
+						groupby=db.f_bilhetes_chamadas.origem, orderby=~count, limitby=(0, 5))
+	lista=[]
+	for dado in result:
+		if len(lista) == 0:
+			lista.append(['Ramal', 'chamadas'])	
+		lista.append([dado.f_bilhetes_chamadas['origem'], dado._extra['COUNT(f_bilhetes_chamadas.origem)']])
+	print lista
+
+	#formato
+	#var =[
+    #      ['Ramal', 'Chamadas'],
+    #      ['8001',  1000],
+    #      ['8050',  1170]]
+	return response.json(lista)
+
+
 
 ##--Parte de Login e Usuários--##
 def user():
@@ -65,17 +242,21 @@ def login():
 
 	return response.render("initial/login.html", form=form)
 
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def users():
-	grid 	= SQLFORM.grid(db.auth_user, user_signature=False, _class="dataTables_wrapper form-inline")
+	response.title = 'Usuários'
+	response.marca=['Acessos', 'Usuários']
+	#grid 	= SQLFORM.grid(db.auth_user, user_signature=False, _class="dataTables_wrapper form-inline")
 	editor = permissao()
-	usuarios= db(db.auth_user).select()
+	usuarios= db(db.auth_user.first_name != 'root').select()
 	logger.debug("acesso a usuarios")
 	
 	return response.render("initial/show_usuarios.html", 
-				grid=grid,	editor=editor, usuarios=usuarios)
+						editor=editor, usuarios=usuarios)
 
 def form_users():
 	response.title = 'Usuários'
+	response.marca=['Acessos', 'Usuários', ' Adiciona Usuário']
 	id_usuario = request.vars['id_usuario']
 	
 	if id_usuario is None:
@@ -117,7 +298,9 @@ def download():
 
 
 ##--Parte de Menus e Submenus--##
+@auth.requires_login()
 def f_menu():
+	print monta_query()
 	response.title = 'Menu'
 	editor 	= 	permissao()
 	menu 	= 	db(db.f_menu).select()
@@ -125,6 +308,7 @@ def f_menu():
 	return response.render("initial/show_menu.html", 
 							editor=editor, menu=menu)
 
+@auth.requires_login()
 def f_menu_form():
 	response.title 	= 	'Menu'
 	id_menu			= 	request.vars['id_menu']
@@ -153,6 +337,7 @@ def f_menu_form():
 
 	return response.render("initial/form_menu.html", form=form)
 
+@auth.requires_login()
 def f_submenu():
 	response.title = 'Submenu'
 	editor 	= 	permissao()
@@ -162,6 +347,7 @@ def f_submenu():
 	return response.render("initial/show_submenu.html", 
 								editor=editor, var=var)
 
+@auth.requires_login()
 def f_submenu_form():
 	response.title 	= 	'Submenu'
 	id_submenu		= 	request.vars['id_submenu']
@@ -190,8 +376,10 @@ def f_submenu_form():
 
 	return response.render("initial/form_submenu.html", form=form)
 
+@auth.requires_login()
 def f_permissao_menu_form():
 	response.title = 'Permissao menu'
+	response.marca = ['Acessos', 'Usuários', ' Permissões']
 	id_usuario = request.vars['id_usuario']
 	check_ger = ""
 
@@ -201,6 +389,7 @@ def f_permissao_menu_form():
 	return response.render("initial/form_permissao_menu.html",
 		id_usuario=id_usuario, check_ger=check_ger)
 
+@auth.requires_login()
 def insert_permissao_menu():
 	print request.vars
 	id_usuario = request.vars['id_usuario']

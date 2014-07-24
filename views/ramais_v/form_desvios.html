@@ -1,0 +1,76 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Aqui você pode configurar o desvio de um ramal para um número ou outro ramal detalhando os dias e o horário.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<div>
+<label>Ramal:</label>
+<div>{{=form.custom.widget.id_ramalvirtual}}</div>
+<br>
+</div>
+
+<label>Tipo desvio:</label>
+<div>{{=form.custom.widget.tipo_desvio}}</div>
+<br>
+
+<label>Dia semana:</label>
+<div>{{=form.custom.widget.dia_semana}}</div>
+<br>
+
+<label>Horário início:</label>
+<div>{{=form.custom.widget.horario_inicio}}</div>
+<br>
+
+<label>Horário fim:</label>
+<div>{{=form.custom.widget.horario_fim}}</div>
+<br>
+
+<label>Número:</label>
+<div>{{=form.custom.widget.numero}}</div>
+<br>
+
+</div><!--col-lg-->
+
+</div><!--row-->
+
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_desvios" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+
+{{block jquery}}
+<script src="{{=URL(a='admanager', c='static', f='js')}}/maskedinput/maskedinput.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+$("#f_desvios_horario_inicio").mask("99:99");
+$("#f_desvios_horario_fim").mask("99:99");
+
+
+//Menu
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Desvios").addClass("active");
+
+</script>
+
+{{end}}

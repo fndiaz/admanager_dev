@@ -1,0 +1,59 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Aqui você pode criar ramais de fax.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<div>
+<label>Nome:</label>
+<div>{{=form.custom.widget.nome}}</div>
+</div>
+<br>
+
+<div>
+<label>Email:</label>
+<div>{{=form.custom.widget.email}}</div>
+</div>
+<br>
+
+<div>
+<label>Número:</label>
+<div>{{=form.custom.widget.numero}}</div>
+</div>
+<br>
+</div>
+</div>
+
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary">Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_fax" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+</div>
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Fax").addClass("active");
+
+</script>
+
+{{end}}

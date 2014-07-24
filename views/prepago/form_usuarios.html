@@ -1,0 +1,76 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong></strong> Crie usuários para discagens.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<label>Nome:</label>
+<div>{{=form.custom.widget.nome}}</div>
+<br>
+
+<label>Grupo:</label>
+<div>{{=form.custom.widget.id_grupo_destinos}}</div>
+<br>
+
+<label>Gravação:</label>
+<div>{{=form.custom.widget.gravacao}}</div>
+<br>
+
+<label>Blacklist:</label>
+<div>{{=form.custom.widget.blacklist}}</div>
+<br>
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+
+<div>
+<label>Pin:</label>
+<div>{{=form.custom.widget.pin}}</div>
+<br>
+</div>
+
+<label>Departamento:</label>
+<div>{{=form.custom.widget.id_departamento}}</div>
+<br>
+
+<label>Crédito:</label>
+<div>{{=form.custom.widget.credito}}</div>
+<br>
+
+</div><!--col-lg-->
+</div><!--row-->
+
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_usuarios" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Pré-Pago").addClass("chevron opened");
+$("#dsp-Pré-Pago").css("display", "block");
+$("#usuários-discagem").addClass("active");
+
+</script>
+
+{{end}}

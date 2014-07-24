@@ -345,6 +345,11 @@ table.tabela-forip td{
     padding-bottom: 8px;
 }
 
+.esquerda{
+    float:left;
+    padding-bottom: 8px;
+}
+
 /*resposta flash*/
 .resposta{
     float:right;

@@ -1,8 +1,13 @@
 {{extend 'layout.html'}}
 
 {{block center}}
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione usuário no sistema, lembrando que o modo de login é com o e-mail.
+</div>
+
 <div class='row'>
-<div class="col-lg-4">
+<div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
 <label>Nome:</label>
 <div>{{=form.custom.widget.first_name}}</div>
@@ -24,10 +29,31 @@
 <div>{{=form.custom.widget.password}}</div>
 <br>
 
-<button type="submit" class="btn btn-primary">Enviar</button>
-{{=form.custom.end}}
-</div><!--col-lg-3-->
+</div><!--col-lg-->
 </div><!--row-->
-<br>
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="users" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Acessos").addClass("chevron opened");
+$("#dsp-Acessos").css("display", "block");
+$("#Usuários").addClass("active");
+
+</script>
 
 {{end}}

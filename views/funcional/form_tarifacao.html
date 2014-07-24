@@ -1,8 +1,13 @@
 {{extend 'layout.html'}}
 
 {{block center}}
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Defina o passo e o valor da tarifação da chamada.
+</div>
+
 <div class='row'>
-<div class="col-lg-12">
+<div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
 <label>Tarifação:</label>
 <div>{{=form.custom.widget.tarifacao}}</div>
@@ -16,20 +21,32 @@
 <div>{{=form.custom.widget.valor}}</div>
 <br>
 
-
-</div><!--col-lg-12-->
+</div><!--col-lg-->
+</div><!--row-->
 
 <!--Submit-->
+<div class="row">
 <div class="botao_esquerda">
-<button type="submit" class="btn btn-primary">Enviar</button>
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
 </div>
 <div class="botao_direita">
 <button type="button" class="btn btn-primary" onclick=location.href="f_tarifacao" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
 </div>
+</div>
 <!--Submit-->
 {{=form.custom.end}}
+{{end}}
 
-</div><!--row-->
 
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Funcional").addClass("chevron opened");
+$("#dsp-Funcional").css("display", "block");
+$("#Tarifação").addClass("active");
+
+</script>
 
 {{end}}

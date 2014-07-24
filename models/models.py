@@ -116,6 +116,20 @@ db.define_table("f_parametros",
     format="%(empresa)s",
     migrate=False)
 
+db.define_table("f_ura",
+	Field("ramal_principal"),
+	Field("ura", "text"),
+	format="%(empresa)s",
+    migrate=False)
+
+db.define_table("f_portabilidade",
+	Field("endereco"),
+	Field("usuario"),
+	Field("senha"),
+	Field("ativo", "boolean"),
+	format="%(usuario)s",
+    migrate=False)
+
 db.define_table("f_bilhetes_chamadas",
 	Field("id_tronco", db.f_troncos),
 	Field("origem"),
@@ -133,6 +147,69 @@ db.define_table("f_bilhetes_chamadas",
 	Field("departamento", "string", length="50"),
 	Field("transbordo", "string", length="5"),
     format="%(origem)s",
+    migrate=False)
+
+db.define_table("f_grupo_destinos",
+	Field("id_destinos", "list:reference db.f_destinos"),
+	Field("grupo_destino", "string"),
+	format="%(grupo_destino)s",
+    migrate=False)
+
+db.define_table("f_departamentos",
+	Field("departamento", "string", length="50"),
+	Field("id_empresa", db.f_empresa),
+	format="%(departamento)s",
+    migrate=False)
+
+db.define_table("f_ramal_virtual",
+	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX", "DAHDI", "KHOMP", "QUEUE", "FAX"])),
+	Field("ramal_fisico"),
+	Field("id_departamento", db.f_departamentos),
+	Field("ramal_virtual"),
+	Field("gravacao", "boolean"),
+	Field("blacklist", "boolean"),
+	Field("mesa_fop2", "boolean"),
+	Field("chamadas_simultaneas", "integer"),
+	Field("id_grupo_destinos", db.f_grupo_destinos),
+	Field("nome", "string", length="20"),
+	Field("bina_interno"),
+	Field("bina_externo"),
+	Field("credito", "boolean"),
+	format="%(ramal_virtual)s",
+    migrate=False)
+
+db.define_table("f_aplicacao",
+	Field("id_ramalvirtual", db.f_ramal_virtual),
+	Field("cadeado_ativo", "boolean", default=False),
+	Field("cadeado_senha"),
+	Field("cs_ativo", "boolean", default=False),
+	Field("cs_chamadaexterna", "boolean", default=False),
+	Field("cs_chamadainterna", "boolean", default=False),
+	Field("cs_numero", "integer"),
+	Field("cs_excecao"),
+	Field("voicemail_ativo", "boolean", default=False),
+	Field("voicemail_email"),
+	Field("voicemail_senha", "integer"),
+	Field("agenda_cadastro", "boolean", default=False),
+	Field("agenda_senha", "integer"),
+    migrate=False)
+
+desvio={"INDISPONIVEL": "Indisponivel", "OCUPADO": "Ocupado", "NAOATENDIMENTO" : "Não Atendimento", "IMEDIATO" : "Imediato"}
+db.define_table("f_desvios",
+	Field("id_ramalvirtual", db.f_ramal_virtual),
+	Field("tipo_desvio", requires=IS_IN_SET(desvio)),
+	Field("dia_semana", "list:string"),
+	Field("horario_inicio"),
+	Field("horario_fim"),
+	Field("numero"),
+	format="%(numero)s",
+    migrate=False)
+
+db.define_table("f_direcionamento",
+	Field("origem"),
+	Field("ddr"),
+	Field("ramal_virtual"),
+	format="%(origem)s",
     migrate=False)
 
 ####--SIP/IAX
@@ -158,8 +235,79 @@ db.define_table("fisico_dahdi_khomp",
 	Field("tecnologia"),
 	Field("porta"),
 	Field("context"),
-	format="%()s",
+	format="%(porta)s",
 	migrate=True)
+
+##Queues
+estrategia = ["ringall", "roundrobin", "leastrecent", "fewestcalls", "random", "rrmemory"]
+db.define_table("queue",
+	Field("name"),
+	Field("strategy", requires=IS_IN_SET(estrategia), default='ringall'),
+	Field("musiconhold", default='default'),
+	Field("ringinuse", requires=IS_IN_SET(["yes", "no"]), default='no'),
+	Field("retry", "integer", default=1),
+	Field("timeout", "integer", default=15),
+	Field("timeoutrestart", "boolean"),
+	Field("joinempty", requires=IS_IN_SET(["yes", "no"]), default='yes'),
+	Field("leavewhenempty", requires=IS_IN_SET(["yes", "no"]), default='yes'),
+	Field("eventwhencalled", "boolean", default=True),
+	Field("wrapuptime", "integer", default=0),
+	Field("maxlen", "integer", default=100), 
+
+	Field("announce"),
+	Field("context", default="ramais"),
+	Field("monitor_join", "boolean", default=False),
+	Field("monitor_format"),
+	Field("queue_youarenext"),
+	Field("queue_thereare"),
+	Field("queue_callswaiting"),
+	Field("queue_holdtime"),
+	Field("queue_minutes"),
+	Field("queue_seconds"),
+	Field("queue_lessthan"),
+	Field("queue_thankyou"),
+	Field("queue_reporthold"),
+	Field("announce_frequency", "integer"),
+	Field("announce_round_seconds", "integer"),
+	Field("announce_holdtime"),
+	Field("servicelevel", "integer"),
+	Field("eventmemberstatus", "boolean", default=False),
+	Field("reportholdtime", "boolean", default=False),
+	Field("memberdelay", "integer", default=0),
+	Field("weight", "integer", default=0),
+	Field("setinterfacevar", "boolean", default=True),
+	Field("atributo"),
+	format="%(name)s",
+	migrate=False)
+
+db.define_table("queue_members",
+	Field("uniqueid"),
+	Field("queue_name"),
+	Field("interface"),
+	Field("penalty", "integer"),
+	Field("membername"),
+	Field("paused", "integer"),
+	format="%(queue_name)s",
+	migrate=False)
+
+db.define_table("f_fax",
+	Field("nome"),
+	Field("email"),
+	Field("numero"),
+	format="%(nome)s",
+	migrate=False)
+
+####--Usuarios/PrePago
+db.define_table("f_usuarios",
+	Field("pin", "string", length=20),
+	Field("id_departamento", db.f_departamentos),
+	Field("nome", "string", length=20),
+	Field("gravacao", "boolean"),
+	Field("blacklist", "boolean"),
+	Field("id_grupo_destinos", db.f_grupo_destinos),
+	Field("credito", "boolean"),
+	format="%(nome)s",
+	migrate=False)
 
 ####--Menus Permissões
 db.define_table('f_menu',

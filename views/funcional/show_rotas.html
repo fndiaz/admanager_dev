@@ -15,8 +15,8 @@
             <th>Prioridade</th>
             <th>Destino</th>
             <th>Exclui antes</th>
-            <th>Adiciona antes</th>
-            <th>Adiciona depois</th>
+            <th>Add antes</th>
+            <th>Add depois</th>
             <th>Empresa</th>
             <th>Tarifação</th>
             <th>horario</th>
@@ -44,7 +44,7 @@
                 {{=db(db.f_empresa.id == item).select(db.f_empresa.empresa)[0].empresa}}<br>
                 {{pass}}
             </td>
-            <td>{{=dado.id_tarifacao}}</td>
+            <td>{{=db(db.f_tarifacao.id == dado.id_tarifacao).select(db.f_tarifacao.tarifacao)[0].tarifacao}}</td>
             <td>{{=dado.id_horario}}</td>
             <td>{{=dado.add_csp}}</td>
             <td>

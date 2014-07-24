@@ -1,0 +1,188 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Criei uma fila de atendimento, definindo opções como estratégia de atendimento em seguida adicione membros a ela.   
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<label>Nome:</label>
+<div>{{=form.custom.widget.name}}</div>
+<br>
+
+<label>Estratégia:</label>
+<div>{{=form.custom.widget.strategy}}</div>
+<br>
+
+<label>Musiconhold:</label>
+<div>{{=form.custom.widget.musiconhold}}</div>
+<br>
+
+<label>Ringuse:</label>
+<div>{{=form.custom.widget.ringinuse}}</div>
+<br>
+
+<label>Retry:</label>
+<div>{{=form.custom.widget.retry}}</div>
+<br>
+
+<label>Timeoutrestart:</label>
+<div>{{=form.custom.widget.timeoutrestart}}</div>
+<br>
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+
+<label>Timeout:</label>
+<div>{{=form.custom.widget.timeout}}</div>
+<br>
+
+<label>Joinempty:</label>
+<div>{{=form.custom.widget.joinempty}}</div>
+<br>
+
+
+<label>Leavewhenempty:</label>
+<div>{{=form.custom.widget.leavewhenempty}}</div>
+<br>
+
+<label>Wrapuptime:</label>
+<div>{{=form.custom.widget.wrapuptime}}</div>
+<br>
+
+<label>Maxlen:</label>
+<div>{{=form.custom.widget.maxlen}}</div>
+<br>
+
+<label>Eventwhencalled:</label>
+<div>{{=form.custom.widget.eventwhencalled}}</div>
+<br>
+</div><!--col-lg-3-->
+
+</div><!--row-->
+
+<div style="display: none;"><!--Oculta-->
+<label>Announce:</label>
+<div>{{=form.custom.widget.announce}}</div>
+<br>
+
+<label>Context:</label>
+<div>{{=form.custom.widget.context}}</div>
+<br>
+
+<label>Monitor join:</label>
+<div>{{=form.custom.widget.monitor_join}}</div>
+<br>
+
+<label>Set interfacevar:</label>
+<div>{{=form.custom.widget.setinterfacevar}}</div>
+<br>
+
+<label>Monitor format:</label>
+<div>{{=form.custom.widget.monitor_format}}</div>
+<br>
+
+<label>Queue youarenext:</label>
+<div>{{=form.custom.widget.queue_youarenext}}</div>
+<br>
+
+<label>Queue thereare:</label>
+<div>{{=form.custom.widget.queue_thereare}}</div>
+<br>
+
+<label>Queue callswaiting:</label>
+<div>{{=form.custom.widget.queue_callswaiting}}</div>
+<br>
+
+<label>Queue holdtime:</label>
+<div>{{=form.custom.widget.queue_holdtime}}</div>
+<br>
+
+<label>Queue minutes:</label>
+<div>{{=form.custom.widget.queue_minutes}}</div>
+<br>
+
+<label>Queue seconds:</label>
+<div>{{=form.custom.widget.queue_seconds}}</div>
+<br>
+
+<label>Queue lessthan:</label>
+<div>{{=form.custom.widget.queue_lessthan}}</div>
+<br>
+
+<label>Queue thankyou:</label>
+<div>{{=form.custom.widget.queue_thankyou}}</div>
+<br>
+
+<label>Queue reporthold:</label>
+<div>{{=form.custom.widget.queue_reporthold}}</div>
+<br>
+
+<label>Event member status:</label>
+<div>{{=form.custom.widget.eventmemberstatus}}</div>
+<br>
+
+<label>Report holdtime:</label>
+<div>{{=form.custom.widget.reportholdtime}}</div>
+<br>
+
+<label>Announce frequency:</label>
+<div>{{=form.custom.widget.announce_frequency}}</div>
+<br>
+
+<label>Announce round seconds:</label>
+<div>{{=form.custom.widget.announce_round_seconds}}</div>
+<br>
+
+<label>Announce holdtime:</label>
+<div>{{=form.custom.widget.announce_holdtime}}</div>
+<br>
+
+<label>Service level:</label>
+<div>{{=form.custom.widget.servicelevel}}</div>
+<br>
+
+<label>Member delay:</label>
+<div>{{=form.custom.widget.memberdelay}}</div>
+<br>
+
+<label>Weight:</label>
+<div>{{=form.custom.widget.weight}}</div>
+<br>
+
+<label>Atributo:</label>
+<div>{{=form.custom.widget.atributo}}</div>
+<br>
+
+</div><!--Oculta-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="queue" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Filas").addClass("active");
+
+</script>
+
+{{end}}

@@ -1,7 +1,13 @@
 {{extend 'layout.html'}}
 
 {{block center}}
-<br><br>
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Escolha os menus e submenus que o usuário poderá acessar, e por último defina se ele é um gerenciador.
+</div>
+
+<br>
 
 
 <div style="margin-left:150px; margin-right:150px">
@@ -45,7 +51,7 @@ else:
     check_menup = ""
 pass}}
 <table style="clear: both" class="table table-bordered table-striped" id="user">
-<tbody> 
+<tbody>
 <tr>         
 <td width="40%", style="border:1px solid #ADC2CC"><b>{{=dado.nome}}</b></td>
 <td width="60%", style="border:1px solid #ADC2CC">
@@ -70,6 +76,7 @@ if auth.has_membership(sub.nome, id_usuario):
 else:
     check_sub = ""
 pass}}
+{{if (sub.nome != 'Permissões') and (sub.nome != 'Grupos'): }} <!--Não mostra alguns submenus -->
 <tr>         
 <td style="border:1px solid #ADC2CC">{{=sub.nome}}</td>
 <td style="border:1px solid #ADC2CC">
@@ -83,6 +90,7 @@ pass}}
 
 </td>
 </tr>  
+{{pass}}<!--Não mostra alguns submenus -->
 {{pass}} 
 </tbody>
 </table><br>
@@ -93,7 +101,7 @@ pass}}
 
 <tbody> 
 <tr>         
-<td width="40%", style="border:1px solid #ADC2CC"><b>Permissão de Escrita</b></td>
+<td  id='ger' width="40%", style="border:1px solid #ADC2CC"><b>Gerenciador</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i></td>
 <td width="60%", style="border:1px solid #ADC2CC">
 <!--<input class="form-control" id="{{=dado.nome}}" name="{{=dado.nome}}" type="checkbox" value="on" {{=check_menup}}>-->
 
@@ -115,7 +123,18 @@ pass}}
 
 {{end}}
 
+{{block jquery}}
+
+<script type="text/javascript">
 
 
+$("#ger").popover({trigger: "hover",title: 'Usuário Gerenciador', content: "Somente o usuário gerenciador poderá alterar e deletar os dados do sistema, se não estiver habilitado o usuário será somente leitura. ", placement: 'left' }) 
 
+//Menu
+$("#act-Acessos").addClass("chevron opened");
+$("#dsp-Acessos").css("display", "block");
+$("#Usuários").addClass("active");
 
+</script>
+
+{{end}}

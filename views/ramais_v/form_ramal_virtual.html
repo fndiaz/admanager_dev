@@ -1,0 +1,170 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione um ramal vinculando-o em uma tecnologia e definindo um número para ele.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<label>Tecnologia:</label>
+<div>{{=form.custom.widget.tecnologia}}</div>
+<br>
+
+{{print '-%s-' %(request.vars.id_edit)}}
+<label>Ramal Físico:</label>
+<select class="form-control" id="f_ramal_virtual_ramal_fisico" name="ramal_fisico">
+{{if request.vars.ramal_porta != None:}}
+<option value="{{=request.vars.ramal_porta}}">{{=request.vars.ramal_porta}}</option></select>
+{{pass}}
+<!--<option class="form-control" value=""></option>-->
+</select>
+<br>
+
+<label>Ramal Virtual:</label>
+<div>{{=form.custom.widget.ramal_virtual}}</div>
+<br>
+
+<label>Nome:</label>
+<div>{{=form.custom.widget.nome}}</div>
+<br>
+
+<label>Adicionar na mesa:</label>
+<div>{{=form.custom.widget.mesa_fop2}}</div>
+<br>
+
+<label>Gravação:</label>
+<div>{{=form.custom.widget.gravacao}}</div>
+<br>
+
+<label>Chamadas Simultânes:</label>
+<div>{{=form.custom.widget.chamadas_simultaneas}}</div>
+<br>
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+
+<label>Departamento:</label>
+<div>{{=form.custom.widget.id_departamento}}</div>
+<br>
+
+<label>Grupo Destinos:</label>
+<div>{{=form.custom.widget.id_grupo_destinos}}</div>
+<br>
+
+<label>Bina Interno:</label>
+<div>{{=form.custom.widget.bina_interno}}</div>
+<br>
+
+<label>Bina Externo:</label>
+<div>{{=form.custom.widget.bina_externo}}</div>
+<br>
+
+<label>Atribuir lista blacklist:</label>
+<div>{{=form.custom.widget.blacklist}}</div>
+<br>
+
+<label>Crédito:</label>
+<div>{{=form.custom.widget.credito}}</div>
+<br>
+
+</div><!--col-lg-3-->
+
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_ramal_virtual" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+<script>
+function getParam(n){ //funcao get variaveis url
+return (location.search.match(new RegExp(n + '=([^?&=]+)')) || [])[1] || '';
+}
+
+function popula_options(tec){
+  //alert(tec)
+
+  $.ajax({
+    type: "POST",
+    url: "ajax_fisico",
+    data: {tec: $("#f_ramal_virtual_tecnologia").val()},
+    dataType: "json",
+    success: function(retorno){
+    var options = "";
+
+    if (tec == 'SIP' || tec == 'IAX'){
+      $.each(retorno, function(i, value){
+        $("select#f_ramal_virtual_ramal_fisico").append(
+          "<option value="+retorno[i].usuario+">"+retorno[i].usuario+"</option>"); 
+      });//each 
+    }//if iax|sip  
+
+    if (tec == 'DAHDI' || tec == 'KHOMP'){
+      $.each(retorno, function(i, value){
+        $("select#f_ramal_virtual_ramal_fisico").append(
+          "<option value="+retorno[i].porta+">"+retorno[i].porta+"</option>"); 
+        });//each 
+      }//if dahdi|khomp
+
+    if (tec == 'QUEUE'){
+      $.each(retorno, function(i, value){
+        $("select#f_ramal_virtual_ramal_fisico").append(
+          "<option value="+retorno[i].name+">"+retorno[i].name+"</option>"); 
+        });//each 
+      }//if queue
+
+    if (tec == 'FAX'){
+      $.each(retorno, function(i, value){
+        $("select#f_ramal_virtual_ramal_fisico").append(
+          "<option value="+retorno[i].numero+">"+retorno[i].numero+"</option>"); 
+        });//each 
+      }//if fax
+
+  }//success
+});//ajax
+}//function popula
+
+var id_edit = getParam('id_edit'); //pega request id
+if(id_edit != ''){
+  var tec = $("#f_ramal_virtual_tecnologia").val();
+  popula_options(tec)
+}
+
+
+$("#f_ramal_virtual_tecnologia").change(function(){//change tecnologia
+  $('#f_ramal_virtual_ramal_fisico').html('');//limpa options
+  var tec = $("#f_ramal_virtual_tecnologia").val();
+  popula_options(tec)
+});//change tecnologia
+
+</script>
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Ramais").addClass("active");
+
+</script>
+
+{{end}}

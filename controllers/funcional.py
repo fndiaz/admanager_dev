@@ -4,6 +4,7 @@
 @auth.requires_login()  
 def f_troncos():
 	response.title = 'Troncos'
+	response.marca=['Funcional', 'Troncos']
 	editor = permissao()
 	url = URL('admanager', 'funcional', 'f_troncos_form')
 	print editor
@@ -16,6 +17,7 @@ def f_troncos():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_troncos_form():
 	response.title = 'Troncos'
+	response.marca=['Funcional', 'Troncos', 'Adiciona Tronco']
 	id_tronco	= request.vars['id_tronco']
 	
 	if id_tronco is None:
@@ -39,6 +41,7 @@ def f_troncos_form():
 @auth.requires_login()
 def f_troncos_fisicos():
 	response.title = 'Troncos Físicos'
+	response.marca=['Funcional', 'Troncos Físicos']
 	query 	=	(db.f_troncos.id == db.f_troncos_fisicos.id_tronco)
 	editor 	= 	permissao()
 	url = URL('admanager', 'funcional', 'f_troncos_fisicos_form')
@@ -52,6 +55,7 @@ def f_troncos_fisicos():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_troncos_fisicos_form():
 	response.title = 'Troncos Físicos'
+	response.marca=['Funcional', 'Troncos Físicos', 'Adiciona Tronco Físico']
 	id_tronco_fisico = request.vars['id_tronco_fisico']
 	
 	if id_tronco_fisico is None:
@@ -61,8 +65,8 @@ def f_troncos_fisicos_form():
 		form 	=	SQLFORM(db.f_troncos_fisicos, id_tronco_fisico, 
 								submit_button='Editar')
 
-	form.element(_name='id_tronco')['_class'] = "form-control"
-	form.element(_name='dispositivo')['_class'] = "form-control"
+	for input in form.elements():
+		input['_class'] = 'form-control'
 
 	if form.process().accepted:
 		redirect(URL('f_troncos_fisicos'))
@@ -74,6 +78,7 @@ def f_troncos_fisicos_form():
 @auth.requires_login()
 def f_destinos():
 	response.title = 'Destinos'
+	response.marca=['Funcional', 'Destinos']
 	url = URL('admanager', 'funcional', 'f_destinos_form')
 	editor 	= 	permissao()
 	destinos 	= 	db(db.f_destinos).select(orderby=db.f_destinos.id)
@@ -84,6 +89,7 @@ def f_destinos():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_destinos_form():
 	response.title = 'Destinos'
+	response.marca=['Funcional', 'Destinos', 'Adiciona Destino']
 	id_destino	= 	request.vars['id_destino']
 
 	if id_destino is None:
@@ -93,10 +99,9 @@ def f_destinos_form():
 		form 	=	SQLFORM(db.f_destinos, id_destino, 
 								submit_button='Editar')
 
-	form.element(_name='tipo_chamada')['_class'] = "form-control"
-	form.element(_name='expressao')['_class'] = "form-control"
-	form.element(_name='destino')['_class'] = "form-control"
-	form.element(_name='tamanho_max')['_class'] = "form-control"
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
 	if form.process().accepted:
 		escreve_destino()
 		redirect(URL('f_destinos'))
@@ -107,6 +112,7 @@ def f_destinos_form():
 @auth.requires_login()
 def f_empresa():
 	response.title = 'Empresa'
+	response.marca = ['Funcional', 'Empresa']
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'funcional', 'f_empresa_form')
 	empresa	= 	db(db.f_empresa).select(orderby=db.f_empresa.id)
@@ -117,6 +123,7 @@ def f_empresa():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_empresa_form():
 	response.title = 'Empresa'
+	response.marca = ['Funcional', 'Empresa', 'Adiciona Empresa']
 	id_empresa	= 	request.vars['id_empresa']
 	print id_empresa
 	
@@ -138,6 +145,7 @@ def f_empresa_form():
 @auth.requires_login()
 def f_tarifacao():
 	response.title = 'Tarifação'
+	response.marca=['Funcional', 'Tarifação']
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'funcional', 'f_tarifacao_form')
 	tarifacao 	=	db(db.f_tarifacao).select(orderby=db.f_tarifacao.id)
@@ -148,6 +156,7 @@ def f_tarifacao():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_tarifacao_form():
 	response.title = 'Tarifação'
+	response.marca=['Funcional', 'Tarifação', 'Adiciona Tarifação']
 	id_tarifacao=	request.vars['id_tarifacao']
 	
 	if id_tarifacao is None:
@@ -157,9 +166,8 @@ def f_tarifacao_form():
 		form 	=	SQLFORM(db.f_tarifacao, id_tarifacao, 
 								submit_button='Editar')
 
-	form.element(_name='tarifacao')['_class'] = "form-control"
-	form.element(_name='passo')['_class'] = "form-control"
-	form.element(_name='valor')['_class'] = "form-control"
+	for input in form.elements():
+		input['_class'] = 'form-control'
 	if form.process().accepted:
 		redirect(URL('f_tarifacao'))
 
@@ -169,6 +177,7 @@ def f_tarifacao_form():
 @auth.requires_login()
 def f_rotas():
 	response.title = 'Rotas'
+	response.marca=['Funcional', 'Rotas']
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'funcional', 'f_rotas_form')
 	rota = db(db.f_rotas).select()	 
@@ -179,6 +188,7 @@ def f_rotas():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_rotas_form():
 	response.title = 'Rotas'
+	response.marca=['Funcional', 'Rotas', 'Adiciona Rota']
 	id_rota 	= 	request.vars['id_rota']
 
 	if id_rota is None:
@@ -188,17 +198,8 @@ def f_rotas_form():
 		form 	=	SQLFORM(db.f_rotas, id_rota, 
 								submit_button='Editar')
 
-	form.element(_name='rota')['_class'] = "form-control"
-	form.element(_name='id_tronco')['_class'] = "form-control"
-	form.element(_name='prioridade')['_class'] = "form-control"
-	form.element(_name='id_destino')['_class'] = "form-control"
-	form.element(_name='exclui_antes')['_class'] = "form-control"
-	form.element(_name='adiciona_antes')['_class'] = "form-control"
-	form.element(_name='adiciona_depois')['_class'] = "form-control"
-	form.element(_name='id_empresa')['_class'] = "form-control"
-	form.element(_name='id_tarifacao')['_class'] = "form-control"
-	form.element(_name='id_horario')['_class'] = "form-control"
-	form.element(_name='add_csp')['_class'] = "form-control"
+	for input in form.elements():
+		input['_class'] = 'form-control'
 	if form.process().accepted:
 		redirect(URL('f_rotas'))
 
@@ -208,6 +209,7 @@ def f_rotas_form():
 @auth.requires_login()
 def f_horario():
 	response.title = 'Horário'
+	response.marca=['Funcional', 'Horário']
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'funcional', 'f_horario_form')
 	horario = db(db.f_horario).select()
@@ -218,6 +220,7 @@ def f_horario():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_horario_form():
 	response.title = 'Horário'
+	response.marca=['Funcional', 'Horário', 'Adiciona Horário']
 	id_horario 	= 	request.vars['id_horario']
 
 	if id_horario is None:
@@ -225,10 +228,9 @@ def f_horario_form():
 	else:
 		form 	=	SQLFORM(db.f_rotas, id_horario)
 
-	form.element(_name='dia_semana')['_class'] = "form-control"
-	form.element(_name='horario')['_class'] = "form-control"
-	form.element(_name='acao_negativa')['_class'] = "form-control"
-	form.element(_name='descricao')['_class'] = "form-control"
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
 	if form.process().accepted:
 		redirect(URL('f_horario'))
 
@@ -255,44 +257,72 @@ def f_bilhetes_chamadas():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_parametros_form():
 	response.title = 'Parâmetros'
+	response.marca=['Configs', 'Parâmetros']
 	id_parametro=	request.vars['id_parametro']
 	
 	form 	=	SQLFORM(db.f_parametros, 1)
 	
-	form.element(_name='empresa')['_class'] = "form-control"
-	form.element(_name='tempo_chamada_externa')['_class'] = "form-control"
-	form.element(_name='tempo_chamada_interna')['_class'] = "form-control"
-	form.element(_name='gravacao_geral')['_class'] = "form-control"
-	form.element(_name='endereco_smtp')['_class'] = "form-control"
-	form.element(_name='usuario_smtp')['_class'] = "form-control"
-	form.element(_name='senha_smtp')['_class'] = "form-control"
-	form.element(_name='ssl_smtp')['_class'] = "form-control"
-	form.element(_name='porta_smtp')['_class'] = "form-control"
-	form.element(_name='email_admin')['_class'] = "form-control"
-	form.element(_name='faixa_ip_interna')['_class'] = "form-control"
+	for input in form.elements():
+		input['_class'] = 'form-control'
 	form.element(_name='faixa_ip_interna')['_rows'] = "4"
-	form.element(_name='endereco_ip_externo')['_class'] = "form-control"
-	form.element(_name='endereco_host_externo')['_class'] = "form-control"
-	form.element(_name='toque_diferenciado')['_class'] = "form-control"
-	form.element(_name='toque_diff_sipheader')['_class'] = "form-control"
-	form.element(_name='spy_senha')['_class'] = "form-control"
-	form.element(_name='spy_ramal_proibe_monitora')['_class'] = "form-control"
 	form.element(_name='spy_ramal_proibe_monitora')['_rows'] = "4"
-	form.element(_name='spy_ramal_espiao')['_class'] = "form-control"
 	form.element(_name='spy_ramal_espiao')['_rows'] = "4"
-	form.element(_name='tamanho_pin')['_class'] = "form-control"
-	form.element(_name='fuso_horario')['_class'] = "form-control"
-	form.element(_name='credito_dia')['_class'] = "form-control"
-	form.element(_name='ura_antes_horario')['_class'] = "form-control"
-	form.element(_name='bloqueio_chamadacobrar')['_class'] = "form-control"
-	form.element(_name='tempo_chamada_transf')['_class'] = "form-control"
-	form.element(_name='rechamada')['_class'] = "form-control"
-	form.element(_name='pin_temporario')['_class'] = "form-control"
 
 	if form.process().accepted:
+		escreve_sip_iax()
+		session.alerta_sucesso = 'Parâmetros salvos com sucesso!'
 		redirect(URL('f_parametros_form'))
 
 	return response.render("funcional/form_parametros.html", form=form)
+
+######-URA
+@auth.requires_login()
+def f_ura():
+	response.title = 'Ura'
+	response.marca=['Funcional', 'Ura']
+	editor 	= 	permissao()
+	url 	=	URL('admanager', 'funcional', 'f_ura_form')
+	con = db(db.f_ura).select()
+	
+	return response.render("funcional/show_ura.html", 
+					editor=editor, url=url, con=con)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def f_ura_form():
+	response.title = 'Ura'
+	response.marca=['Funcional', 'Ura', 'Adiciona Ura']
+	id_edit = request.vars['id_edit']
+
+	if id_edit is None:
+		form 	=	SQLFORM(db.f_ura)
+	else:
+		form 	=	SQLFORM(db.f_ura, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process().accepted:
+		escreve_ura()
+		redirect(URL('f_ura'))
+
+	return response.render("funcional/form_ura.html", form=form)
+
+######-PORTABILIDADE
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def f_portabilidade_form():
+	response.title = 'Portabilidade'
+	response.marca=['Configs', 'Portabilidade']
+	
+	form 	=	SQLFORM(db.f_portabilidade, 1)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process().accepted:
+		redirect(URL('f_portabilidade'))
+
+	return response.render("funcional/form_portabilidade.html", form=form)
+
 
 @auth.requires_login()
 def delete():
@@ -315,10 +345,14 @@ def delete():
 		tabela 	= 	db.f_destinos.id
 	if funcao 	== 	"f_horario":
 		tabela 	= 	db.f_horario.id
+	if funcao 	== 	"f_ura":
+		tabela 	=	db.f_ura.id
 
 	db(tabela == id_tab).delete()
 	if funcao == "f_destinos":
 		escreve_destino()
+	if funcao == "f_ura":
+		escreve_ura()
 	redirect(URL(funcao))
 
 def escreve_destino():
@@ -326,9 +360,21 @@ def escreve_destino():
 	arq = open('/tmp/entrada.ael','w')
 	for destino in destinos:
 		print destino.tipo_chamada
-		arq.write('%s => { \n' %(destino.tipo_chamada))
+		arq.write('_X%s => { \n' %(destino.expressao))
 		arq.write('	Set(__id_destino=%s);\n' %(destino.id))
 		arq.write('	AGI(rastreamento.php,${CHANNEL},${CDR(linkedid)},${STRFTIME(${EPOCH},,%F %T)},${CUT(CHANNEL,-,1)},${EXTEN},Context:${CONTEXT} | [id_destino=${id_destino}]); \n')
 		arq.write('	goto ${proximo_contexto}|${EXTEN}|1;\n')
 		arq.write('};\n\n')
 	arq.close()
+
+def escreve_ura():
+	ura = db(db.f_ura).select()
+	arq = open('/tmp/ura_manager.ael', 'w')
+	for dado in ura:
+		arq.write("%s => {\n" %(dado.ramal_principal))
+
+		for linha in str(dado.ura).split('\n'):
+			arq.write("%s \n" %(linha)) 
+
+		arq.write("};\n\n")
+

@@ -1,0 +1,21 @@
+<!-- start: User Dropdown -->
+<li class="dropdown">
+	<a class="btn account dropdown-toggle" data-toggle="dropdown" href="ui-sliders-progress.html#">
+	{{if (db(db.auth_user.first_name == session.auth.user.first_name).select(db.auth_user.photo)[0].photo == "") or (db(db.auth_user.first_name == session.auth.user.first_name).select(db.auth_user.photo)[0].photo == None):}}
+		<div class="avatar"><img src="{{=URL(a='admanager', c='static', f='images')}}/avatar-null.jpg" alt="Avatar"></div>
+	{{else:}}
+		<div class="avatar"><img src="{{=URL(a='admanager', c='static', f='images')}}/avatar/{{=session.auth.user.photo}}" alt="Avatar"></div>
+	{{pass}}
+	<div class="user">
+		<span class="hello">Logado com</span>
+		<span class="name">{{=session.auth.user.first_name}}</span>
+	</div>
+	</a>
+	<ul class="dropdown-menu">
+		<li><a href="{{=URL(a='admanager', c='initial', f='profile')}}"><i class="icon-user"></i> Profile</a></li>
+		<!--<li><a href="ui-elements.html#"><i class="icon-cog"></i> Settings</a></li>-->
+		<li><a href="{{=URL(a='admanager', c='initial', f='change_password')}}"><i class="icon-key"></i> Trocar senha</a></li>
+		<li><a href="{{=URL(a='admanager', c='initial', f='user/logout')}}"><i class="icon-off"></i> Logout</a></li>
+	</ul>
+</li>
+<!-- end: User Dropdown -->

@@ -12,8 +12,13 @@
     <div class="tab-pane active" id="tab1">
 
 <br>
-<button type="button" class="btn btn-primary" onclick=location.href="lote_dahdi_form" ><i class="icon-sitemap"></i>&nbsp;Criar lote</button>
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong></strong>Adicione uma porta DAHDI 
+</div>
 
+<br>
+<button type="button" class="btn btn-primary" onclick=location.href="lote_dahdi_form" ><i class="icon-sitemap"></i>&nbsp;Criar lote</button>
 
 {{=form_dahdi.custom.begin}}
 <br>
@@ -44,6 +49,12 @@
 {{=form_khomp.custom.begin}}
 
 <br>
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica! </strong>Selecione um dispositivo khomp que os 24 canais serão criados. 
+</div>
+
+<br>
 <label>Contexto:</label>
 <div>{{=form_khomp.custom.widget.dispositivo}}</div>
 <br><br>
@@ -63,6 +74,17 @@
     </div>
   </div>
 </div>
+{{end}}
 
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#DAHDI-KHOMP").addClass("active");
+
+</script>
 
 {{end}}

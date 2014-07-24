@@ -1,0 +1,48 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione os departamentos de acordo com sua empresa.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<label>Departamento:</label>
+<div>{{=form.custom.widget.departamento}}</div>
+<br>
+
+<label>Empresa:</label>
+<div>{{=form.custom.widget.id_empresa}}</div>
+<br>
+
+</div><!--col-lg-->
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_departamentos" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Funcional").addClass("chevron opened");
+$("#dsp-Funcional").css("display", "block");
+$("#Departamentos").addClass("active");
+
+</script>
+
+{{end}}

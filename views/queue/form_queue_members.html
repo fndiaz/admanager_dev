@@ -1,0 +1,137 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione um ramal para fazer parte da fila de atendimento.   
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<div>
+<label>Fila:</label>
+<div>{{=form.custom.widget.queue_name}}</div>
+<br>
+</div>
+
+<div style="display: none;">
+<label>UniqueID:</label>
+<div>{{=form.custom.widget.uniqueid}}</div>
+<br>
+</div>
+
+<div>
+<label>Ramal Físico:</label>
+<div>{{=form.custom.widget.interface}}</div>
+<br>
+</div>
+
+<div>
+<label>Penalty:</label>
+<div>{{=form.custom.widget.penalty}}</div>
+<br>
+</div>
+
+<div>
+<label>Membro:</label>
+<div>{{=form.custom.widget.membername}}</div>
+<br>
+</div>
+
+<div>
+<label>Pause:</label>
+<div>{{=form.custom.widget.paused}}</div>
+<br>
+</div>
+
+</div>
+
+<div class="coluna_form_direita_b0">
+
+<span class="badge badge-warning"><i class="icon-flag"></i></span>
+<label>Digite o ramal para popular o ramal físico</label>
+<input style="float:left;" class="form-control" id="busca_fisico" name="busca_fisico" type="text" value="">
+<a  style="float:left" id="btn_busca_fisico" class="btn" href="#"><i class=" icon-pencil icon-white"></i></a>
+
+</div>
+
+</div>
+
+
+<!--Submit-->
+<div class='row'>
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary">Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="{{=URL(a='admanager', c='queues', f='queue_members', vars={'id_queue':request.vars.id_queue})}}" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+</div><!--col-lg-3-->
+</div><!--row-->
+
+
+
+
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+var d = new Date();
+var n = d.getTime();
+$('#queue_members_uniqueid').val(n);
+
+$(document).ready(function(){
+    $('#btn_busca_fisico').click(function(){
+       //alert($('#busca_fisico').val());
+
+
+      $.ajax({
+        type: "POST",
+        url: "busca_fisico",
+        data: {ramal: $("#busca_fisico").val()},
+        dataType: "json",
+        success: function(retorno){
+
+          $.each(retorno, function(i, value){
+            //alert(retorno[i].tecnologia);
+            $('#queue_members_interface').val(retorno[i].tecnologia+'/'+retorno[i].ramal_fisico);
+            
+            $('#queue_members_membername').val(retorno[i].nome);
+
+          });//each 
+
+        }//success
+      });//ajax
+
+
+    });//click btn_busca_fisico
+})
+
+$("#busca_fisico").popover({trigger: "focus", title: 'Agilize a inserção dos dados', content: "digite o ramal acima e clique no botão ao lado, para que os campos principais sejam populados", placement: 'bottom' })
+
+//Menu
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Filas").addClass("active");
+
+</script>
+
+
+
+
+{{end}}
+
+
+
+
+
+
+

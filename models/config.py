@@ -35,7 +35,7 @@ auth = Auth(db, controller="initial", function="user")
 #settings
 auth.settings.remember_me_form = False
 auth.settings.formstyle = "divs"
-auth.settings.login_next = URL(a='admanager', c='funcional', f='f_troncos')
+auth.settings.login_next = URL(a='admanager', c='initial', f='dashboard')
 auth.settings.request_reset_password_next = URL('initial', 'login')
 auth.settings.logout_next = URL('login?_next=')
 auth.settings.registration_requires_verification = False
@@ -72,8 +72,8 @@ def notifica(form):
 
 #fields
 auth.settings.extra_fields['auth_user'] = [
-	Field("ramal", "string")]
-#	Field("photo", "upload"),
+	Field("ramal", "string"),
+	Field("photo", "upload", uploadfolder='/home/fernando/web2py/applications/admanager/static/images/avatar',)]
 #	Field("gender", requires=IS_IN_SET(["masculino","feminino"]))
 #]
 
@@ -89,7 +89,8 @@ if request.is_local:
 
 import datetime
 #response
-response.title= "titulo response"
+response.title= "Alternativo"
+response.marca=""
 response.meta.keywords= "chave, outra, e outra"
 
 

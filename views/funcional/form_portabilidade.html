@@ -1,0 +1,38 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class='row'>
+<div class="col-lg-12">
+{{=form.custom.begin}}
+
+<label>Endereço:</label>
+<div>{{=form.custom.widget.endereco}}</div>
+<br>
+
+<label>Usuário:</label> 
+<div>{{=form.custom.widget.usuario}}</div>
+<br>
+
+<label>Senha:</label> 
+<div>{{=form.custom.widget.senha}}</div>
+<br>
+
+<label>Habilitar Serviço:</label> 
+<div>{{=form.custom.widget.ativo}}</div>
+<br>
+
+</div><!--col-lg-3-->
+
+<!--Submit-->
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary">Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_troncos" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+
+</div><!--row-->
+
+{{end}}

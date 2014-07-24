@@ -4,6 +4,7 @@ import random
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def fisico_sip_iax_form():
 	response.title = 'Autenticação SIP/IAX'
+	response.marca=['Extensões', 'Autenticação SIP/IAX', 'Adiciona SIP/IAX']
 	
 	if request.vars.id_edit is None:
 		form 	=	SQLFORM(db.fisico_sip_iax)
@@ -27,6 +28,7 @@ def fisico_sip_iax_form():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def fisico_tronco_form():
 	response.title = 'Tronco SIP/IAX'
+	response.marca=['Extensões', 'Tronco SIP/IAX', 'Adiciona Tronco SIP/IAX']
 	db.fisico_sip_iax.tronco.default = True
 
 	if request.vars.id_edit is None:
@@ -52,11 +54,13 @@ def fisico_tronco_form():
 	else:
 		print request.vars
 
-	return response.render("ramais/form_tronco.html", form=form)
+	return response.render("ramais/form_tronco.html", 
+											form=form)
 
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def lote_fisico_form():
 	response.title = 'Lote SIP/IAX'
+	response.marca=['Extensões', 'Autenticação SIP/IAX', 'Adiciona SIP/IAX', 'Lote SIP/IAX']
 	form = SQLFORM.factory(
 		Field('tecnologia', requires=
 			IS_IN_SET(["SIP", "IAX"], error_message=T("não nulo"))),
@@ -90,6 +94,7 @@ def lote_fisico_form():
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def fisico_dahdi_khomp_form():
 	response.title = 'Canais DAHDI/KHOMP'
+	response.marca=['Extensões', 'Canais DAHDI/KHOMP', 'Adiciona DAHDI/KHOMP']
 	##DAHDI
 	form_dahdi = SQLFORM.factory(
 		Field('porta', requires=IS_NOT_IN_DB(db, 'fisico_dahdi_khomp.porta')),
@@ -242,56 +247,7 @@ def insert_lote_fisico(var):
 			db(db.fisico_sip_iax.usuario==fisico).update(secret=gera_senha())
 		num = num + 1
 
-@auth.requires_login() 
-def escreve_sip_iax():
-	ramais = db(db.fisico_sip_iax).select(orderby=db.fisico_sip_iax.usuario)
-	sip = open('/tmp/sip_admanager.conf','w')
-	iax = open('/tmp/iax_admanager.conf','w')
-	ips=db(db.f_parametros).select(db.f_parametros.faixa_ip_interna)[0].faixa_ip_interna
 
-	for ramal in ramais:
-		if ramal.tecnologia == 'SIP':
-			texto = sip
-			print 'escrevendo SIP/%s' %(ramal.usuario)
-		if ramal.tecnologia == 'IAX':
-			texto = iax
-			print 'escrevendo IAX/%s' %(ramal.usuario)
-	
-		texto.write('[%s]\n' %(ramal.usuario))
-		texto.write('type=%s\n' %(ramal.type_f))
-		texto.write('host=%s\n' %(ramal.host_f))
-		texto.write('secret=%s\n' %(ramal.secret))
-		texto.write('context=%s\n' %(ramal.context))
-		if ramal.qualify == True:
-			texto.write('qualify=yes\n')
-		else:
-			texto.write('qualify=no\n')
-		texto.write('deny=0.0.0.0/0.0.0.0\n')
-		if ramal.aut_externa == True:
-			texto.write('permit=0.0.0.0/0.0.0.0\n')
-		else:
-			print ips
-			for ip in str(ips).split('\n'):
-				if ip != '':
-					texto.write('permit=%s\n' %(ip))
-		texto.write('disallow=%s\n' %(','.join(ramal.disallow)))
-		texto.write('allow=%s\n' %(','.join(ramal.allow)))
-		if ramal.nat == True:
-			texto.write('nat=yes\n')
-		else:
-			texto.write('nat=no\n')
-		print '--extra--'
-		print ramal.extras
-		print '--extra--'
-		for extra in str(ramal.extras).split('\n'):
-			if extra != '':
-				texto.write('%s\n' %(extra))
-			#else:
-			#	print '%s-nulo'%(extra)
-		texto.write('\n')
-					
-	sip.close()
-	iax.close()
 
 @auth.requires_login() 
 def gera_dahdi():
@@ -405,8 +361,8 @@ def escreve_tronco():
 				arq_sip.write('register=> %s:%s@%s/%s\n' 
 				%(tronco.usuario, tronco.secret, tronco.host_f, tronco.usuario))
 			if tronco.tecnologia == 'IAX':
-				arq_iax.write('register=> %s:%s@%s/%s\n' 
-				%(tronco.usuario, tronco.secret, tronco.host_f, tronco.usuario))
+				arq_iax.write('register=> %s:%s@%s\n' 
+				%(tronco.usuario, tronco.secret, tronco.host_f))
 	arq_sip.close()
 	arq_iax.close()
 
@@ -415,6 +371,7 @@ def escreve_tronco():
 @auth.requires_login()
 def show_sip():
 	response.title = 'Usuários SIP/IAX'
+	response.marca=['Extensões', 'Autenticação SIP/IAX']
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'ramais', 'fisico_sip_iax_form')
 	query 	= 	(db.fisico_sip_iax.tronco != True)
@@ -426,17 +383,19 @@ def show_sip():
 @auth.requires_login()
 def show_tronco():
 	response.title = 'Troncos SIP/IAX'
+	response.marca=['Extensões', 'Troncos SIP/IAX']
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'ramais', 'fisico_tronco_form')
 	query = (db.fisico_sip_iax.tronco == True)
 	con = db(query).select()
 
 	return response.render("ramais/show_tronco.html", 
-					con=con, url=url, editor=editor)
+						con=con, url=url, editor=editor)
 
 @auth.requires_login()
 def show_dahdi():
 	response.title = 'Portas DAHDI'
+	response.marca=['Extensões', 'Canais DAHDI/KHOMP']
 	editor 	=	permissao()
 	url 	= 	URL('admanager', 'ramais', 'fisico_dahdi_khomp_form')
 	con = db(db.fisico_dahdi_khomp.tecnologia == 'dahdi').select()

@@ -52,16 +52,22 @@ def f_departamentos_form():
 	response.title = 'Departamentos'
 	response.marca=['Extensões', 'Departamentos', 'Adiciona Departamentos']
 	id_edit	= request.vars['id_edit']
+	testa = True
 	
 	if id_edit is None:
 		form 	=	SQLFORM(db.f_departamentos)
 	else:
+		testa 	=	False
 		form 	=	SQLFORM(db.f_departamentos, id_edit)
+		form.element(_name='departamento')['_readonly'] = "readonly"
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
 
 	if form.process().accepted:
+		if testa == True:
+			var= 'dept_%s' %(request.vars['departamento'])
+			auth.add_group(var, '')
 		redirect(URL('f_departamentos'))
 
 	return response.render("ramais_v/form_departamentos.html", form=form)
@@ -266,6 +272,7 @@ def delete():
 		tabela 	=	 db.f_ramal_virtual.id
 		funcao  = 	 'f_ramal_virtual'
 	if funcao	== "f_departamentos":
+		delete_role(request.vars['nome'])
 		tabela 	=	db.f_departamentos.id
 		funcao	= 	"f_departamentos"
 	if funcao	==	"f_desvios":
@@ -277,3 +284,10 @@ def delete():
 	
 	db(tabela == id_tab).delete()
 	redirect(URL(funcao))
+
+def delete_role(nome):
+	print 'entrou'
+	print nome
+	nome = 'dept_%s' %(nome)
+	id_role	= 	db(db.auth_group.role == nome).select(db.auth_group.id)
+	auth.del_group(id_role[0].id)

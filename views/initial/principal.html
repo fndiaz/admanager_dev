@@ -302,8 +302,8 @@ url: "gera_teste",
 dataType: "json",
 success: function(dado){
 	//alert(dado)
-	data.setValue(0, 1, dado);
-	data.setValue(1, 1, dado);
+	data.setValue(0, 1, dado[0]);
+	data.setValue(1, 1, dado[1]);
 	chart.draw(data, options);
 	
 }

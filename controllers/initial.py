@@ -4,8 +4,8 @@ import commands
 from datetime import datetime
 import platform
 import urllib2
-import urllib
-import requests
+#import urllib
+#import requests
 import cookielib
 from xml.etree.ElementTree import ElementTree
 
@@ -54,13 +54,13 @@ def monta_query():
 	date = datetime.now()
 	date = date.strftime("%Y-%m-%d")
 	ano= date.split('-')[0]
-	dia= date.split('-')[1]
-	mes= date.split('-')[2]
+	mes= date.split('-')[1]
+	dia= date.split('-')[2]
 	#mes = session.data_hoje.split('-')[1]
 	dict_query = {}
 	query_padrao = (db.f_bilhetes_chamadas.horario.year()==ano)&\
-		   		   (db.f_bilhetes_chamadas.horario.month()==dia)&\
-		            (db.f_bilhetes_chamadas.horario.day()==mes)
+		   		   (db.f_bilhetes_chamadas.horario.month()==mes)&\
+		            (db.f_bilhetes_chamadas.horario.day()==dia)
 
 	dict_query['query_entrante']= query_padrao &\
 								  (db.f_bilhetes_chamadas.id_destino == -1)
@@ -77,8 +77,8 @@ def monta_query():
 								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddfixo'])
 	dict_query['query_dddcelular']= query_padrao &\
 								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular1'])&\
-								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular2'])&\
-								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular3'])
+								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular2'])
+								  #(db.f_bilhetes_chamadas.id_destino == id_destino['id_dddcelular3'])
 	dict_query['query_0800']= query_padrao &\
 								  (db.f_bilhetes_chamadas.id_destino == id_destino['id_0800'])
 
@@ -129,14 +129,13 @@ def get_server():
 	print var
 	return server
 
-def gera_testee():
-	print "gera-teste"
+def gera_teste():
 	cj = cookielib.CookieJar()
 	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 	opener.open("http://192.168.100.253:8088/asterisk/mxml?action=login&username=python&secret=123456")
 
 	tree = ElementTree(file=opener.open('http://192.168.100.253:8088/asterisk/mxml?action=CoreShowChannels'))
-
+	lista=[]
 	r = tree.getroot()
 	a=True
 	for child in r:
@@ -152,19 +151,23 @@ def gera_testee():
 					print 'fim'
 					total = var.attrib['listitems']
 					print total
+	#ch=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active call' | awk '{print $1}'")
+	ch= '1'
+	lista.append(total)
+	lista.append(ch)
 
-	return response.json(total)
+	return response.json(lista)
 
 def get_chart():
 	date = datetime.now()
 	date = date.strftime("%Y-%m-%d")
 	ano= date.split('-')[0]
-	dia= date.split('-')[1]
-	mes= date.split('-')[2]
+	mes= date.split('-')[1]
+	dia= date.split('-')[2]
 
 	count = db.f_bilhetes_chamadas.origem.count()
-	query = (db.f_bilhetes_chamadas.horario.year()==ano)&\
-		   	(db.f_bilhetes_chamadas.horario.month()==mes)&\
+	query = (db.f_bilhetes_chamadas.horario.year()==2014)&\
+		   	(db.f_bilhetes_chamadas.horario.month()==05)&\
 		   	(db.f_bilhetes_chamadas.id_destino > 1)
 	result = db(query).select(db.f_bilhetes_chamadas.origem, count, 
 						groupby=db.f_bilhetes_chamadas.origem, orderby=~count, limitby=(0, 5))
@@ -382,12 +385,16 @@ def f_permissao_menu_form():
 	response.marca = ['Acessos', 'Usuários', ' Permissões']
 	id_usuario = request.vars['id_usuario']
 	check_ger = ""
+	check_grav = ""
 
 	if auth.has_membership('gerenciador', id_usuario):
 		check_ger = "checked"
 
+	if auth.has_membership('gravacao_perm', id_usuario):
+		check_grav = "checked"
+
 	return response.render("initial/form_permissao_menu.html",
-		id_usuario=id_usuario, check_ger=check_ger)
+		id_usuario=id_usuario, check_ger=check_ger, check_grav=check_grav)
 
 @auth.requires_login()
 def insert_permissao_menu():
@@ -402,6 +409,13 @@ def insert_permissao_menu():
 		print 'del gerenciador'
 		auth.del_membership(auth.id_group('gerenciador'), id_usuario)
 		auth.add_membership(auth.id_group('comum'), id_usuario)
+
+	if request.vars.gravacao_perm == 'on':
+		print 'adicionando gravacao_perm'
+		auth.add_membership(auth.id_group('gravacao_perm'), id_usuario)
+	else:
+		print 'del gravacao_perm'
+		auth.del_membership(auth.id_group('gravacao_perm'), id_usuario)
 
 	menu 	= 	db(db.f_menu).select()
 	##Faz o loop retornando menus
@@ -432,6 +446,21 @@ def insert_permissao_menu():
 			auth.add_membership(id_grupo, id_usuario)
 		else:
 			auth.del_membership(id_grupo, id_usuario)
+
+	##Faz o loop retornando departamentos
+	depta=db(db.f_departamentos).select(db.f_departamentos.departamento)
+	for dept in depta:
+		nome = 'dept_%s' %(dept.departamento) 
+		query = (db.auth_group.role == nome)
+		id_grupo = db(query).select()[0].id
+
+		##verifica se departamento está ticado e adiciona no membership
+		var = request.vars['%s' %(nome)]	
+		if var == 'on':
+			auth.add_membership(id_grupo, id_usuario)
+		else:
+			auth.del_membership(id_grupo, id_usuario)
+
 	redirect(URL('users'))
 
 

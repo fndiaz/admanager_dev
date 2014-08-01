@@ -10,6 +10,8 @@ if db(db.auth_group.role == 'gerenciador').isempty():
 	db.auth_group.insert(role="gerenciador", description="gerenciador cliente")
 if db(db.auth_group.role == 'comum').isempty():
 	db.auth_group.insert(role="comum", description="usuario leitura")
+if db(db.auth_group.role == 'gravacao_perm').isempty():
+	db.auth_group.insert(role="gravacao_perm", description="ouvir gravacoes")
 
 if db(db.auth_user.email == 'root@forip.com.br').isempty():
 	##Inserindo user root
@@ -31,7 +33,9 @@ if db(db.f_menu).isempty():
 	auth.add_group('Extensões', '')
 	db.f_menu.insert(nome="Pré Pago", controller="", funcao="", icone="icon-align-justify", ordem="5", submenu=True)
 	auth.add_group('Pré Pago', '')
-	db.f_menu.insert(nome="Configs", controller="", funcao="", icone="icon-wrench", ordem="6", submenu=True)
+	db.f_menu.insert(nome="Bilhetes", controller="bilhetes", funcao="busca_chamadas", icone="iconicon-th-list", ordem="6", submenu=False)
+	auth.add_group('Bilhetes', '')
+	db.f_menu.insert(nome="Configs", controller="", funcao="", icone="icon-wrench", ordem="7", submenu=True)
 	auth.add_group('Configs', '')
 	db.commit()
 
@@ -57,8 +61,48 @@ if db(db.f_submenu).isempty():
 	auth.add_group('Empresa', '')
 	db.f_submenu.insert(nome="Departamentos", controller="ramais_v", funcao="f_departamentos", icone="icon-chevron-right", ordem="2", menu_ref=id_funcional)
 	auth.add_group('Departamentos', '')
-	db.f_submenu.insert(nome="Departamentos", controller="ramais_v", funcao="f_departamentos", icone="icon-chevron-right", ordem="2", menu_ref=id_funcional)
-	auth.add_group('Departamentos', '')
+	db.f_submenu.insert(nome="Troncos", controller="funcional", funcao="f_troncos", icone="icon-chevron-right", ordem="3", menu_ref=id_funcional)
+	auth.add_group('Troncos', '')
+	db.f_submenu.insert(nome="Troncos físicos", controller="funcional", funcao="f_troncos_fisicos", icone="icon-chevron-right", ordem="4", menu_ref=id_funcional)
+	auth.add_group('Troncos físicos', '')
+	db.f_submenu.insert(nome="Destinos", controller="funcional", funcao="f_destinos", icone="icon-chevron-right", ordem="5", menu_ref=id_funcional)
+	auth.add_group('Destinos', '')
+	db.f_submenu.insert(nome="Grupo Destinos", controller="ramais_v", funcao="f_grupo_destinos", icone="icon-chevron-right", ordem="6", menu_ref=id_funcional)
+	auth.add_group('Grupo Destinos', '')
+	db.f_submenu.insert(nome="Rotas saídas", controller="funcional", funcao="f_rotas", icone="icon-chevron-right", ordem="7", menu_ref=id_funcional)
+	auth.add_group('Rotas saídas', '')
+	db.f_submenu.insert(nome="Tarifação", controller="funcional", funcao="f_tarifacao", icone="icon-chevron-right", ordem="8", menu_ref=id_funcional)
+	auth.add_group('Tarifação', '')
+	db.f_submenu.insert(nome="Horário", controller="funcional", funcao="f_horario", icone="icon-chevron-right", ordem="9", menu_ref=id_funcional)
+	auth.add_group('Horário', '')
+	db.f_submenu.insert(nome="Ura", controller="funcional", funcao="f_ura", icone="icon-chevron-right", ordem="10", menu_ref=id_funcional)
+	auth.add_group('Ura', '')
+	##Menu Extensões
+	db.f_submenu.insert(nome="SIP-IAX", controller="ramais", funcao="show_sip", icone="icon-list-alt", ordem="1", menu_ref=id_extensoes)
+	auth.add_group('SIP-IAX', '')
+	db.f_submenu.insert(nome="Tronco SIP-IAX", controller="ramais", funcao="show_tronco", icone="icon-list-alt", ordem="2", menu_ref=id_extensoes)
+	auth.add_group('Tronco SIP-IAX', '')
+	db.f_submenu.insert(nome="DAHDI-KHOMP", controller="ramais", funcao="show_dahdi", icone="icon-list-alt", ordem="3", menu_ref=id_extensoes)
+	auth.add_group('DAHDI-KHOMP', '')
+	db.f_submenu.insert(nome="Ramais", controller="ramais_v", funcao="f_ramal_virtual", icone="icon-list-alt", ordem="4", menu_ref=id_extensoes)
+	auth.add_group('Ramais', '')
+	db.f_submenu.insert(nome="Filas", controller="queues", funcao="queue", icone="icon-list-alt", ordem="5", menu_ref=id_extensoes)
+	auth.add_group('Filas', '')
+	db.f_submenu.insert(nome="Fax", controller="queues", funcao="f_fax", icone="icon-list-alt", ordem="6", menu_ref=id_extensoes)
+	auth.add_group('Fax', '')
+	db.f_submenu.insert(nome="Desvios", controller="ramais_v", funcao="f_desvios", icone="icon-list-alt", ordem="7", menu_ref=id_extensoes)
+	auth.add_group('Desvios', '')
+	db.f_submenu.insert(nome="Direcionamento", controller="ramais_v", funcao="f_direcionamento", icone="icon-list-alt", ordem="8", menu_ref=id_extensoes)
+	auth.add_group('Direcionamento', '')
+	##Pré Pago
+	db.f_submenu.insert(nome="Usuários discagem", controller="prepago", funcao="f_usuarios", icone="icon-chevron-right", ordem="1", menu_ref=id_prepago)
+	auth.add_group('Usuários discagem', '')
+	##Configs
+	db.f_submenu.insert(nome="Parâmetros", controller="funcional", funcao="f_parametros_form", icone="icon-chevron-right", ordem="1", menu_ref=id_configs)
+	auth.add_group('Parâmetros', '')
+	db.f_submenu.insert(nome="Portabilidade", controller="funcional", funcao="f_portabilidade_form", icone="icon-chevron-right", ordem="1", menu_ref=id_configs)
+	auth.add_group('Portabilidade', '')
+
 
 if db(db.f_portabilidade).isempty():
 	db.f_portabilidade.insert(endereco='sippulse.com.br',usuario='adaldeia',senha='senha',ativo=False)

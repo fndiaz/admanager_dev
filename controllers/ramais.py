@@ -339,7 +339,7 @@ def insert_lote_dahdi(var):
 @auth.requires_login()
 def escreve_dahdi():
 	ramais = db(db.fisico_dahdi_khomp.tecnologia == 'dahdi').select(orderby=db.fisico_dahdi_khomp.porta)
-	dahdi = open('/tmp/chan_dahdi_admanager.conf','w')
+	dahdi = open('/aldeia/etc/asterisk/confs/chan_dahdi_admanager.conf','w')
 	for ramal in ramais:
 		print ramal.porta
 		dahdi.write('signalling=fxo_ks\n')
@@ -353,8 +353,8 @@ def escreve_dahdi():
 @auth.requires_login()
 def escreve_tronco():
 	troncos = db(db.fisico_sip_iax.tronco == True).select(orderby=db.fisico_sip_iax.usuario)
-	arq_sip = open('/tmp/sip_trunk_admanager.conf','w')
-	arq_iax = open('/tmp/iax_trunk_admanager.conf','w')
+	arq_sip = open('/aldeia/etc/asterisk/confs/sip_trunk_admanager.conf','w')
+	arq_iax = open('/aldeia/etc/asterisk/confs/iax_trunk_admanager.conf','w')
 	for tronco in troncos:
 		if tronco.register == True:
 			if tronco.tecnologia == 'SIP':

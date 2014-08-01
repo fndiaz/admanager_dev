@@ -1,0 +1,69 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong></strong> Faça a busca das chamadas filtrando com os campos abaixo
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0" style="margin-left:25%">
+<div class='well' style="padding:25px; margin-left:45px">
+{{=form.custom.begin}}
+
+<legend>Formulário de Pesquisa</legend>
+
+<label>Origem:</label>
+<div>{{=form.custom.widget.origem}}</div>
+<br>
+
+<label>Destino:</label> 
+<div>{{=form.custom.widget.destino}}</div>
+<br>
+
+<label>Data Início:</label> 
+<div>{{=form.custom.widget.data_inicio}}</div>
+<br>
+
+<label>Data Fim:</label> 
+<div>{{=form.custom.widget.data_fim}}</div>
+<br>
+
+<label>Tipo:</label> 
+<div>{{=form.custom.widget.tipo}}</div>
+<br>
+<br>
+<button type="submit" class="btn btn-primary">
+<i class="icon-search"></i>&nbsp;Buscar</button>
+
+
+</div><!--col-lg-->
+</div>
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<!--<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Buscar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_destinos" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>-->
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Bilhetes").addClass("chevron opened");
+$("#dsp-Bilhetes").css("display", "block");
+$("#Saintes").addClass("active");
+
+</script>
+
+{{end}}

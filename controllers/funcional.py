@@ -270,6 +270,7 @@ def f_parametros_form():
 
 	if form.process().accepted:
 		escreve_sip_iax()
+		escreve_smtp()
 		session.alerta_sucesso = 'Parâmetros salvos com sucesso!'
 		redirect(URL('f_parametros_form'))
 
@@ -356,11 +357,12 @@ def delete():
 	redirect(URL(funcao))
 
 def escreve_destino():
+	print 'escreve destinos'
 	destinos = db(db.f_destinos).select(orderby=db.f_destinos.id)
-	arq = open('/tmp/entrada.ael','w')
+	arq = open('/aldeia/etc/asterisk/confs/entrada.ael','w')
 	for destino in destinos:
 		print destino.tipo_chamada
-		arq.write('_X%s => { \n' %(destino.expressao))
+		arq.write('_%s => { \n' %(destino.expressao))
 		arq.write('	Set(__id_destino=%s);\n' %(destino.id))
 		arq.write('	AGI(rastreamento.php,${CHANNEL},${CDR(linkedid)},${STRFTIME(${EPOCH},,%F %T)},${CUT(CHANNEL,-,1)},${EXTEN},Context:${CONTEXT} | [id_destino=${id_destino}]); \n')
 		arq.write('	goto ${proximo_contexto}|${EXTEN}|1;\n')
@@ -369,7 +371,7 @@ def escreve_destino():
 
 def escreve_ura():
 	ura = db(db.f_ura).select()
-	arq = open('/tmp/ura_manager.ael', 'w')
+	arq = open('/aldeia/etc/asterisk/confs/ura_manager.ael', 'w')
 	for dado in ura:
 		arq.write("%s => {\n" %(dado.ramal_principal))
 
@@ -377,4 +379,30 @@ def escreve_ura():
 			arq.write("%s \n" %(linha)) 
 
 		arq.write("};\n\n")
+	arq.close()
+
+def escreve_smtp():
+	dado=db(db.f_parametros).select()[0]
+	arq1 = open('/etc/ssmtp/ssmtp.conf', 'w')
+	arq2 = open('/usr/local/etc/email/email.conf', 'w')
+
+	arq1.write("root=%s \n" %(dado.usuario_smtp))
+	arq1.write("mailhub=%s:%s \n" %(dado.endereco_smtp, dado.porta_smtp))
+	arq1.write("rewriteDomain=%s \n" %(dado.usuario_smtp.split('@')[1]))
+	arq1.write("hostname=%s \n" %(dado.usuario_smtp))
+	arq1.write("UseTLS=No\nUseSTARTTLS=No \n")
+	arq1.write("AuthUser=%s \n" %(dado.usuario_smtp))
+	arq1.write("AuthPass=%s \n" %(dado.senha_smtp))
+	arq1.close()
+
+	arq2.write("SMTP_SERVER = '%s' \n" %(dado.endereco_smtp))
+	arq2.write("SMTP_PORT = '%s' \n" %(dado.porta_smtp))
+	arq2.write("MY_NAME  = 'PABX' \n")
+	arq2.write("MY_EMAIL = '%s' \n" %(dado.usuario_smtp))
+	arq2.write("SMTP_AUTH = 'LOGIN' \n")
+	arq2.write("SMTP_AUTH_USER = '%s' \n" %(dado.usuario_smtp))
+	arq2.write("SMTP_AUTH_PASS = '%s' \n" %(dado.senha_smtp))
+	arq2.close()
+
+
 

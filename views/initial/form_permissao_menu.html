@@ -76,7 +76,7 @@ if auth.has_membership(sub.nome, id_usuario):
 else:
     check_sub = ""
 pass}}
-{{if (sub.nome != 'Permissões') and (sub.nome != 'Grupos'): }} <!--Não mostra alguns submenus -->
+{{if (sub.nome != 'Permissões') and (sub.nome != 'Grupos') and (sub.nome != 'Menu') and (sub.nome != 'Submenu'): }} <!--Não mostra alguns submenus -->
 <tr>         
 <td style="border:1px solid #ADC2CC">{{=sub.nome}}</td>
 <td style="border:1px solid #ADC2CC">
@@ -117,6 +117,55 @@ pass}}
 </table><br>
 
 
+<!--Departamentos -->
+<table style="clear: both" class="table table-bordered table-striped" id="user">
+
+<tbody> 
+<tr>         
+<td  id='zz' width="40%", style="border:1px solid #ADC2CC"><b>Gravações</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i></td>
+<td id='yy' width="60%", style="border:1px solid #ADC2CC">
+<!--<input class="form-control" id="{{=dado.nome}}" name="{{=dado.nome}}" type="checkbox" value="on" {{=check_menup}}>-->
+
+<label class="switch switch-success">
+<input type="checkbox" class="switch-input" id="gravacao_perm" name="gravacao_perm" value="on" {{=check_grav}}>
+<span class="switch-label" data-on="On" data-off="Off"></span>
+<span class="switch-handle"></span>
+</label>
+</td>
+</tr>
+
+{{
+    depta=db(db.f_departamentos).select(db.f_departamentos.departamento)
+    for dept in depta:
+    dept_nome = 'dept_%s' %(dept.departamento)
+    
+    if auth.has_membership(dept_nome, id_usuario):
+        check_dept = "checked"
+    else:
+        check_dept = ""
+    pass
+
+}}
+
+<tr>         
+<td style="border:1px solid #ADC2CC">{{=dept.departamento}}</td>
+<td style="border:1px solid #ADC2CC">
+<!--<input class="form-control" id="{{=sub.nome}}" name="{{=sub.nome}}" type="checkbox" value="on" {{=check_sub}}>-->
+
+<label class="switch switch-success">
+<input type="checkbox" class="switch-input" id="{{=dept_nome}}" name="{{=dept_nome}}" value="on" {{=check_dept}}>
+<span class="switch-label" data-on="On" data-off="Off"></span>
+<span class="switch-handle"></span>
+</label>
+
+</td>
+</tr>  
+
+{{pass}}
+</tbody>
+</table><br>
+
+
 <input value="Enviar" type="submit"  class="btn btn-primary">
 </form>
 </div>
@@ -129,6 +178,8 @@ pass}}
 
 
 $("#ger").popover({trigger: "hover",title: 'Usuário Gerenciador', content: "Somente o usuário gerenciador poderá alterar e deletar os dados do sistema, se não estiver habilitado o usuário será somente leitura. ", placement: 'left' }) 
+
+
 
 //Menu
 $("#act-Acessos").addClass("chevron opened");

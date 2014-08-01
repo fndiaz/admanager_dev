@@ -5,6 +5,8 @@
 #########################################################################
 
 from gluon.storage import Storage
+from datetime import datetime
+from pytz import timezone
 
 config = Storage(
         db=Storage(),
@@ -87,7 +89,6 @@ auth.define_tables(username=False)
 if request.is_local:
 	response.generic_patterns = ['*']
 
-import datetime
 #response
 response.title= "Alternativo"
 response.marca=""

@@ -128,7 +128,7 @@ def busca_fisico():
 	query1 = (db.f_ramal_virtual.ramal_virtual == request.vars['ramal'])&\
 			 (db.f_ramal_virtual.tecnologia != 'QUEUE')&\
 			 (db.f_ramal_virtual.tecnologia != 'FAX')
-	con = db(query1).select(db.f_ramal_virtual.tecnologia, db.f_ramal_virtual.ramal_fisico, db.f_ramal_virtual.nome)
+	con = db(query1).select(db.f_ramal_virtual.tecnologia, db.f_ramal_virtual.ramal_fisico, db.f_ramal_virtual.ramal_virtual)
 
 	return con.as_json()
 

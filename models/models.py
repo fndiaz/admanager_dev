@@ -12,6 +12,8 @@ db.define_table('f_empresa',
 	migrate=False
 	)
 
+db.f_empresa._enable_record_versioning()
+
 db.define_table('f_troncos',
 	Field("id"),
 	Field("tronco", "string", length="20"),
@@ -47,6 +49,7 @@ db.define_table('f_destinos',
 	Field("destino", "string"),
 	Field("tamanho_max", "integer"),
 	Field("tarifado", "boolean"),
+	Field("portabilidade", "boolean"),
 	format="%(tipo_chamada)s",
 	migrate=False
 	)

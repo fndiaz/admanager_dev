@@ -18,10 +18,10 @@
 <table class="tabela-forip">
     <thead>
         <tr>
+            <th>Nome</th>
             <th>Fila</th>
             <th>Interface</th>
             <th>Penalty</th>
-            <th>Nome</th>
             <th>Paused</th>
             <th>#</th>
         </tr>
@@ -29,10 +29,10 @@
     <tbody>
     {{for dado in con:}}
         <tr>
+            <td>{{=dado.membername}}</td>
             <td>{{=dado.queue_name}}</td>
             <td>{{=dado.interface}}</td>
             <td>{{=dado.penalty}}</td>
-            <td>{{=dado.membername}}</td>
             <td>{{=dado.paused}}</td>
             <td>
             {{if editor == True:}}

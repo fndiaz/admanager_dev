@@ -4,10 +4,29 @@
 
 ###--- Estrutura ---###
 
-Início de desenvolviemnto /initial
+Início de desenvolvimento e principal /initial
+	-Dashboard
 	-Autenticação
 	-Menus
 	-Permissões
 
 Funcionalidades básicas /funcional
 	-Cadastros e formulários principais
+
+Físicos e lotes /ramais
+	-ramais físicos sip/iax
+	-ramais físicos dahdi/khomp
+	-troncos sip/iax
+
+Ramais e complementos funcional /ramais_v
+	-ramal virtual
+	-departamentos
+	-direcionamento entre outros
+
+Filas e fax /queues
+	-queue e queue members
+	-fax
+
+Relatótios e gravações /bilhetes
+	-busca chamadas
+	-escutar ligações

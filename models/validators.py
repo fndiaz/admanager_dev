@@ -29,16 +29,14 @@ db.f_tarifacao.valor.requires = IS_NOT_EMPTY()
 
 ##Rotas
 db.f_rotas.rota.requires = IS_NOT_EMPTY()
-db.f_rotas.id_tronco.requires = IS_IN_DB(db, 'f_troncos.id', '%(tronco)s', zero=T('selecione um tronco'), 
+#db.f_rotas.id_tronco.requires = IS_IN_DB(db, 'f_troncos.id', '%(tronco)s',
+#					error_message=T("valor inválido"))
+db.f_rotas.id_tarifacao.requires = IS_IN_DB(db, 'f_tarifacao.id', '%(tarifacao)s', 
 					error_message=T("valor inválido"))
-db.f_rotas.id_tarifacao.requires = IS_IN_DB(db, 'f_tarifacao.id', '%(tarifacao)s', zero=T('selecione uma tarifacao'), 
+db.f_rotas.id_horario.requires = IS_IN_DB(db, 'f_horario.id', '%(horario)s', 
 					error_message=T("valor inválido"))
-db.f_rotas.id_horario.requires = IS_IN_DB(db, 'f_horario.id', '%(horario)s', zero=T('selecione um horário'), 
-					error_message=T("valor inválido"))
-db.f_rotas.id_empresa.requires = IS_IN_DB(db,'f_empresa.id',"%(empresa)s",
-					multiple=True, error_message=T("escolha uma opção"))
-db.f_rotas.id_destino.requires = IS_IN_DB(db,'f_destinos.id',"%(expressao)s",
-					multiple=True, error_message=T("escolha uma opção"))
+db.f_rotas.id_empresa.requires = IS_IN_DB(db(db.f_empresa.mostrar == True),'f_empresa.id',"%(empresa)s", multiple=True)
+db.f_rotas.id_destino.requires = IS_IN_DB(db(db.f_destinos.mostrar == True),'f_destinos.id',"%(destino)s", multiple=True)
 
 ##Horários
 #dias={"mon": "Segunda Feira", "tue": "Terça Feira", "wed" : "Quarta Feira", "thu" : "Quinta Feira", "fri" : "Sexta Feira", "sat" : "Sábado", "sun" : "Domingo"}
@@ -100,7 +98,7 @@ db.f_desvios.horario_fim.requires = IS_NOT_EMPTY()
 ## Queues
 #########################################################################
 #Queue
-db.queue.name.requires = IS_NOT_EMPTY()
+db.queue.name.requires = [IS_NOT_EMPTY(), IS_ALPHANUMERIC()]
 
 #Queue Member
 db.queue_members.queue_name.requires = IS_NOT_EMPTY()

@@ -73,25 +73,20 @@ def link_player():
 	print request.vars
 	date = request.vars.date
 	linked_id = request.vars.linked_id
-	origem = request.vars.origem
-	dst = request.vars.dst
+	arq = request.vars.arq
 
-	ano = date.split(' ')[0]
-	hora = date.split(' ')[1]
+	date = date.split(' ')[0]
 	datef=''
-	horaf=''
 
 	for i in range(0,3):
-		dt = ano.split('-')[i]
+		dt = date.split('-')[i]
 		datef = datef + dt
-		hr = hora.split('-')[i]
-		horaf = horaf + hr
 		i=i+1
 
 	if request.vars.link == 'player':	
-		redirect(("http://127.0.0/wavplayer/index.php?audio=GRAVACOES/"+ datef +"/"+ linked_id +"-"+ horaf +"-"+ origem +"-"+ dst +".WAV"))
+		redirect(("http://127.0.0/wavplayer/index.php?audio=GRAVACOES/"+ datef +"/"+ arq +".WAV"))
 		#***TROCAR por request.env.server_addr****
 	elif request.vars.link == 'down':
 		#redirect(("http://"+ request.env.remote_addr +"/GRAVACOES/"+ datef +"/"+ unique +".WAV"))
-		redirect(("http://"+ request.env.remote_addr +"/download_audio.php/?diretorio="+ datef +"/"+ linked_id +"-"+ horaf +"-"+ origem +"-"+ dst +".WAV"))
+		redirect(("http://"+ request.env.server_addr +"/download_audio.php/?diretorio="+ datef +"&arquivo="+ arq +".WAV"))
 		#***TROCAR por request.env.server_addr****

@@ -94,6 +94,8 @@ if db(db.f_submenu).isempty():
 	auth.add_group('Desvios', '')
 	db.f_submenu.insert(nome="Direcionamento", controller="ramais_v", funcao="f_direcionamento", icone="icon-list-alt", ordem="8", menu_ref=id_extensoes)
 	auth.add_group('Direcionamento', '')
+	db.f_submenu.insert(nome="DDR", controller="ramais_v", funcao="f_ddr", icone="icon-list-alt", ordem="9", menu_ref=id_extensoes)
+	auth.add_group('DDR', '')
 	##Pré Pago
 	db.f_submenu.insert(nome="Usuários discagem", controller="prepago", funcao="f_usuarios", icone="icon-chevron-right", ordem="1", menu_ref=id_prepago)
 	auth.add_group('Usuários discagem', '')

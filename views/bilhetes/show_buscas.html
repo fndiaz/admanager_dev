@@ -11,7 +11,7 @@
                                 <th>Data</th>
                                 <th>Departamento</th>
                                 <th>Tempo</th>
-                              {{if auth.has_membership("gravacao_perm", session.auth.user.id):}}
+                              {{if auth.has_membership("gravacao_perm") or (auth.has_membership('administrador')):}}
                                 <th>Gravações</th>
                               {{pass}}
                         </tr>
@@ -22,21 +22,22 @@
                                 <td>{{=dado.origem}}</td>
                                 <td>{{=dado.destino}}</td>
                                 <td>{{
-                                      hora=dado.horario.astimezone(timezone('America/Sao_Paulo'))
-                                      =hora.strftime("%Y-%m-%d %H:%M:%S")
+                                      #hora=dado.horario.astimezone(timezone('America/Sao_Paulo'))
+                                      #=hora.strftime("%Y-%m-%d %H:%M:%S")
+                                      =dado.horario
                                     }}
                                 </td>
                                 <td>{{=dado.departamento}}</td>
                                 <td>{{=time.strftime('%H:%M:%S', time.gmtime(dado.tempo))}}</td>
-                              {{if auth.has_membership("gravacao_perm", session.auth.user.id):}}
+                              {{if (auth.has_membership("gravacao_perm")) or (auth.has_membership('administrador')):}}
                                 <td>{{if dado.gravacao == True:}}
                                    <a href="{{=URL(a='admanager', c='bilhetes', f='link_player', 
-                                    vars=dict(date=hora.strftime("%Y-%m-%d %H-%M-%S"), origem=dado.origem, dst=dado.destino, linked_id=dado.linked_id,link='player'))}}" target="_blank"><i class=" icon-headphones"></i></a>
+                                    vars=dict(date=dado.horario.strftime("%Y-%m-%d"), arq=dado.arquivo_gravacao, linked_id=dado.linked_id,link='player'))}}" target="_blank"><i class=" icon-headphones"></i></a>
                                     &nbsp;&nbsp;&nbsp;
                                     <a href="{{=URL(a='admanager', c='bilhetes', f='link_player', 
-                                    vars=dict(date=hora.strftime("%Y-%m-%d %H-%M-%S"), origem=dado.origem, dst=dado.destino, linked_id=dado.linked_id,link='down'))}}" target="_blank"><i class=" icon-download-alt"></i></a>
+                                    vars=dict(date=dado.horario.strftime("%Y-%m-%d"), arq=dado.arquivo_gravacao, linked_id=dado.linked_id,link='down'))}}" target="_blank"><i class=" icon-download-alt"></i></a>
                                 {{else:}}
-                                --
+                                <i class=" icon-ban-circle"></i>
                                 {{pass}}</td>
                               {{pass}}
                         </tr>

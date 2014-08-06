@@ -7,14 +7,14 @@
 db.define_table('f_empresa',
 	Field("id"),
 	Field("empresa"),
-	####Field("faixa_ramal"),
+	Field("mostrar", "boolean", default=True),
 	format="%(empresa)s",
 	migrate=False
 	)
 
 db.f_empresa._enable_record_versioning()
 
-db.define_table('f_troncos',
+Troncos = db.define_table('f_troncos',
 	Field("id"),
 	Field("tronco", "string", length="20"),
 	Field("dispositivo", "string", length="30"),
@@ -30,19 +30,20 @@ db.define_table('f_troncos',
 	Field("ramal_principal", "string", length="10"),
 	Field("ura", "boolean"),
 	Field("add_zero", "boolean"),
-	Field("id_empresa", db.f_empresa),
+	Field("id_empresa", db.f_empresa, requires=IS_IN_DB(db(db.f_empresa.mostrar == True),'f_empresa.id',"%(empresa)s")),
+	Field("mostrar", "boolean", default=True),
 	format="%(tronco)s",
 	migrate=False
 	)
 
-db.define_table('f_troncos_fisicos',
+Troncos_fisicos = db.define_table('f_troncos_fisicos',
 	Field("id"),
-	Field("id_tronco", db.f_troncos),
+	Field("id_tronco", db.f_troncos, requires=IS_IN_DB(db(db.f_troncos.mostrar == True),'f_troncos.id',"%(tronco)s")),
 	Field("dispositivo", "string", length="30"),
 	migrate=False
 	)
 
-db.define_table('f_destinos',
+Destinos = db.define_table('f_destinos',
 	Field("id"),
 	Field("tipo_chamada", "string"),
 	Field("expressao", "string"),
@@ -50,6 +51,7 @@ db.define_table('f_destinos',
 	Field("tamanho_max", "integer"),
 	Field("tarifado", "boolean"),
 	Field("portabilidade", "boolean"),
+	Field("mostrar", "boolean", default=True),
 	format="%(tipo_chamada)s",
 	migrate=False
 	)
@@ -72,10 +74,10 @@ db.define_table("f_horario",
     format="%(horario)s",
     migrate=False)
 
-db.define_table('f_rotas',
+Rotas = db.define_table('f_rotas',
 	Field("id"),
 	Field("rota", "string", length="1"),
-	Field("id_tronco", db.f_troncos),
+	Field("id_tronco", db.f_troncos, requires=IS_IN_DB(db(db.f_troncos.mostrar == True),'f_troncos.id',"%(tronco)s")),
 	Field("prioridade", "integer"),
 	Field("id_destino", "list:reference db.f_destinos"),
 	Field("exclui_antes", "integer"),
@@ -149,25 +151,27 @@ db.define_table("f_bilhetes_chamadas",
 	Field("nome_origem", "string", length="20"),
 	Field("departamento", "string", length="50"),
 	Field("transbordo", "string", length="5"),
+	Field("arquivo_gravacao", "string"),
     format="%(origem)s",
     migrate=False)
 
-db.define_table("f_grupo_destinos",
+Grupo_destinos = db.define_table("f_grupo_destinos",
 	Field("id_destinos", "list:reference db.f_destinos"),
 	Field("grupo_destino", "string"),
 	format="%(grupo_destino)s",
     migrate=False)
 
-db.define_table("f_departamentos",
+Departamentos = db.define_table("f_departamentos",
 	Field("departamento", "string", length="50"),
-	Field("id_empresa", db.f_empresa),
+	Field("id_empresa", db.f_empresa, requires=IS_IN_DB(db(db.f_empresa.mostrar == True),'f_empresa.id',"%(empresa)s")),
+	Field("mostrar", "boolean", default=True),
 	format="%(departamento)s",
     migrate=False)
 
-db.define_table("f_ramal_virtual",
+Ramal_virtual = db.define_table("f_ramal_virtual",
 	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX", "DAHDI", "KHOMP", "QUEUE", "FAX"])),
 	Field("ramal_fisico"),
-	Field("id_departamento", db.f_departamentos),
+	Field("id_departamento", db.f_departamentos, requires=IS_IN_DB(db(db.f_departamentos.mostrar == True),'f_departamentos.id',"%(departamento)s")),
 	Field("ramal_virtual"),
 	Field("gravacao", "boolean"),
 	Field("blacklist", "boolean"),
@@ -181,7 +185,7 @@ db.define_table("f_ramal_virtual",
 	format="%(ramal_virtual)s",
     migrate=False)
 
-db.define_table("f_aplicacao",
+Aplicacao = db.define_table("f_aplicacao",
 	Field("id_ramalvirtual", db.f_ramal_virtual),
 	Field("cadeado_ativo", "boolean", default=False),
 	Field("cadeado_senha"),
@@ -198,7 +202,7 @@ db.define_table("f_aplicacao",
     migrate=False)
 
 desvio={"INDISPONIVEL": "Indisponivel", "OCUPADO": "Ocupado", "NAOATENDIMENTO" : "Não Atendimento", "IMEDIATO" : "Imediato"}
-db.define_table("f_desvios",
+Desvios = db.define_table("f_desvios",
 	Field("id_ramalvirtual", db.f_ramal_virtual),
 	Field("tipo_desvio", requires=IS_IN_SET(desvio)),
 	Field("dia_semana", "list:string"),
@@ -232,14 +236,14 @@ db.define_table("fisico_sip_iax",
 	Field("extras", "text", default='requirecalltoken=no\ncanreinvite=no\n'),
 	Field("register", "boolean"),
 	format="%(usuario)s",
-	migrate=True)
+	migrate=False)
 
 db.define_table("fisico_dahdi_khomp",
 	Field("tecnologia"),
 	Field("porta"),
 	Field("context"),
 	format="%(porta)s",
-	migrate=True)
+	migrate=False)
 
 ##Queues
 estrategia = ["ringall", "roundrobin", "leastrecent", "fewestcalls", "random", "rrmemory"]
@@ -300,10 +304,16 @@ db.define_table("f_fax",
 	format="%(nome)s",
 	migrate=False)
 
+Ddr = db.define_table("f_ddr",
+	Field("ddr"),
+	Field("id_ramalvirtual", db.f_ramal_virtual),
+	format="%(ddr)s",
+	migrate=False)
+
 ####--Usuarios/PrePago
 db.define_table("f_usuarios",
 	Field("pin", "string", length=20),
-	Field("id_departamento", db.f_departamentos),
+	Field("id_departamento", db.f_departamentos, requires=IS_IN_DB(db(db.f_departamentos.mostrar == True),'f_departamentos.id',"%(departamento)s")),
 	Field("nome", "string", length=20),
 	Field("gravacao", "boolean"),
 	Field("blacklist", "boolean"),

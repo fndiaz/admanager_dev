@@ -40,9 +40,9 @@ def f_departamentos():
 	editor = permissao()
 	url = URL('admanager', 'ramais_v', 'f_departamentos_form')
 
-	query = (db.f_departamentos.id_empresa == db.f_empresa.id)
+	query = (db.f_departamentos.mostrar == True)&\
+			(db.f_departamentos.id_empresa == db.f_empresa.id)
 	con = db(query).select(orderby=db.f_departamentos.id)
-	print con
 	
 	return response.render("ramais_v/show_departamentos.html",  
 					url=url, editor=editor, con=con)
@@ -148,7 +148,7 @@ def f_aplicacao_form():
 
 	return response.render("ramais_v/form_aplicacao.html", form=form)
 
-
+######-DIRECIONAMENTO
 @auth.requires_login()
 def f_direcionamento():
 	response.title = 'Direcionamento'
@@ -180,7 +180,7 @@ def f_direcionamento_form():
 
 	return response.render("ramais_v/form_direcionamento.html", form=form)
 
-
+######-DESVIOS
 @auth.requires_login()
 def f_desvios():
 	response.title = 'Desvios'
@@ -190,7 +190,6 @@ def f_desvios():
 
 	query = (db.f_desvios.id_ramalvirtual == db.f_ramal_virtual.id)
 	con = db(query).select(orderby=db.f_desvios.numero)
-	print con
 	
 	return response.render("ramais_v/show_desvios.html",  
 					url=url, editor=editor, con=con)
@@ -231,6 +230,56 @@ def valida_f_desvios_form(form):
 		if m2 <= m1:
 			form.errors.horario_fim = 'não pode ser menor, igual que horário início'
 
+######-DDR
+@auth.requires_login()
+def f_ddr():
+	response.title = 'DDR'
+	response.marca=['Extensões', 'DDR']
+	editor = permissao()
+	url = URL('admanager', 'ramais_v', 'f_ddr_form')
+
+	query = (db.f_ddr.id_ramalvirtual == db.f_ramal_virtual.id)
+	con = db(query).select(orderby=db.f_ddr.ddr)
+	
+	return response.render("ramais_v/show_ddr.html",  
+					url=url, editor=editor, con=con)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def f_ddr_form():
+	response.title = 'DDR'
+	response.marca=['Extensões', 'DDR', 'Adiciona DDR']
+	id_edit	= request.vars['id_edit']
+	
+	if id_edit is None:
+		form 	=	SQLFORM(db.f_ddr)
+	else:
+		form 	=	SQLFORM(db.f_ddr, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process().accepted:
+		redirect(URL('f_ddr'))
+
+	return response.render("ramais_v/form_ddr.html", form=form)
+
+######-EXTRAS
+def link_fisico():
+	print 'link_fisico'
+	print request.vars
+	if (request.vars['tec'] == 'SIP') or (request.vars['tec'] == 'IAX'):
+		id_fis=db(db.fisico_sip_iax.usuario == request.vars.fisico).select(db.fisico_sip_iax.id)[0].id
+		redirect(URL(a='admanager',c='ramais',f='fisico_sip_iax_form',vars=dict(id_edit=id_fis)))
+	if (request.vars['tec'] == 'DAHDI') or (request.vars['tec'] == 'KHOMP'):
+		redirect(URL(a='admanager',c='ramais',f='show_dahdi'))
+	if (request.vars['tec'] == 'QUEUE'):
+		id_fis=db(db.queue.name == request.vars.fisico).select(db.queue.id)[0].id
+		redirect(URL(a='admanager',c='queues',f='queue_form',vars=dict(id_edit=id_fis)))
+	if (request.vars['tec'] == 'FAX'):
+		id_fis=db(db.f_fax.numero == request.vars.fisico).select(db.f_fax.id)[0].id
+		redirect(URL(a='admanager',c='queues',f='f_fax_form',vars=dict(id_edit=id_fis)))
+
+
 def ajax_fisico():
 	print 'entrou'
 	print request.vars
@@ -268,21 +317,47 @@ def delete():
 	print request.vars
 	funcao 	=	request.vars['tabela']
 	id_tab	=	request.vars['id_tab']
+
 	if funcao 	== "f_ramal_virtual":
 		tabela 	=	 db.f_ramal_virtual.id
+		if trata_ramal_virtual(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
 		funcao  = 	 'f_ramal_virtual'
+
 	if funcao	== "f_departamentos":
 		delete_role(request.vars['nome'])
 		tabela 	=	db.f_departamentos.id
 		funcao	= 	"f_departamentos"
+
 	if funcao	==	"f_desvios":
 		tabela	= 	db.f_desvios.id
 		funcao	= 	"f_desvios"
+
 	if funcao	== "f_grupo_destinos":
 		tabela	= 	db.f_grupo_destinos.id
+		if trata_grupo_destino(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
 		funcao	= 	"f_grupo_destinos"
 	
 	db(tabela == id_tab).delete()
+	if funcao == "f_ramal_virtual":
+		db(Aplicacao.id_ramalvirtual == id_tab).delete()
+	redirect(URL(funcao))
+
+@auth.requires_login()
+def delete_visao():
+	print request.vars
+	funcao 	=	request.vars['tabela']
+	id_tab	=	request.vars['id_tab']
+	if funcao 	== 	"f_departamentos":
+		if trata_departamento(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
+		tabela 	= db.f_departamentos.id
+
+	db(tabela == id_tab).update(mostrar=False)
 	redirect(URL(funcao))
 
 def delete_role(nome):

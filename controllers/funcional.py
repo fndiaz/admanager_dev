@@ -9,7 +9,7 @@ def f_troncos():
 	url = URL('admanager', 'funcional', 'f_troncos_form')
 	print editor
 
-	troncos = db(db.f_troncos).select(orderby=db.f_troncos.id)
+	troncos = db(db.f_troncos.mostrar == True).select(orderby=db.f_troncos.id)
 	
 	return response.render("funcional/show_troncos.html",  
 					url=url, editor=editor, troncos=troncos)
@@ -34,6 +34,8 @@ def f_troncos_form():
 	#form.element(_name='ciclo_conta')['_value'] = "teste"
 	if form.process().accepted:
 		redirect(URL('f_troncos'))
+	elif form.errors:
+		response.alerta_erro="Erros no formulário"
 
 	return response.render("funcional/form_troncos.html", form=form)
 
@@ -81,7 +83,7 @@ def f_destinos():
 	response.marca=['Funcional', 'Destinos']
 	url = URL('admanager', 'funcional', 'f_destinos_form')
 	editor 	= 	permissao()
-	destinos 	= 	db(db.f_destinos).select(orderby=db.f_destinos.id)
+	destinos 	= 	db(db.f_destinos.mostrar == True).select(orderby=db.f_destinos.id)
 
 	return response.render("funcional/show_destinos.html", 
 				url=url, editor=editor, destinos=destinos)
@@ -115,7 +117,7 @@ def f_empresa():
 	response.marca = ['Funcional', 'Empresa']
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'funcional', 'f_empresa_form')
-	empresa	= 	db(db.f_empresa).select(orderby=db.f_empresa.id)
+	empresa	= 	db(db.f_empresa.mostrar == True).select(orderby=db.f_empresa.id)
 
 	return response.render("funcional/show_empresa.html", 
 				url=url, editor=editor, empresa=empresa)
@@ -137,6 +139,7 @@ def f_empresa_form():
 	form.element(_name='empresa')['_class'] = "form-control"
 	#form.element(_name='faixa_ramal')['_class'] = "form-control"
 	if form.process().accepted:
+		print request.vars
 		redirect(URL('f_empresa'))
 
 	return response.render("funcional/form_empresa.html", form=form)
@@ -336,16 +339,20 @@ def delete():
 		tabela 	= 	db.f_troncos_fisicos.id
 	if funcao 	== "f_tarifacao":
 		tabela 	= 	db.f_tarifacao.id
+		if trata_tarifacao(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
 	if funcao 	== "f_rotas":
 		tabela 	= 	db.f_rotas.id
-	if funcao 	== 	"f_tarifacao":
-		tabela 	=	db.f_tarifacao.id
 	if funcao 	== 	"f_empresa":
 		tabela 	= db.f_empresa.id
 	if funcao 	== 	"f_destinos":
 		tabela 	= 	db.f_destinos.id
 	if funcao 	== 	"f_horario":
 		tabela 	= 	db.f_horario.id
+		if trata_horario(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
 	if funcao 	== 	"f_ura":
 		tabela 	=	db.f_ura.id
 
@@ -355,6 +362,34 @@ def delete():
 	if funcao == "f_ura":
 		escreve_ura()
 	redirect(URL(funcao))
+
+@auth.requires_login()
+def delete_visao():
+	print request.vars
+	funcao 	=	request.vars['tabela']
+	id_tab	=	request.vars['id_tab']
+	if funcao 	== 	"f_empresa":
+		if trata_empresa(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
+		tabela 	= db.f_empresa.id
+	if funcao 	== "f_troncos":
+		if trata_tronco(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
+		tabela 	=	 db.f_troncos.id
+	if funcao 	== 	"f_destinos":
+		if trata_destino(funcao, id_tab) == False:
+			session.alerta_erro = 'Erro, existe vínculo!'
+			redirect(URL(funcao))
+		tabela 	= 	db.f_destinos.id
+
+	db(tabela == id_tab).update(mostrar=False)
+	if funcao == "f_destinos":
+		escreve_destino()
+	redirect(URL(funcao))
+
+
 
 def escreve_destino():
 	print 'escreve destinos'

@@ -20,5 +20,12 @@
 	{{session.alerta_sucesso=None}}
 {{pass}}
 
+{{if session.alerta_erro != None:}}
+	 <div style="cursor: pointer; display: block;" id="noty_error" class="noty_bar noty_theme_default noty_layout_topLeft noty_error">
+		 <div class="noty_message"><span class="noty_text">{{=session.alerta_erro}}</span>
+		 </div><button type="button" class="close" data-dismiss="alert">×</button>
+	</div>
+	{{session.alerta_erro=None}}
+{{pass}}
 
 

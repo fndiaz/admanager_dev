@@ -323,7 +323,8 @@ def f_portabilidade_form():
 		input['_class'] = 'form-control'
 
 	if form.process().accepted:
-		redirect(URL('f_portabilidade'))
+		session.alerta_sucesso = 'Dados salvos com sucesso!'
+		redirect(URL('f_portabilidade_form'))
 
 	return response.render("funcional/form_portabilidade.html", form=form)
 

@@ -1,5 +1,6 @@
 # coding: utf8
 {
+'': '',
 '!=': '!=',
 '"update" is an optional expression like "field1=\'newvalue\'". You cannot update or delete the results of a JOIN': '"update" é uma expressão opcional como "campo1=\'novovalor\'". Você não pode atualizar ou apagar os resultados de um JOIN',
 '%(nrows)s registros encontrados': '%(nrows)s registros encontrados',
@@ -25,8 +26,8 @@
 'Apply changes': 'Apply changes',
 'Até logo': 'Até logo',
 'Autentique-se': 'Autentique-se',
-'Available databases and tables': 'Bancos de dados e tabelas disponíveis',
 'Available Databases and Tables': 'Available Databases and Tables',
+'Available databases and tables': 'Bancos de dados e tabelas disponíveis',
 'Bancos': 'Bancos',
 'Bem Vindo': 'Bem Vindo',
 'Buy this book': 'Buy this book',

@@ -46,7 +46,7 @@ auth.settings.registration_requires_approval = False
 auth.settings.actions_disabled = ['register']
 
 auth.messages.logged_in = 'Bem Vindo' 
-auth.messages.logged_out = 'Até logo'
+auth.messages.logged_out = ''
 auth.messages.access_denied = 'Acesso negado! Contate o administrador'
 auth.messages.invalid_email = 'email Inválido'
 auth.messages.invalid_login = 'Login Inválido'

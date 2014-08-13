@@ -33,7 +33,7 @@ if db(db.f_menu).isempty():
 	auth.add_group('Extensões', '')
 	db.f_menu.insert(nome="Pré Pago", controller="", funcao="", icone="icon-align-justify", ordem="5", submenu=True)
 	auth.add_group('Pré Pago', '')
-	db.f_menu.insert(nome="Bilhetes", controller="bilhetes", funcao="busca_chamadas", icone="iconicon-th-list", ordem="6", submenu=False)
+	db.f_menu.insert(nome="Bilhetes", controller="bilhetes", funcao="busca_chamadas", icone="icon-search", ordem="6", submenu=False)
 	auth.add_group('Bilhetes', '')
 	db.f_menu.insert(nome="Configs", controller="", funcao="", icone="icon-wrench", ordem="7", submenu=True)
 	auth.add_group('Configs', '')

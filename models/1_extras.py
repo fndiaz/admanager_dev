@@ -15,8 +15,8 @@ def permissao():
 
 def escreve_sip_iax():
 	ramais = db(db.fisico_sip_iax).select(orderby=db.fisico_sip_iax.usuario)
-	sip = open('/tmp/sip_admanager.conf','w')
-	iax = open('/tmp/iax_admanager.conf','w')
+	sip = open('/aldeia/etc/asterisk/confs/sip_admanager.conf','w')
+	iax = open('/aldeia/etc/asterisk/confs/iax_admanager.conf','w')
 	ips=db(db.f_parametros).select(db.f_parametros.faixa_ip_interna)[0].faixa_ip_interna
 
 	for ramal in ramais:

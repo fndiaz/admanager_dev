@@ -109,11 +109,11 @@ def fisico_dahdi_khomp_form():
 	form_khomp = SQLFORM.factory(
 		Field('dispositivo', 
 			requires=
-			IS_IN_SET(["b0", "b1", 
-					   "b2", "b3", 
-					   "b4", "b5", 
-					   "b6", "b7",
-					   "b8", "b9"]),
+			IS_IN_SET(["B0", "B1", 
+					   "B2", "B3", 
+					   "B4", "B5", 
+					   "B6", "B7",
+					   "B8", "B9"]),
 			default=gera_khomp())
 	)
 
@@ -275,14 +275,14 @@ def insert_dahdi(var):
 
 @auth.requires_login() 
 def gera_khomp():
-	con = db(db.fisico_dahdi_khomp.porta.like('b%')).select(db.fisico_dahdi_khomp.porta)
+	con = db(db.fisico_dahdi_khomp.porta.like('B%')).select(db.fisico_dahdi_khomp.porta)
 	#print con
 	lista=[]
 	for data in con:
 		lista.append(data.porta)
 	#print lista
 	for i in range(10):
-		porta='b%sc1' %(i)
+		porta='B%sC1' %(i)
 		#print porta
 		if porta in lista:
 			print 'porta existe:%s' %(porta)
@@ -300,17 +300,17 @@ def insert_khomp(var):
 		#print '%sc%s' %(var.dispositivo,porta)
 		db.fisico_dahdi_khomp.insert(
 			tecnologia='khomp',
-			porta='%sc%s' %(var.dispositivo,porta),
+			porta='%sC%s' %(var.dispositivo,porta),
 			context=var.context)
 
 @auth.requires_login()
 def verifica_khomp(var):
-	con = db(db.fisico_dahdi_khomp.porta.like('b%')).select(db.fisico_dahdi_khomp.porta)
+	con = db(db.fisico_dahdi_khomp.porta.like('B%')).select(db.fisico_dahdi_khomp.porta)
 	lista=[]
 	for data in con:
 		lista.append(data.porta)
 
-	if '%sc1' %(var.dispositivo) in lista:
+	if '%sC1' %(var.dispositivo) in lista:
 		return False
 	else:
 		return True
@@ -349,6 +349,7 @@ def escreve_dahdi():
 		dahdi.write('channel=>%s\n\n' %(ramal.porta))
 
 	dahdi.close()
+	commands.getoutput("sudo asterisk -rx 'module reload chan_dahdi.so'")
 
 @auth.requires_login()
 def escreve_tronco():
@@ -365,6 +366,8 @@ def escreve_tronco():
 				%(tronco.usuario, tronco.secret, tronco.host_f))
 	arq_sip.close()
 	arq_iax.close()
+	commands.getoutput("sudo asterisk -rx 'module reload chan_sip.so'")
+	commands.getoutput("sudo asterisk -rx 'module reload chan_iax2.so'")
 
 
 #SHOW
@@ -429,11 +432,11 @@ def delete():
 
 @auth.requires_login()
 def delete_khomp():
-	dispositivo = request.vars.porta.split('c')[0]
+	dispositivo = request.vars.porta.split('C')[0]
 	for i in range(24):
 		porta=i+1
-		print 'delete %sc%s' %(dispositivo,porta)
-		var = '%sc%s' %(dispositivo,porta)
+		print 'delete %sC%s' %(dispositivo,porta)
+		var = '%sC%s' %(dispositivo,porta)
 		db(db.fisico_dahdi_khomp.porta == var).delete()	
 	
 	redirect(URL('show_dahdi'))

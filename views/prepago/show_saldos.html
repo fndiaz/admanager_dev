@@ -1,0 +1,149 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong>  Escolha um usuário abaixo para consultar seu saldo de minutos.
+</div>
+
+<div class="box-content">
+<div class="row">
+<div class="col-sm-12">
+
+{{=form.custom.begin}}
+
+<div class="a" style="float:left; position:relative; margin-left:0px">
+{{=form.custom.widget.usuario}}
+</div>
+
+<div class="span3" style="margin-left: 320px">
+<button class="btn btn-primary" type="submit"></i>&nbsp;Consultar</button>
+</div>
+{{=form.custom.end}}
+
+<br><br><br>
+<!--Info Usuarios-->
+{{if request.vars.usr != None:}}
+
+<div class="col-sm-3">
+<div class="row">
+
+<div class="col-xs-5 col-sm-12">
+
+	<h3>Informações do Usuário</h3>
+
+	<ul class="profile-details">
+		<li>
+			<div><i class="icon-user"></i> Nome</div>
+				{{=usr.f_usuarios.nome}}
+		</li>
+		<li>
+			<div><i class="icon-tablet"></i> Pin</div>
+				{{=usr.f_usuarios.pin}}
+		</li>
+		<li>
+			<div><i class="icon-briefcase"></i> Departamento</div>
+				{{=usr.f_departamentos.departamento}}
+		</li>
+		<li>
+			<div><i class="icon-group"></i> Grupo Chamadas</div>
+				{{=usr.f_grupo_destinos.grupo_destino}}
+		</li>
+	</ul>
+
+	<h3>Funções Disponíveis</h3>
+
+	<ul class="profile-details">
+		<li>
+			<div><i class=" icon-headphones"></i> Gravação</div>
+			{{if usr.f_usuarios.gravacao is True:}}
+			Habilitado
+			{{else:}}
+			Desabilitado
+			{{pass}}
+		</li>
+		<li>
+			<div><i class="icon-shield"></i> Blacklist</div>
+			{{if usr.f_usuarios.blacklist is True:}}
+			Habilitado
+			{{else:}}
+			Desabilitado
+			{{pass}}
+		</li>
+	</ul>
+
+<br><br>
+</div><!--col12-->	
+</div><!--/row-->	
+</div><!--col-3-->
+<!--FIM info Usuarios-->
+
+<div class="col-sm-8">
+{{ tipo={'local_fixo': 'Local Fixo', 'local_celular': 'Local Celular', 'ddd_celular': 'DDD Celular', 'ddi': 'DDI', 'ddd_fixo': 'DDD Fixo', '0300': 'Zero Trezentos'} }}
+
+<h2>Saldos</h2>
+	{{for i in saldo:}}
+
+    {{
+    if int(porcent[i]) < 30:
+    	cor='lightBlue'
+    elif int(porcent[i]) < 60:
+    	cor='lightOrange'
+    else:
+    	cor='red'
+    pass
+    }}
+
+	<ul class="skill-bar" style="margin-bottom:15px">
+    	
+       	
+       	{{if int(saldo[i]) == 0:}}
+       	<h5>{{=tipo[i]}}</h5>
+       	<li>
+       	<div class="meter"></div>
+		<div style="color:#b2b8bd; float:right; margin-top:-10px;"><h5><i>Crédito: 0</i></h5></div>	
+       </li>
+       	{{else:}}
+       	<h5>{{=tipo[i]}}</h5>
+       	<li>
+       	<div class="meter"><span class="{{=cor}}">{{=porcent[i]}}%</span></div>
+       	<div style="color:#b2b8bd; float:right; margin-top:-10px;"><h5><i>Usado: {{=credito[i]-saldo[i]}} de um total {{=credito[i]}} restando agora {{=saldo[i]}}</i></h5></div>	
+       	</li>
+       	{{pass}}<!--if int(saldo[i]) == 0:-->
+
+
+       									
+  	</ul>
+  	{{pass}}<!--for i in saldo:-->
+</div><!--8/col-->
+{{pass}}<!--if request.vars.usr != None:-->
+
+
+
+</div><!--col-12-->
+</div><!--row-->
+</div><!--box-content-->
+{{end}}<!--FIM-->
+
+
+
+
+
+
+
+
+{{block jquery}}
+<script>
+
+//$("#toptitle").text("New word");
+
+$("#act-Pré-Pago").addClass("chevron opened");
+$("#dsp-Pré-Pago").css("display", "block");
+$("#Consultar-saldo").addClass("active");
+
+</script>
+
+{{end}}
+
+

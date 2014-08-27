@@ -1,0 +1,90 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong></strong> Os valores setados serão inclusos <strong>em forma de minutos</strong> no usuário selecionado.
+</div>
+
+<div class='row'>
+<div class="col-lg-10" style="margin-left:8%; margin-bottom:50px">
+<table class="table table-bordered table-striped">
+{{=form.custom.begin}}
+								<tbody><tr>
+									<th>Usuário</th>
+									<th>Local Fixo</th>
+									<th>Local Celular</th>
+									<th>DDD Fixo</th>
+									<th>DDD Celular</th>
+									<th>DDI</th>
+									<th>0300</th>
+								</tr>
+								<tr>
+									<td>{{=form.custom.widget.usuario}}</td>
+									<td>{{=form.custom.widget.local_fixo}}</td>
+									<td>{{=form.custom.widget.local_celular}}</td>
+									<td>{{=form.custom.widget.ddd_fixo}}</td>
+									<td>{{=form.custom.widget.ddd_celular}}</td>
+									<td>{{=form.custom.widget.ddi}}</td>
+									<td>{{=form.custom.widget.f0300}}</td>
+								</tr>
+							</tbody></table>
+
+<button type="submit" class="btn btn-primary"><i class="icon-check"></i>&nbsp;Inserir</button>
+
+<!--Form erros-->
+{{if form.errors:}}
+<div style="margin-top:25px; float:right">
+<div class="alert alert-danger">
+<button type="button" class="close" data-dismiss="alert">×</button>
+Alguns <strong>erros</strong> foram encontrados
+  <ul>
+  {{for fieldname in form.errors:}}
+    <li>Campo {{=fieldname}}: {{=form.errors[fieldname]}}</li>
+  {{pass}}
+  </ul>
+  {{form.errors.clear()}}
+</div>
+</div>
+{{pass}}
+
+<!--Show insert creditos-->
+{{ tipo={'local_fixo': 'Local Fixo', 'local_celular': 'Local Celular', 'ddd_celular': 'DDD Celular', 'ddi': 'DDI', 'ddd_fixo': 'DDD Fixo', 'f0300': 'Zero Trezentos'} }}
+
+{{if dict_insert != {}:}}
+<div style="margin-top:25px; float:right">
+<div class="alert alert-success">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Registros</strong> inseridos com sucesso!
+ <ul>
+{{for item in dict_insert:}}
+<li>{{=tipo[item]}} : {{=dict_insert[item]}} minutos</li>
+{{pass}}
+</ul>
+</div>
+</div>
+{{pass}}
+<!--FIM-Show insert creditos-->
+
+
+{{=form.custom.end}}
+</div>
+
+
+</div><!--row-->
+{{end}}
+
+
+
+
+
+{{block jquery}}
+<script>
+
+$("#act-Pré-Pago").addClass("chevron opened");
+$("#dsp-Pré-Pago").css("display", "block");
+$("#Cred-Manual").addClass("active");
+
+</script>
+{{end}}

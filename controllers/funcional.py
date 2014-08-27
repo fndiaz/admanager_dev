@@ -404,6 +404,7 @@ def escreve_destino():
 		arq.write('	goto ${proximo_contexto}|${EXTEN}|1;\n')
 		arq.write('};\n\n')
 	arq.close()
+	commands.getoutput("sudo asterisk -rx 'ael reload'")
 
 def escreve_ura():
 	ura = db(db.f_ura).select()
@@ -416,6 +417,7 @@ def escreve_ura():
 
 		arq.write("};\n\n")
 	arq.close()
+	commands.getoutput("sudo asterisk -rx 'ael reload'")
 
 def escreve_smtp():
 	dado=db(db.f_parametros).select()[0]

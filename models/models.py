@@ -91,7 +91,7 @@ Rotas = db.define_table('f_rotas',
 	migrate=False
 	)
 
-db.define_table("f_parametros",
+Parametros = db.define_table("f_parametros",
     Field("empresa", "string", length="100"),
     Field("tempo_chamada_externa", "integer"),
     Field("tempo_chamada_interna", "integer"),
@@ -311,7 +311,7 @@ Ddr = db.define_table("f_ddr",
 	migrate=False)
 
 ####--Usuarios/PrePago
-db.define_table("f_usuarios",
+Usuariospp = db.define_table("f_usuarios",
 	Field("pin", "string", length=20),
 	Field("id_departamento", db.f_departamentos, requires=IS_IN_DB(db(db.f_departamentos.mostrar == True),'f_departamentos.id',"%(departamento)s")),
 	Field("nome", "string", length=20),
@@ -320,6 +320,27 @@ db.define_table("f_usuarios",
 	Field("id_grupo_destinos", db.f_grupo_destinos),
 	Field("credito", "boolean"),
 	format="%(nome)s",
+	migrate=False)
+
+Saldos = db.define_table("f_saldos",
+	Field("responsavel"),
+	Field("tipo_origem"),
+	Field("datahora"),
+	Field("tempo", "integer"),
+	Field("uniqueid"),
+	Field("tipo", length=1),
+	Field("tipo_chamada"),
+	format="%(responsavel)s",
+	migrate=False)
+
+Creditos = db.define_table("f_creditos",
+	Field("id_departamento", db.f_departamentos, requires=IS_IN_DB(db(db.f_departamentos.mostrar == True),'f_departamentos.id',"%(departamento)s")),
+	Field("local_fixo"),
+	Field("local_celular"),
+	Field("ddd_fixo"),
+	Field("ddd_celular"),
+	Field("ddi"),
+	Field("f0300"),
 	migrate=False)
 
 ####--Menus Permissões

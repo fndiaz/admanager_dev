@@ -1,6 +1,4 @@
 # coding=UTF-8
-import os
-import commands
 from datetime import datetime
 import platform
 import urllib2
@@ -130,29 +128,30 @@ def get_server():
 	return server
 
 def gera_teste():
-	cj = cookielib.CookieJar()
-	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-	opener.open("http://192.168.100.253:8088/asterisk/mxml?action=login&username=python&secret=123456")
-
-	tree = ElementTree(file=opener.open('http://192.168.100.253:8088/asterisk/mxml?action=CoreShowChannels'))
+#	cj = cookielib.CookieJar()
+#	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+#	opener.open("http://192.168.100.253:8088/asterisk/mxml?action=login&username=python&secret=123456")
+#
+#	tree = ElementTree(file=opener.open('http://192.168.100.253:8088/asterisk/mxml?action=CoreShowChannels'))
 	lista=[]
-	r = tree.getroot()
-	a=True
-	for child in r:
-		print child
-		for var in child:
-			if a == True:
-				print var.attrib['message']
-				a = False
-			else:
-				if var.attrib['event'] == 'CoreShowChannel':
-					print var.attrib['channel']
-				elif var.attrib['event'] == 'CoreShowChannelsComplete':
-					print 'fim'
-					total = var.attrib['listitems']
-					print total
-	#ch=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active call' | awk '{print $1}'")
+#	r = tree.getroot()
+#	a=True
+#	for child in r:
+#		print child
+#			if a == True:
+#				print var.attrib['message']
+#				a = False
+#			else:
+#				if var.attrib['event'] == 'CoreShowChannel':
+#					print var.attrib['channel']
+#				elif var.attrib['event'] == 'CoreShowChannelsComplete':
+#					print 'fim'
+#					total = var.attrib['listitems']
+#					print total
+	ch=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active call' | awk '{print $1}'")
+	total=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active channel' | awk '{print $1}'")
 	ch= '1'
+	total='1'
 	lista.append(total)
 	lista.append(ch)
 

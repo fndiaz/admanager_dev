@@ -1,0 +1,131 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong></strong> Os valores setados serão inclusos <strong>em forma de minutos</strong> automaticamente todo mês em nos ramais que fazem parte do departamento selecionado.
+</div>
+
+<div class='row'>
+<div class="col-lg-10" style="margin-left:8%; margin-bottom:50px">
+<table class="table table-bordered table-striped">
+{{=form.custom.begin}}
+								<tbody><tr>
+									<th>Departamento</th>
+									<th>Local Fixo</th>
+									<th>Local Celular</th>
+									<th>DDD Fixo</th>
+									<th>DDD Celular</th>
+									<th>DDI</th>
+									<th>0300</th>
+								</tr>
+								<tr>
+									<td>{{=form.custom.widget.id_departamento}}</td>
+									<td>{{=form.custom.widget.local_fixo}}</td>
+									<td>{{=form.custom.widget.local_celular}}</td>
+									<td>{{=form.custom.widget.ddd_fixo}}</td>
+									<td>{{=form.custom.widget.ddd_celular}}</td>
+									<td>{{=form.custom.widget.ddi}}</td>
+									<td>{{=form.custom.widget.f0300}}</td>
+								</tr>
+							</tbody></table>
+
+<button type="submit" class="btn btn-primary"><i class="icon-check"></i>&nbsp;Automatizar</button>
+
+{{if form.errors:}}
+<div style="margin-top:25px; float:right">
+<div class="alert alert-danger">
+<button type="button" class="close" data-dismiss="alert">×</button>
+Alguns <strong>erros</strong> foram encontrados
+  <ul>
+  {{for fieldname in form.errors:}}
+    <li>Campo {{=fieldname}}: {{=form.errors[fieldname]}}</li>
+  {{pass}}
+  </ul>
+  {{form.errors.clear()}}
+</div>
+</div>
+{{pass}}
+
+
+{{=form.custom.end}}
+</div>
+
+
+
+
+<div class="col-lg-10" style="margin-left:8%; margin-bottom:60px">
+<h2><small>Registros Criados</small></h2>
+<table class="tabela-forip">
+    <thead>
+        <tr>
+            <th>Departamento</th>
+			<th>Local Fixo</th>
+			<th>Local Celular</th>
+			<th>DDD Fixo</th>
+			<th>DDD Celular</th>
+			<th>DDI</th>
+			<th>0300</th>
+			<th>#</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{for dado in con:}}
+        <tr>
+        	<td>{{=dado.f_departamentos.departamento}}</td>
+            <td>{{=dado.f_creditos.local_fixo}}</td>
+            <td>{{=dado.f_creditos.local_celular}}</td>
+            <td>{{=dado.f_creditos.ddd_fixo}}</td>
+            <td>{{=dado.f_creditos.ddd_celular}}</td>
+            <td>{{=dado.f_creditos.ddi}}</td>
+            <td>{{=dado.f_creditos.f0300}}</td>
+			<td>
+			{{if editor == True:}}
+            	<a href="{{=url}}?id_edit={{=dado.f_creditos.id}}">
+            	<i class=" icon-edit"></i></a> &nbsp;&nbsp;
+
+				<a class="link" data-tabela="f_creditos" data-nome="{{=dado.f_departamentos.departamento}}" data-value="{{=dado.f_creditos.id}}" href="#">
+   				<i class=" icon-trash"></i></a>
+			{{pass}}
+			</td>
+        </tr>
+    {{pass}}
+    </tbody>
+</table>
+<br>
+</div>
+
+
+</div><!--row-->
+{{end}}
+
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+var links = document.querySelectorAll('.link');
+for (x in links) {
+    links[x].onclick = function() { 
+    var data_attr = this.dataset;
+    //alert(data_attr.value);
+    var id   = data_attr.value;
+    var nome = data_attr.nome;
+    var tabela= data_attr.tabela;
+    decisao = confirm("Tem certeza que deseja remover o item "+nome);
+        if(decisao){
+            location.href="{{=URL(a='admanager', c='prepago', f='delete')}}?id_tab="+id+"&tabela="+tabela+";"
+        }
+    return false;
+    }
+}
+
+$("#act-Pré-Pago").addClass("chevron opened");
+$("#dsp-Pré-Pago").css("display", "block");
+$("#Cred.-Automático").addClass("active");
+
+</script>
+
+{{end}}

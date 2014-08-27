@@ -52,6 +52,10 @@ db.f_ura.ura.requires = IS_NOT_EMPTY()
 
 ##Parametros
 db.f_parametros.faixa_ip_interna.requires = IS_NOT_EMPTY()
+db.f_parametros.endereco_smtp.requires = IS_NOT_EMPTY()
+db.f_parametros.usuario_smtp.requires = IS_EMAIL()
+db.f_parametros.senha_smtp.requires = IS_NOT_EMPTY()
+db.f_parametros.porta_smtp.requires = IS_NOT_EMPTY()
 
 
 #########################################################################
@@ -110,6 +114,18 @@ db.f_fax.nome.requires = IS_NOT_EMPTY()
 db.f_fax.email.requires = IS_EMAIL()
 db.f_fax.numero.requires = IS_NOT_EMPTY()
 
+#########################################################################
+## Prepago
+#########################################################################
+db.f_usuarios.nome.requires = IS_NOT_IN_DB(db, 'f_usuarios.nome')
+
+#Creditos
+db.f_creditos.local_fixo.requires = IS_INT_IN_RANGE(0,900000)
+db.f_creditos.local_celular.requires = IS_INT_IN_RANGE(0,900000)
+db.f_creditos.ddd_fixo.requires = IS_INT_IN_RANGE(0,900000)
+db.f_creditos.ddd_celular.requires = IS_INT_IN_RANGE(0,900000)
+db.f_creditos.ddi.requires = IS_INT_IN_RANGE(0,900000)
+db.f_creditos.f0300.requires = IS_INT_IN_RANGE(0,900000)
 
 
 

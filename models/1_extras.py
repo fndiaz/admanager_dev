@@ -62,3 +62,5 @@ def escreve_sip_iax():
 					
 	sip.close()
 	iax.close()
+	commands.getoutput("sudo asterisk -rx 'module reload chan_sip.so'")
+	commands.getoutput("sudo asterisk -rx 'module reload chan_iax2.so'")

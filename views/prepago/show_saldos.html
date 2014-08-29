@@ -98,7 +98,7 @@
 	<ul class="skill-bar" style="margin-bottom:15px">
     	
        	
-       	{{if int(saldo[i]) == 0:}}
+       	{{if saldo[i] == 0:}}
        	<h5>{{=tipo[i]}}</h5>
        	<li>
        	<div class="meter"></div>
@@ -108,7 +108,7 @@
        	<h5>{{=tipo[i]}}</h5>
        	<li>
        	<div class="meter"><span class="{{=cor}}">{{=porcent[i]}}%</span></div>
-       	<div style="color:#b2b8bd; float:right; margin-top:-10px;"><h5><i>Usado: {{=credito[i]-saldo[i]}} de um total {{=credito[i]}} restando agora {{=saldo[i]}}</i></h5></div>	
+       	<div style="color:#b2b8bd; float:right; margin-top:-10px;"><h5><i>Usado:{{=str(timedelta(seconds=uso[i]))}} de um total {{=str(timedelta(seconds=credito[i]))}} restando agora {{=str(timedelta(seconds=saldo[i]))}}</i></h5></div>	
        	</li>
        	{{pass}}<!--if int(saldo[i]) == 0:-->
 

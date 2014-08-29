@@ -118,6 +118,7 @@ db.f_fax.numero.requires = IS_NOT_EMPTY()
 ## Prepago
 #########################################################################
 db.f_usuarios.nome.requires = IS_NOT_IN_DB(db, 'f_usuarios.nome')
+db.f_usuarios.pin.requires = IS_NOT_IN_DB(db, 'f_usuarios.pin')
 
 #Creditos
 db.f_creditos.local_fixo.requires = IS_INT_IN_RANGE(0,900000)

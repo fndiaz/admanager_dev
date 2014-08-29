@@ -46,7 +46,7 @@ def show_saldos():
 	for input in form.elements():
 		input['_class'] = 'form-control'
 
-	saldo, porcent, credito = calcula_saldo(request.vars.usr)
+	saldo, porcent, credito, uso = calcula_saldo(request.vars.usr)
 	print saldo
 	print porcent
 	print credito
@@ -64,7 +64,7 @@ def show_saldos():
 		redirect(URL(vars={'usr':form.vars.usuario}))
 
 	return response.render("prepago/show_saldos.html", form=form, 
-			usr=usr, saldo=saldo, porcent=porcent, credito=credito)
+			usr=usr, saldo=saldo, porcent=porcent, credito=credito, uso=uso)
 
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_creditos_form():
@@ -137,27 +137,27 @@ def insere_manual(dados):
 
 	if dados.local_fixo is not '0':
 		Saldos.insert(responsavel=dados.usuario, tipo_origem='U', datahora=date,
-		tempo=int(dados.local_fixo), uniqueid=email, tipo='C', tipo_chamada='LOCAL_FIXO')
+		tempo=int(dados.local_fixo)*60, uniqueid=email, tipo='C', tipo_chamada='LOCAL_FIXO')
 		dict_insert['local_fixo'] = dados.local_fixo
 	if dados.local_celular is not '0':
 		Saldos.insert(responsavel=dados.usuario, tipo_origem='U', datahora=date,
-		tempo=int(dados.local_celular), uniqueid=email, tipo='C', tipo_chamada='LOCAL_CELULAR')
+		tempo=int(dados.local_celular)*60, uniqueid=email, tipo='C', tipo_chamada='LOCAL_CELULAR')
 		dict_insert['local_celular'] = dados.local_celular
 	if dados.ddd_fixo is not '0':
 		Saldos.insert(responsavel=dados.usuario, tipo_origem='U', datahora=date,
-		tempo=int(dados.ddd_fixo), uniqueid=email, tipo='C', tipo_chamada='DDD_FIXO')
+		tempo=int(dados.ddd_fixo)*60, uniqueid=email, tipo='C', tipo_chamada='DDD_FIXO')
 		dict_insert['ddd_fixo'] = dados.ddd_fixo
 	if dados.ddd_celular is not '0':
 		Saldos.insert(responsavel=dados.usuario, tipo_origem='U', datahora=date,
-		tempo=int(dados.ddd_celular), uniqueid=email, tipo='C', tipo_chamada='DDD_CELULAR')
+		tempo=int(dados.ddd_celular)*60, uniqueid=email, tipo='C', tipo_chamada='DDD_CELULAR')
 		dict_insert['ddd_celular'] = dados.ddd_celular
 	if dados.ddi is not '0':
 		Saldos.insert(responsavel=dados.usuario, tipo_origem='U', datahora=date,
-		tempo=int(dados.ddi), uniqueid=email, tipo='C', tipo_chamada='DDI')
+		tempo=int(dados.ddi)*60, uniqueid=email, tipo='C', tipo_chamada='DDI')
 		dict_insert['ddi'] = dados.ddi
 	if dados.f0300 is not '0':
 		Saldos.insert(responsavel=dados.usuario, tipo_origem='U', datahora=date,
-		tempo=int(dados.f0300), uniqueid=email, tipo='C', tipo_chamada='0300')
+		tempo=int(dados.f0300)*60, uniqueid=email, tipo='C', tipo_chamada='0300')
 		dict_insert['f0300'] = dados.f0300
 	return dict_insert
 
@@ -186,11 +186,14 @@ def calcula_data():
 def calcula_saldo(usr):
 	dict_credito = {}
 	dict_saldo = {}
+	dict_uso = {}
 	dict_porcent = {}
 	date=calcula_data()
 	#TIRAR REPLACE--------------------------------------*****
-	date_ant = date['date_ant'].replace(month=07).strftime("%Y-%m-%d %H:%M:%S")
-	date_now = date['date_now'].replace(month=07).strftime("%Y-%m-%d %H:%M:%S")
+	#date_ant = date['date_ant'].replace(month=07).strftime("%Y-%m-%d %H:%M:%S")
+	#date_now = date['date_now'].replace(month=07).strftime("%Y-%m-%d %H:%M:%S")
+	date_ant = date['date_ant'].strftime("%Y-%m-%d %H:%M:%S")
+	date_now = date['date_now'].strftime("%Y-%m-%d %H:%M:%S")
 	query = (Saldos.responsavel == usr)&\
 			(Saldos.datahora > date_ant)&\
 			(Saldos.datahora < date_now)
@@ -211,6 +214,7 @@ def calcula_saldo(usr):
 			dict_saldo[dado] = 0
 			dict_porcent[dado] = -1
 			dict_credito[dado] = 0
+			dict_uso[dado] = 0
 		else:
 			#Credito
 			cred=db(query_c & (Saldos.tipo_chamada == dado.upper() ))\
@@ -229,16 +233,23 @@ def calcula_saldo(usr):
 				for d in deb:
 					debito = d._extra['SUM(f_saldos.tempo)']
 					print '%s-debito' %(debito)
-			#Saldo
+			#Calculando Saldo - Resta
 			saldo=int(credito) - int(debito)
+			uso=int(credito) - int(saldo)
+			#Formato 00:00:00 -nao usado
+			time_saldo=str(timedelta(seconds=saldo))
+			time_credito=str(timedelta(seconds=credito))
+			time_uso=str(timedelta(seconds=uso))
 			porcent= (100*int(debito))/int(credito)
 			print '%s-saldo' %(saldo)
 			print '%s-Porcentagem' %(porcent)
-			dict_credito[dado] = int(credito)
+			#Retorrnando valores
+			dict_credito[dado] = credito
 			dict_saldo[dado] = saldo
+			dict_uso[dado] = uso
 			dict_porcent[dado] = porcent
 
-	return dict_saldo, dict_porcent, dict_credito
+	return dict_saldo, dict_porcent, dict_credito, dict_uso
 
 @auth.requires_login()
 def delete():
@@ -248,6 +259,8 @@ def delete():
 	if funcao 	== "f_creditos":
 		tabela 	=	 db.f_creditos.id
 		funcao  = 	 'f_creditos_form'
+	if funcao 	== "f_usuarios":
+		tabela 	=	 db.f_usuarios.id
 
 	db(tabela == id_tab).delete()
 	redirect(URL(funcao))

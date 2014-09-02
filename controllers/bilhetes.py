@@ -84,9 +84,14 @@ def link_player():
 		i=i+1
 
 	if request.vars.link == 'player':	
-		redirect(("http://127.0.0/wavplayer/index.php?audio=GRAVACOES/"+ datef +"/"+ arq +".WAV"))
+		if request.is_local:
+			redirect(("http://127.0.0.1/wavplayer/index.php?audio=GRAVACOES/"+ datef +"/"+ arq +".WAV"))
+		else:
+			redirect(("http://"+ request.env.server_addr +"/wavplayer/index.php?audio=GRAVACOES/"+ datef +"/"+ arq +".WAV"))
 		#***TROCAR por request.env.server_addr****
 	elif request.vars.link == 'down':
-		#redirect(("http://"+ request.env.remote_addr +"/GRAVACOES/"+ datef +"/"+ unique +".WAV"))
-		redirect(("http://"+ request.env.server_addr +"/download_audio.php/?diretorio="+ datef +"&arquivo="+ arq +".WAV"))
+		if request.is_local:
+			redirect(("http://127.0.0.1/download_audio.php/?diretorio="+ datef +"&arquivo="+ arq +".WAV"))
+		else:
+			redirect(("http://"+ request.env.server_addr +"/download_audio.php/?diretorio="+ datef +"&arquivo="+ arq +".WAV"))
 		#***TROCAR por request.env.server_addr****

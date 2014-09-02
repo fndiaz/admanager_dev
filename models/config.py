@@ -18,8 +18,13 @@ config = Storage(
         )
 
 #config.db.uri = "mysql://root:yma2578k@localhost/adm"
-config.db.uri = "postgres:pg8000://postgres:123456@127.0.0.1/admanager_dev"
 #config.db.uri = "sqlite://hosts.sqlite"
+if request.is_local:
+	config.db.uri = "postgres:pg8000://postgres:123456@127.0.0.1/admanager_dev"
+else:
+	config.db.uri = "postgres:pg8000://forip:yma2578k@127.0.0.1/forip"
+
+
 config.db.pool_size = 10
 config.db.check_reserved = ['all']
 #config.migrate_enable=True
@@ -74,11 +79,15 @@ def notifica(form):
 #auth.settings.register_onaccept = notifica
 #auth.settings.register_onaccept = funcao
 
+if request.is_local:
+	uploadfolder='/home/fernando/web2py/applications/admanager/static/images/avatar'
+else:
+	uploadfolder='/var/www/web2pyapplications/admanager/static/images/avatar'
 
 #fields
 auth.settings.extra_fields['auth_user'] = [
 	Field("ramal", "string"),
-	Field("photo", "upload", uploadfolder='/home/fernando/web2py/applications/admanager/static/images/avatar',)]
+	Field("photo", "upload", uploadfolder=uploadfolder,)]
 #	Field("gender", requires=IS_IN_SET(["masculino","feminino"]))
 #]
 

@@ -12,8 +12,6 @@ db.define_table('f_empresa',
 	migrate=False
 	)
 
-db.f_empresa._enable_record_versioning()
-
 Troncos = db.define_table('f_troncos',
 	Field("id"),
 	Field("tronco", "string", length="20"),

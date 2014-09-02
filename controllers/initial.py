@@ -148,10 +148,11 @@ def gera_teste():
 #					print 'fim'
 #					total = var.attrib['listitems']
 #					print total
-	ch=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active call' | awk '{print $1}'")
-	total=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active channel' | awk '{print $1}'")
 	ch= '1'
 	total='1'
+	if not request.is_local:
+		ch=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active call' | awk '{print $1}'")
+		total=commands.getoutput("sudo asterisk -rx 'core show channels' | grep 'active channel' | awk '{print $1}'")
 	lista.append(total)
 	lista.append(ch)
 
@@ -163,10 +164,13 @@ def get_chart():
 	ano= date.split('-')[0]
 	mes= date.split('-')[1]
 	dia= date.split('-')[2]
+	if request.is_local:
+		ano=2014
+		mes=05
 
 	count = db.f_bilhetes_chamadas.origem.count()
-	query = (db.f_bilhetes_chamadas.horario.year()==2014)&\
-		   	(db.f_bilhetes_chamadas.horario.month()==05)&\
+	query = (db.f_bilhetes_chamadas.horario.year()==ano)&\
+		   	(db.f_bilhetes_chamadas.horario.month()==mes)&\
 		   	(db.f_bilhetes_chamadas.id_destino > 1)
 	result = db(query).select(db.f_bilhetes_chamadas.origem, count, 
 						groupby=db.f_bilhetes_chamadas.origem, orderby=~count, limitby=(0, 5))

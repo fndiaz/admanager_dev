@@ -84,10 +84,11 @@ db.f_grupo_destinos.id_destinos.requires = IS_IN_DB(db(db.f_destinos.mostrar == 
 db.f_departamentos.departamento.requires = IS_NOT_EMPTY()
 
 ##Ramal Virtual
-db.f_ramal_virtual.ramal_virtual.requires = [
-IS_INT_IN_RANGE(0, 99999999999, error_message='somente números'),
+db.f_ramal_virtual.ramal_virtual.requires = [ 
+IS_MATCH("[0-9]+", error_message='somente números'),
 IS_NOT_IN_DB(db, 'f_ramal_virtual.ramal_virtual')
 ]
+
 db.f_ramal_virtual.chamadas_simultaneas.requires = IS_INT_IN_RANGE(1,21)
 
 ##Desvios

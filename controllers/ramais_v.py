@@ -105,7 +105,7 @@ def f_ramal_virtual_form():
 	if form.process().accepted:
 		if id_edit is None:
 			print request.vars
-			insert_aplicacao(request.vars.ramal_virtual)
+			#insert_aplicacao(request.vars.ramal_virtual.strip(' ') )
 		redirect(URL('f_ramal_virtual'))
 
 	return response.render("ramais_v/form_ramal_virtual.html", form=form)

@@ -3,8 +3,22 @@
 {{block center}}
 <div class="alert alert-info">
 <button type="button" class="close" data-dismiss="alert">×</button>
-<strong>Troncos!</strong> São os canais que serão utilizados pelos ramais para realizar e receber chamadas.
+<!--<strong>Troncos!</strong> --> 
+
+<div style="float:left; position:relative;">O número principal do tronco corresponde á&nbsp;
+<i class="icon-signout"></i>&nbsp;</div>
+<div id="text_ddd" style="float:left; position:relative;">DDD-</div>
+<div id="text_prefixo" style="float:left; position:relative;">PREFIXO-</div>
+<div id="text_chave">CHAVE</div>
+
 </div>
+
+<!--<div style="margin-bottom:10px; margin-left:30%;">
+<div style="float:left; position:relative;">Número Tronco:&nbsp;</div>
+<div id="text_ddd" style="float:left; position:relative;">DDD-</div>
+<div id="text_prefixo" style="float:left; position:relative;">PREFIXO-</div>
+<div id="text_chave">CHAVE</div>
+</div>-->
 
 <div class='row'>
 <div class="coluna_form_esquerda_b0">
@@ -44,6 +58,10 @@
 <div>{{=form.custom.widget.ddd}}</div>
 <br>
 
+<label>Csp:</label> 
+<div>{{=form.custom.widget.csp}}</div>
+<br>
+
 <label>Prefixo:</label> 
 <div>{{=form.custom.widget.prefixo}}</div>
 <br>
@@ -54,10 +72,6 @@
 
 <label>Ciclo da conta:</label> 
 <div>{{=form.custom.widget.ciclo_conta}}</div>
-<br>
-
-<label>Csp:</label> 
-<div>{{=form.custom.widget.csp}}</div>
 <br>
 
 <label>Habilitado:</label><br>
@@ -101,6 +115,36 @@
 $("#act-Funcional").addClass("chevron opened");
 $("#dsp-Funcional").css("display", "block");
 $("#Troncos").addClass("active");
+
+if ($('#f_troncos_ddd').val() != ''){
+	$("#text_ddd").text( $('#f_troncos_ddd').val()+'-' );
+}
+
+if ($('#f_troncos_prefixo').val() != ''){
+	$("#text_prefixo").text( $('#f_troncos_prefixo').val()+'-' );
+}
+
+if ($('#f_troncos_chave').val() != ''){
+	$("#text_chave").text( $('#f_troncos_chave').val() );
+}
+
+$( "#f_troncos_ddd" ).focusout(function() {
+  //alert( $("#f_troncos_ddd").val() );
+  var text = $("#f_troncos_ddd").val()
+  $("#text_ddd").text( text+'-' );
+});
+
+$( "#f_troncos_prefixo" ).focusout(function() {
+  //alert( $("#f_troncos_prefixo").val() );
+  var text = $("#f_troncos_prefixo").val()
+  $("#text_prefixo").text( text+'-' );
+});
+
+$( "#f_troncos_chave" ).focusout(function() {
+  //alert( $("#f_troncos_chave").val() );
+  var text = $("#f_troncos_chave").val()
+  $("#text_chave").text( text );
+});
 
 </script>
 

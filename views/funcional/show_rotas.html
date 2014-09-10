@@ -18,10 +18,8 @@
             <th>Add antes</th>
             <th>Add depois</th>
             <th>Empresa</th>
-            <th>Tarifação</th>
-            <th>horario</th>
-            <th>csp</th>
-            <th></th>
+            <th>CSP</th>
+            <th>#</th>
         </tr>
     </thead>
     <tbody>
@@ -33,10 +31,15 @@
             <!--<td>{{=dado.id_destino}}</td>-->
             <td>
                 {{for item in dado.id_destino:}}
-                {{=db(db.f_destinos.id == item).select(db.f_destinos.tipo_chamada)[0].tipo_chamada}}<br>
+                {{=db(db.f_destinos.id == item).select(db.f_destinos.destino)[0].destino}}<br>
                 {{pass}}
             </td>
+
+            {{if dado.exclui_antes == None:}}
+            <td></td>
+            {{else:}}
             <td>{{=dado.exclui_antes}}</td>
+            {{pass}}
             <td>{{=dado.adiciona_antes}}</td>
             <td>{{=dado.adiciona_depois}}</td>
             <td>
@@ -44,9 +47,13 @@
                 {{=db(db.f_empresa.id == item).select(db.f_empresa.empresa)[0].empresa}}<br>
                 {{pass}}
             </td>
-            <td>{{=db(db.f_tarifacao.id == dado.id_tarifacao).select(db.f_tarifacao.tarifacao)[0].tarifacao}}</td>
-            <td>{{=dado.id_horario}}</td>
-            <td>{{=dado.add_csp}}</td>
+            <!--<td>{{=db(db.f_tarifacao.id == dado.id_tarifacao).select(db.f_tarifacao.tarifacao)[0].tarifacao}}</td>-->
+            {{if dado.add_csp is True:}}
+            <td><input checked="checked" disabled="disabled" type="checkbox"></td>
+            {{else:}}
+            <td><input disabled="disabled" type="checkbox"></td>
+            {{pass}}
+
             <td>
             {{if editor == True:}}
                 <a href="{{=url}}?id_rota={{=dado.id}}">

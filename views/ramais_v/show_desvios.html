@@ -15,6 +15,7 @@
                         <tr>
                                 <th>Ramal</th>
                                 <th>Desvio</th>
+                                <th>Dia Semana</th>
                                 <th>Início</th>
                                 <th>Fim</th>
                                 <th>Número</th>
@@ -23,9 +24,34 @@
 
 		<tbody>
 			{{for dado in con:}} 
+            <!--Definindo cor por tecnologia-->
+            {{
+                tipo=dado.f_desvios.tipo_desvio
+                if tipo == 'NAOATENDIMENTO':
+                    classe = 'label label-success'
+                pass
+                if tipo == 'OCUPADO':
+                    classe = 'label label-info'
+                pass
+                if tipo == 'IMEDIATO':
+                    classe = 'label label-important'
+                pass
+                if tipo == 'INDISPONIVEL':
+                    classe = 'label label-warning'
+                pass
+            }}
+
                         <tr>
                                 <td>{{=dado.f_ramal_virtual.ramal_virtual}}</td>
-                                <td>{{=dado.f_desvios.tipo_desvio}}</td>
+                                <td><span class="{{=classe}}"><b>{{=dado.f_desvios.tipo_desvio}}</b></span></td>
+
+                                <td>
+                                {{for item in dado.f_desvios.dia_semana:}}
+                                    {{dict_diasemana=dia_semana()}}
+                                    {{=dict_diasemana[item]}},
+                                {{pass}}
+                                </td>
+
                                 <td>{{=dado.f_desvios.horario_inicio}}</td>
                                 <td>{{=dado.f_desvios.horario_fim}}</td>
                                 <td>{{=dado.f_desvios.numero}}</td>
@@ -83,6 +109,7 @@ $(document).ready(function() {
                                   $('td:eq(3)', nRow).css( "text-align", "center" );
                                   $('td:eq(4)', nRow).css( "text-align", "center" );
                                   $('td:eq(5)', nRow).css( "text-align", "center" );
+                                  $('td:eq(6)', nRow).css( "text-align", "center" );
                                   return nRow;
           }
 

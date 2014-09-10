@@ -101,7 +101,7 @@ pass}}
 
 <tbody> 
 <tr>         
-<td  id='ger' width="40%", style="border:1px solid #ADC2CC"><b>Gerenciador</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i></td>
+<td  id='gerr' width="40%", style="border:1px solid #ADC2CC"><b id='ger'>Gerenciador</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i id='ger2' class="icon-question-sign"></i></td>
 <td width="60%", style="border:1px solid #ADC2CC">
 <!--<input class="form-control" id="{{=dado.nome}}" name="{{=dado.nome}}" type="checkbox" value="on" {{=check_menup}}>-->
 
@@ -122,7 +122,7 @@ pass}}
 
 <tbody> 
 <tr>         
-<td  id='zz' width="40%", style="border:1px solid #ADC2CC"><b>Gravações</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i></td>
+<td  id='grava' width="40%", style="border:1px solid #ADC2CC"><b id='grav'>Gravações</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i id='grav2' class="icon-question-sign"></i></td>
 <td id='yy' width="60%", style="border:1px solid #ADC2CC">
 <!--<input class="form-control" id="{{=dado.nome}}" name="{{=dado.nome}}" type="checkbox" value="on" {{=check_menup}}>-->
 
@@ -135,7 +135,7 @@ pass}}
 </tr>
 
 {{
-    depta=db(db.f_departamentos).select(db.f_departamentos.departamento)
+    depta=db(db.f_departamentos.mostrar == True).select(db.f_departamentos.departamento)
     for dept in depta:
     dept_nome = 'dept_%s' %(dept.departamento)
     
@@ -148,7 +148,7 @@ pass}}
 }}
 
 <tr>         
-<td style="border:1px solid #ADC2CC">{{=dept.departamento}}</td>
+<td style="border:1px solid #ADC2CC"> Dept. {{=dept.departamento}}</td>
 <td style="border:1px solid #ADC2CC">
 <!--<input class="form-control" id="{{=sub.nome}}" name="{{=sub.nome}}" type="checkbox" value="on" {{=check_sub}}>-->
 
@@ -177,7 +177,11 @@ pass}}
 <script type="text/javascript">
 
 
-$("#ger").popover({trigger: "hover",title: 'Usuário Gerenciador', content: "Somente o usuário gerenciador poderá alterar e deletar os dados do sistema, se não estiver habilitado o usuário será somente leitura. ", placement: 'left' }) 
+$("#ger").popover({trigger: "hover",title: 'Usuário Gerenciador', content: "Somente o usuário gerenciador poderá alterar e deletar os dados do sistema, se não estiver habilitado o usuário será somente leitura. ", placement: 'top' }) 
+$("#ger2").popover({trigger: "hover",title: 'Usuário Gerenciador', content: "Somente o usuário gerenciador poderá alterar e deletar os dados do sistema, se não estiver habilitado o usuário será somente leitura. ", placement: 'top' }) 
+
+$("#grav").popover({trigger: "hover",title: 'Escutar Gravações', content: "Usuário terá permissão de escutar e fazer download das ligações no menu Bilhetes se habilitado.", placement: 'top' })
+$("#grav2").popover({trigger: "hover",title: 'Escutar Gravações', content: "Usuário terá permissão de escutar e fazer download das ligações no menu Bilhetes se habilitado.", placement: 'top' }) 
 
 
 

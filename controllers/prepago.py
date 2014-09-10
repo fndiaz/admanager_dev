@@ -35,6 +35,7 @@ def f_usuarios_form():
 
 @auth.requires_login() 
 def show_saldos():
+	print request.vars
 	response.marca=['PréPago', 'Consultar Saldo']
 	response.title = 'Consultar Saldo'
 	usr=''

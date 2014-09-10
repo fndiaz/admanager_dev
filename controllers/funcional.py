@@ -270,14 +270,17 @@ def f_parametros_form():
 	form.element(_name='faixa_ip_interna')['_rows'] = "4"
 	form.element(_name='spy_ramal_proibe_monitora')['_rows'] = "4"
 	form.element(_name='spy_ramal_espiao')['_rows'] = "4"
+	form.custom.widget.tempo_chamada_externa['_placeholder'] = "em segundos"
+	form.custom.widget.tempo_chamada_interna['_placeholder'] = "em segundos"
+	form.custom.widget.faixa_ip_interna['_placeholder'] = "Exemplo: 192.168.1.2/255.255.255.0"
 
-	if form.process().accepted:
+	if form.process(hideerror=True).accepted:
 		escreve_sip_iax()
 		escreve_smtp()
 		session.alerta_sucesso = 'Parâmetros salvos com sucesso!'
 		redirect(URL('f_parametros_form'))
 
-	return response.render("funcional/form_parametros.html", form=form)
+	return response.render("funcional/form_parametros2.html", form=form)
 
 ######-URA
 @auth.requires_login()
@@ -394,7 +397,7 @@ def delete_visao():
 
 def escreve_destino():
 	print 'escreve destinos'
-	destinos = db(db.f_destinos).select(orderby=db.f_destinos.id)
+	destinos = db(db.f_destinos.mostrar == True).select(orderby=db.f_destinos.id)
 	arq = open('/aldeia/etc/asterisk/confs/entrada.ael','w')
 	for destino in destinos:
 		print destino.tipo_chamada
@@ -424,14 +427,23 @@ def escreve_smtp():
 	arq1 = open('/etc/ssmtp/ssmtp.conf', 'w')
 	arq2 = open('/usr/local/etc/email/email.conf', 'w')
 
-	arq1.write("root=%s \n" %(dado.usuario_smtp))
-	arq1.write("mailhub=%s:%s \n" %(dado.endereco_smtp, dado.porta_smtp))
-	arq1.write("rewriteDomain=%s \n" %(dado.usuario_smtp.split('@')[1]))
-	arq1.write("hostname=%s \n" %(dado.usuario_smtp))
-	arq1.write("UseTLS=No\nUseSTARTTLS=No \n")
-	arq1.write("AuthUser=%s \n" %(dado.usuario_smtp))
-	arq1.write("AuthPass=%s \n" %(dado.senha_smtp))
-	arq1.close()
+	if dado.usuario_smtp != "":
+		arq1.write("root=%s \n" %(dado.usuario_smtp))
+		arq1.write("mailhub=%s:%s \n" %(dado.endereco_smtp, dado.porta_smtp))
+		arq1.write("rewriteDomain=%s \n" %(dado.usuario_smtp.split('@')[1]))
+		arq1.write("hostname=%s \n" %(dado.usuario_smtp.split('@')[1]))
+		if dado.tls_smtp == True:
+			arq1.write("UseTLS=Yes \n")
+		else:
+			arq1.write("UseTLS=No \n")
+		if dado.start_tls_smtp == True:
+			arq1.write("UseSTARTTLS=Yes \n")
+		else:
+			arq1.write("UseSTARTTLS=No \n")
+		arq1.write("FromLineOverride=Yes\n")
+		arq1.write("AuthUser=%s \n" %(dado.usuario_smtp))
+		arq1.write("AuthPass=%s \n" %(dado.senha_smtp))
+		arq1.close()
 
 	arq2.write("SMTP_SERVER = '%s' \n" %(dado.endereco_smtp))
 	arq2.write("SMTP_PORT = '%s' \n" %(dado.porta_smtp))

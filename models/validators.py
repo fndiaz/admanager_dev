@@ -10,8 +10,16 @@ db.f_empresa.empresa.requires = IS_NOT_EMPTY()
 ##Troncos
 db.f_troncos.tronco.requires = IS_NOT_EMPTY()
 db.f_troncos.dispositivo.requires = IS_NOT_EMPTY()
-db.f_troncos.chamadas_simultaneas.requires = IS_NOT_EMPTY()
-db.f_troncos.ramal_principal.requires = IS_NOT_EMPTY()
+db.f_troncos.chamadas_simultaneas.requires = IS_INT_IN_RANGE(1,101)
+db.f_troncos.qtde_max_minutos.requires = IS_INT_IN_RANGE(0,999999999, 
+								error_message="entre com 0 ou um número")
+db.f_troncos.transbordo.requires = IS_EMPTY_OR(IS_IN_DB(db(db.f_troncos.mostrar == True),'f_troncos.id',"%(tronco)s"))
+db.f_troncos.ddd.requires = IS_EMPTY_OR(IS_MATCH("[0-9][0-9]", error_message="entre com um número de dois dígitos"))
+db.f_troncos.csp.requires = IS_EMPTY_OR(IS_MATCH("[0-9][0-9]", error_message="entre com um número de dois dígitos"))
+db.f_troncos.chave.requires = IS_EMPTY_OR(IS_MATCH("^[0-9][0-9][0-9][0-9]$", error_message="entre com um número de quatro dígitos"))
+db.f_troncos.ciclo_conta.requires = IS_IN_SET(dia_mes())
+db.f_troncos.prefixo.requires = IS_EMPTY_OR(IS_MATCH("^[2-9][0-9][0-9][0-9]$", error_message="digite um prefixo válido"))
+
 
 #Troncos Físicos
 db.f_troncos_fisicos.dispositivo.requires = IS_NOT_EMPTY()
@@ -51,11 +59,20 @@ db.f_ura.ramal_principal.requires = IS_NOT_EMPTY()
 db.f_ura.ura.requires = IS_NOT_EMPTY()
 
 ##Parametros
+tempo_chamda=[5,10,15,20,30,45,60,90,120]
+gmt=['-12','-11','-10','-9','-8','-7','-6','-5','-4','-3','-2','-1',
+	 '+1','+2','+3','+4','+5','+6','+7','+8','+9','+10','+11','+12']
 db.f_parametros.faixa_ip_interna.requires = IS_NOT_EMPTY()
-db.f_parametros.endereco_smtp.requires = IS_NOT_EMPTY()
-db.f_parametros.usuario_smtp.requires = IS_EMAIL()
-db.f_parametros.senha_smtp.requires = IS_NOT_EMPTY()
-db.f_parametros.porta_smtp.requires = IS_NOT_EMPTY()
+#db.f_parametros.endereco_smtp.requires = IS_NOT_EMPTY()
+#db.f_parametros.usuario_smtp.requires = IS_EMAIL()
+#db.f_parametros.senha_smtp.requires = IS_NOT_EMPTY()
+#db.f_parametros.porta_smtp.requires = IS_NOT_EMPTY()
+db.f_parametros.empresa.requires = IS_NOT_EMPTY()
+db.f_parametros.tempo_chamada_externa.requires = IS_IN_SET(tempo_chamda)
+db.f_parametros.tempo_chamada_interna.requires = IS_IN_SET(tempo_chamda)
+db.f_parametros.tempo_chamada_transf.requires = IS_IN_SET(tempo_chamda)
+db.f_parametros.fuso_horario.requires = IS_IN_SET(gmt)
+db.f_parametros.credito_dia.requires = IS_EMPTY_OR(IS_IN_SET(dia_mes()))
 
 
 #########################################################################
@@ -81,7 +98,10 @@ db.f_grupo_destinos.id_destinos.requires = IS_IN_DB(db(db.f_destinos.mostrar == 
 #db.f_grupo_destinos.grupo_destino.requires = IS_NOT_EMPTY()
 
 #Departamentos
-db.f_departamentos.departamento.requires = IS_NOT_EMPTY()
+db.f_departamentos.departamento.requires = [
+IS_NOT_EMPTY(),
+IS_NOT_IN_DB(db, 'f_departamentos.departamento')
+]
 
 ##Ramal Virtual
 db.f_ramal_virtual.ramal_virtual.requires = [ 
@@ -92,7 +112,8 @@ IS_NOT_IN_DB(db, 'f_ramal_virtual.ramal_virtual')
 db.f_ramal_virtual.chamadas_simultaneas.requires = IS_INT_IN_RANGE(1,21)
 
 ##Desvios
-dias={"mon": "Segunda Feira", "tue": "Terça Feira", "wed" : "Quarta Feira", "thu" : "Quinta Feira", "fri" : "Sexta Feira", "sat" : "Sábado", "sun" : "Domingo"}
+#dias={"mon": "Segunda Feira", "tue": "Terça Feira", "wed" : "Quarta Feira", "thu" : "Quinta Feira", "fri" : "Sexta Feira", "sat" : "Sábado", "sun" : "Domingo"}
+dias=[('mon','Segunda Feira'),('tue','Terça Feira'),('wed','Quarta Feira'),('thu','Quinta Feira'),('fri','Sexta Feira'),('sat','Sábado'),('sun','Domingo')]
 db.f_desvios.dia_semana.requires = IS_IN_SET(dias,
 					multiple=True, error_message=T("escolha uma opção"))
 db.f_desvios.horario_inicio.requires = IS_NOT_EMPTY()

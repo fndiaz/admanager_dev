@@ -49,7 +49,7 @@ def query_monta(dado):
 		query=query & (db.f_bilhetes_chamadas.id_destino == 0)
 
 	##Adiciona query por departamento
- 	depta=db(db.f_departamentos).select(db.f_departamentos.departamento)
+ 	depta=db(db.f_departamentos.mostrar == True).select(db.f_departamentos.departamento)
 	for dept in depta:
 		dept_nome = 'dept_%s' %(dept.departamento)
 	
@@ -64,7 +64,9 @@ def query_monta(dado):
 
 	#print query
 	#print query_dept
-	query=query & query_dept
+	#query=query & query_dept
+	#query_dept=((db.f_bilhetes_chamadas.departamento == 'Suporte Aldeia') | (db.f_bilhetes_chamadas.departamento == 'Suporte ForIP') | (db.f_bilhetes_chamadas.departamento == ''))
+	query = query & query_dept
 	print query
 	return query
 

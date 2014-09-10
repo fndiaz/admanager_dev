@@ -64,3 +64,19 @@ def escreve_sip_iax():
 	iax.close()
 	commands.getoutput("sudo asterisk -rx 'module reload chan_sip.so'")
 	commands.getoutput("sudo asterisk -rx 'module reload chan_iax2.so'")
+
+def dia_mes():
+	lista_diames=[]
+	for i in range(1,32):
+		if i < 10:
+			lista_diames.append('0%s' %str(i))
+		else:
+			lista_diames.append(str(i))
+	return lista_diames
+
+def dia_semana():
+	dict_diasemana=dias={"mon": "Seg", "tue": "Ter", "wed" : "Qua", "thu" : "Qui", "fri" : "Sex", "sat" : "Sáb", "sun" : "Dom"}
+	lista_diasemana=[('mon','Seg'),('tue','Ter'),('wed','Qua'),('thu','Qui'),('fri','Sex'),('sat','Sáb'),('sun','Dom')]
+	return dict_diasemana
+
+

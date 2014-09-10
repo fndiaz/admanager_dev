@@ -1,0 +1,370 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class="box-content">
+<div id="MyWizard" class="wizard" style="margin-bottom:50px">
+	<ul class="steps">
+		<li data-target="#step1" class="active"><span class="badge badge-info">1</span><span class="chevron"></span>Global</li>
+		<li data-target="#step2"><span class="badge">2</span><span class="chevron"></span>Rede</li>
+		<li data-target="#step3"><span class="badge">3</span><span class="chevron"></span>Mail</li>
+		<li data-target="#step4"><span class="badge">4</span><span class="chevron"></span>Outros</li>
+	</ul>
+	
+	<div class="actions">
+		<button type="button" class="btn btn-prev"> <i class="icon-arrow-left"></i> Prev</button>
+		<button type="button" class="btn btn-success btn-next" data-last="Finish">Next <i class="icon-arrow-right"></i></button>
+	</div>
+</div>
+
+
+
+<form id="form_parametros" action="#" enctype="multipart/form-data" method="post">
+<div class="step-content"><!--STEP content-->
+
+
+<div class="step-pane active" id="step1" style="margin-bottom:50px"><!--Step1-->
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+<label>Empresa:</label>
+<div>{{=form.custom.widget.empresa}}</div>
+<br>
+
+<label>Tempo chamada externa:</label> 
+<div>{{=form.custom.widget.tempo_chamada_externa}}</div>
+<br>
+
+<label>Tempo chamada interna:</label> 
+<div>{{=form.custom.widget.tempo_chamada_interna}}</div>
+<br>
+
+<label>Tempo chamada transferência:</label> 
+<div>{{=form.custom.widget.tempo_chamada_transf}}</div>
+<br>
+
+</div><!--col-lg-7-->
+
+<div class="coluna_form_direita_b0">
+<label>Gravação geral:</label> 
+<div>{{=form.custom.widget.gravacao_geral}}</div>
+<br>
+
+<label>Ura antes da regra horário:</label> <i id="i-ura" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.ura_antes_horario}}</div>
+<br>
+
+<label>Rechamada:</label> 
+<div>{{=form.custom.widget.rechamada}}</div>
+<br>
+
+<label>Bloqueio a cobrar:</label> <i id="i-acobrar" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.bloqueio_chamadacobrar}}</div>
+<br>
+
+<!--Form erros-->
+{{if form.errors:}}
+<div style="margin-top:25px; float:right">
+<div class="alert alert-danger">
+<button type="button" class="close" data-dismiss="alert">×</button>
+Alguns <strong>erros</strong> foram encontrados
+  <ul>
+  {{for fieldname in form.errors:}}
+    <li>Campo {{=fieldname}}: {{=form.errors[fieldname]}}</li>
+  {{pass}}
+  </ul>
+  {{form.errors.clear()}}
+</div>
+</div>
+{{pass}}
+<!--Form erros-->
+
+</div><!--col-lg-->
+
+</div><!--row-->
+
+<!--Form erros-->
+{{if form.errors:}}
+<div style="margin-top:25px; float:right">
+<div class="alert alert-danger">
+<button type="button" class="close" data-dismiss="alert">×</button>
+Alguns <strong>erros</strong> foram encontrados
+  <ul>
+  {{for fieldname in form.errors:}}
+    <li>Campo {{=fieldname}}: {{=form.errors[fieldname]}}</li>
+  {{pass}}
+  </ul>
+  {{form.errors.clear()}}
+</div>
+</div>
+{{pass}}
+<!--Form erros-->
+
+</div><!--Step1-->
+
+
+<div class="step-pane" id="step2" style="margin-bottom:50px"><!--Step2-->
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+
+<label>IP Externo:</label> 
+<div>{{=form.custom.widget.endereco_ip_externo}}</div>
+<br>
+
+<label>Host externo:</label> 
+<div>{{=form.custom.widget.endereco_host_externo}}</div>
+<br>
+
+<div style="margin-left:0px; margin-right:130px">
+<label>Faixa interna IP:</label> 
+<div>{{=form.custom.widget.faixa_ip_interna}}</div>
+</div>
+<br>
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+
+<label>email administrador:</label> 
+<div>{{=form.custom.widget.email_admin}}</div>
+<br>
+
+<label>Fuso horário:</label> 
+<div>{{=form.custom.widget.fuso_horario}}</div>
+<br>
+</div><!--col-lg-3-->
+
+</div><!--row-->
+
+</div><!--Step2-->
+	
+
+<div class="step-pane" id="step3" style="margin-bottom:50px"><!--Step3-->
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+<label>Usuário SMTP:</label> 
+<div>{{=form.custom.widget.usuario_smtp}}</div>
+<br>
+
+<label>Senha SMTP:</label> 
+<div>{{=form.custom.widget.senha_smtp}}</div>
+<br>
+
+<label>TLS:</label> 
+<div>{{=form.custom.widget.tls_smtp}}</div>
+<br>	
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+<label>Endereço SMTP:</label> 
+<div>{{=form.custom.widget.endereco_smtp}}</div>
+<br>
+
+<label>Porta SMTP:</label> 
+<div>{{=form.custom.widget.porta_smtp}}</div>
+<br>
+
+<label>Start TLS:</label> 
+<div>{{=form.custom.widget.start_tls_smtp}}</div>
+<br>  
+								
+</div><!--col-lg-->
+
+</div><!--row-->
+
+
+</div><!--Step3-->
+								
+<div class="step-pane" id="step4"><!--Step4-->
+
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+
+<label>Spy senha:</label> 
+<div>{{=form.custom.widget.spy_senha}}</div>
+<br>
+
+<div style="margin-left:0px; margin-right:130px">
+<label>Spy blacklist:</label> 
+<div >{{=form.custom.widget.spy_ramal_proibe_monitora}}</div>
+</div>
+<br>
+
+<div style="margin-left:0px; margin-right:130px">
+<label>Spy espião:</label> 
+<div>{{=form.custom.widget.spy_ramal_espiao}}</div>
+</div>
+<br>
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+
+<label>Toque diferenciado:</label> 
+<div>{{=form.custom.widget.toque_diff_sipheader}}</div>
+<br>
+
+<label>Crédito dia:</label> <i id="i-credito_dia" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.credito_dia}}</div>
+<br>
+
+<label>Tamanho PIN:</label> <i id="i-tamanho_pin" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.tamanho_pin}}</div>
+<br>
+
+<label>PIN temporário:</label> <i id="i-pin_temporario" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.pin_temporario}}</div>
+<br>
+
+<div style="margin-left:0px; margin-right:120px" id="rangeSlider"></div><br>
+<br>
+<!--<label>Toque diferenciado:</label> 
+<div>{{=form.custom.widget.toque_diferenciado}}</div>
+<br>-->
+
+</div><!--col-lg-->
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+</div>
+<!--Submit-->
+
+
+</div><!--Step4-->
+							
+</div><!--STEP content-->
+{{=form.custom.end}}
+
+</div>
+
+{{end}}
+
+
+{{block jquery}}
+
+	<!-- page scripts -->
+
+	<!--<script src="{{=URL(a='admanager', c='static', f='js')}}/jquery.sparkline.min.js"></script>
+	<script src="{{=URL(a='admanager', c='static', f='js')}}/jquery.chosen.min.js"></script>
+	<script src="{{=URL(a='admanager', c='static', f='js')}}/jquery.autosize.min.js"></script>
+	<script src="{{=URL(a='admanager', c='static', f='js')}}/jquery.placeholder.min.js"></script>-->
+	<script src="{{=URL(a='admanager', c='static', f='js')}}/wizard.min.js"></script>
+	
+	<!-- theme scripts -->
+	<!--<script src="{{=URL(a='admanager', c='static', f='js')}}/custom.min.js"></script>
+	<script src="{{=URL(a='admanager', c='static', f='js')}}/core.min.js"></script>-->
+	
+	<!-- inline scripts related to this page -->
+	<script src="{{=URL(a='admanager', c='static', f='js')}}/pages/form-wizard.js"></script>
+	
+	<!-- end: JavaScript-->
+
+
+<script src="{{=URL(a='admanager', c='static', f='js')}}/livevalidation.js" type="text/javascript"></script>
+
+<link href="{{=URL(a='admanager', c='static', f='css')}}/nouslider/jquery.nouislider.css" rel="stylesheet">
+<script src="{{=URL(a='admanager', c='static', f='js')}}/nouslider/jquery.nouislider.min.js"></script>
+
+<script>
+//Validation
+var empresa = new LiveValidation( "f_parametros_empresa", { validMessage: " ", wait: 5 } );
+empresa.add( Validate.Presence, { failureMessage: "Não pode ser nulo!" } );
+empresa.add( Validate.Presence );
+
+var tempo_chamada_externa = new LiveValidation( "f_parametros_tempo_chamada_externa", { validMessage: " ", wait: 5 } );
+tempo_chamada_externa.add( Validate.Presence, { failureMessage: "Não pode ser nulo!" } );
+tempo_chamada_externa.add( Validate.Numericality);
+
+var tempo_chamada_interna = new LiveValidation( "f_parametros_tempo_chamada_interna", { validMessage: " ", wait: 5 } );
+tempo_chamada_interna.add( Validate.Presence, { failureMessage: "Não pode ser nulo!" } );
+tempo_chamada_interna.add( Validate.Numericality);
+
+var tempo_chamada_transf = new LiveValidation( "f_parametros_tempo_chamada_transf", { validMessage: " ", wait: 5 } );
+tempo_chamada_transf.add( Validate.Presence, { failureMessage: "Não pode ser nulo!" } );
+tempo_chamada_transf.add( Validate.Numericality);
+//tempo_chamada_transf.add( Validate.Length, { is: 2 } );
+
+var faixa_ip_interna = new LiveValidation("f_parametros_faixa_ip_interna", { validMessage: " ", wait: 5 } );
+faixa_ip_interna.add( Validate.Presence, { failureMessage: "Não pode ser nulo!" } );
+
+var email_admin = new LiveValidation("f_parametros_email_admin", { validMessage: " ", wait: 5 } );
+email_admin.add( Validate.Email );
+
+var fuso_horario = new LiveValidation("f_parametros_fuso_horario", { validMessage: " ", wait: 5 } );
+fuso_horario.add( Validate.Presence)
+
+var porta_smtp = new LiveValidation("f_parametros_porta_smtp", { validMessage: " ", wait: 5 } );
+porta_smtp.add(Validate.Numericality);
+
+var spy_senha = new LiveValidation( "f_parametros_spy_senha", { validMessage: " ", wait: 5 } );
+spy_senha.add( Validate.Numericality);
+spy_senha.add( Validate.Length, { is: 4 } );
+
+var pin_temporario = new LiveValidation( "f_parametros_pin_temporario", { validMessage: " ", wait: 5 } );
+pin_temporario.add( Validate.Numericality);
+//pin_temporario.add( Validate.Numericality, { minimum: 1, maximum: 100 } );
+
+var tamanho_pin = new LiveValidation( "f_parametros_tamanho_pin", { validMessage: " ", wait: 5 } );
+tamanho_pin.add( Validate.Numericality);
+tamanho_pin.add( Validate.Length, { is: 1 } );
+
+
+//Help
+$("#i-acobrar").popover({trigger: "hover",title: 'Somente KHOMP', content: "Realiza o bloqueio de chamadas a cobrar somenete em aparelhos da KHOMP.", placement: 'top' })
+
+$("#i-ura").popover({trigger: "hover",title: 'Ura sobrepõe horário', content: "Permite que a 'Ura' sobreponha a regra de horário definido no menu Horário, ou seja a 'Ura' será executada antes de checar a regra de horário.", placement: 'top' })
+
+$("#i-credito_dia").popover({trigger: "hover",title: 'Crédito Pré pago', content: "Dia para inserção de Crédito automático para usuários Pré pagos.", placement: 'top' })
+
+$("#i-tamanho_pin").popover({trigger: "hover",title: 'Pin Pré pago', content: "Define tamnho do PIN para usuários Pré pago.", placement: 'top' })
+
+$("#i-pin_temporario").popover({trigger: "hover",title: 'Pin temporário', content: "Define o tempo em MINUTOS no qual o pin será expirado.", placement: 'top' })
+
+
+//UISlider
+var pin_temp = $('#f_parametros_pin_temporario').val()
+var pin_temp = parseInt(pin_temp)
+
+      $("#rangeSlider").noUiSlider({
+        start: [ 20 ],
+        step: 1,
+        behaviour: 'tap',
+        connect: 'lower',
+        range: {
+          'min': 1,
+          'max': 100
+        },
+        //connect: true,
+        serialization: {
+          lower: [
+            $.Link({
+              target: $("#f_parametros_pin_temporario"),
+              //type: number,
+              format: {
+                decimals: 0,
+              }
+            })        
+          ]
+        }
+      }); 
+
+$("#rangeSlider").val([pin_temp]); 
+
+
+//lock enter
+$('input').keypress(function (e) {
+        var code = null;
+        code = (e.keyCode ? e.keyCode : e.which);                
+        return (code == 13) ? false : true;
+});
+
+</script>
+
+{{end}}

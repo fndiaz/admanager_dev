@@ -19,12 +19,12 @@
 			{{for usr in dict_saldo_geral:}} 
                         <tr>
                                 <td width="18%">{{=usr}}</td>
-                                <td width="10%">{{=dict_saldo_geral[usr]['local_fixo']}}</td>
-                                <td width="10%">{{=dict_saldo_geral[usr]['local_celular']}}</td>
-                                <td width="10%">{{=dict_saldo_geral[usr]['ddd_fixo']}}</td>
-                                <td width="10%">{{=dict_saldo_geral[usr]['ddd_celular']}}</td>
-                                <td width="10%">{{=dict_saldo_geral[usr]['ddi']}}</td>
-                                <td width="10%">{{=dict_saldo_geral[usr]['0300']}}</td>
+                                <td width="10%">{{=str(timedelta(seconds=dict_saldo_geral[usr]['local_fixo']))}}</td>
+                                <td width="10%">{{=str(timedelta(seconds=dict_saldo_geral[usr]['local_celular']))}}</td>
+                                <td width="10%">{{=str(timedelta(seconds=dict_saldo_geral[usr]['ddd_fixo']))}}</td>
+                                <td width="10%">{{=str(timedelta(seconds=dict_saldo_geral[usr]['ddd_celular']))}}</td>
+                                <td width="10%">{{=str(timedelta(seconds=dict_saldo_geral[usr]['ddi']))}}</td>
+                                <td width="10%">{{=str(timedelta(seconds=dict_saldo_geral[usr]['0300']))}}</td>
                         </tr>
             {{pass}}
                         

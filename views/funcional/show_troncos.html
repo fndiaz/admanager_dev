@@ -21,7 +21,7 @@
             <th>Chave</th>
             <th>Habilitado</th>
             <th>Ciclo conta</th>
-            <th></th>
+            <th>#</th>
         </tr>
     </thead>
     <tbody>
@@ -31,17 +31,53 @@
             <td>{{=dado.dispositivo}}</td>
             <td>{{=dado.chamadas_simultaneas}}</td>
             <td>{{=dado.qtde_max_minutos}}</td>
-            <td>{{=dado.transbordo}}</td>
+
+            {{if (dado.transbordo == None) or (dado.transbordo == ''):}}
+            <td></td>
+            {{else:}}
+            <td>{{ transb=db(db.f_troncos.id == dado.transbordo).select(Troncos.tronco) 
+                    for trans in transb:
+                        =trans.tronco
+                pass}}
+            </td>
+            {{pass}}
+
+            {{if dado.csp == None:}}
+            <td></td>
+            {{else:}}
             <td>{{=dado.csp}}</td>
+            {{pass}}
+
+            {{if dado.ddd == None:}}
+            <td></td>
+            {{else:}}
             <td>{{=dado.ddd}}</td>
+            {{pass}}
+
+            {{if dado.prefixo == None:}}
+            <td></td>
+            {{else:}}
             <td>{{=dado.prefixo}}</td>
+            {{pass}}
+
+            {{if dado.chave == None:}}
+            <td></td>
+            {{else:}}
             <td>{{=dado.chave}}</td>
+            {{pass}}
+
             {{if dado.habilitado is True:}}
             <td><input checked="checked" disabled="disabled" type="checkbox"></td>
             {{else:}}
             <td><input disabled="disabled" type="checkbox"></td>
             {{pass}}
+
+            {{if dado.ciclo_conta == None:}}
+            <td></td>
+            {{else:}}
             <td>{{=dado.ciclo_conta}}</td>
+            {{pass}}
+
             <td>
                 {{if editor == True:}}
                 <a href="{{=url}}?id_tronco={{=dado.id}}">

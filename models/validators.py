@@ -17,7 +17,7 @@ db.f_troncos.transbordo.requires = IS_EMPTY_OR(IS_IN_DB(db(db.f_troncos.mostrar 
 db.f_troncos.ddd.requires = IS_EMPTY_OR(IS_MATCH("[0-9][0-9]", error_message="entre com um número de dois dígitos"))
 db.f_troncos.csp.requires = IS_EMPTY_OR(IS_MATCH("[0-9][0-9]", error_message="entre com um número de dois dígitos"))
 db.f_troncos.chave.requires = IS_EMPTY_OR(IS_MATCH("^[0-9][0-9][0-9][0-9]$", error_message="entre com um número de quatro dígitos"))
-db.f_troncos.ciclo_conta.requires = IS_IN_SET(dia_mes())
+db.f_troncos.ciclo_conta.requires = IS_EMPTY_OR(IS_IN_SET(dia_mes()))
 db.f_troncos.prefixo.requires = IS_EMPTY_OR(IS_MATCH("^[2-9][0-9][0-9][0-9]$", error_message="digite um prefixo válido"))
 
 
@@ -96,6 +96,10 @@ db.fisico_sip_iax.host_f.requires = IS_NOT_EMPTY()
 db.f_grupo_destinos.id_destinos.requires = IS_IN_DB(db(db.f_destinos.mostrar == True),'f_destinos.id',"%(destino)s", multiple=True)
 #IS_IN_DB(db,'f_destinos.id',"%(tipo_chamada)s",multiple=True)
 #db.f_grupo_destinos.grupo_destino.requires = IS_NOT_EMPTY()
+
+#Destinos
+dest = ["LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI", "0800", "0300"]
+db.f_destinos.tipo_chamada.requires = IS_IN_SET(dest)
 
 #Departamentos
 db.f_departamentos.departamento.requires = [

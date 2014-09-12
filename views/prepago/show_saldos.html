@@ -108,7 +108,15 @@
        	<h5>{{=tipo[i]}}</h5>
        	<li>
        	<div class="meter"><span class="{{=cor}}">{{=porcent[i]}}%</span></div>
-       	<div style="color:#b2b8bd; float:right; margin-top:-10px;"><h5><i>Usado:{{=str(timedelta(seconds=uso[i]))}} de um total {{=str(timedelta(seconds=credito[i]))}} restando agora {{=str(timedelta(seconds=saldo[i]))}}</i></h5></div>	
+       	<div style="color:#b2b8bd; float:right; margin-top:-10px;"><h5><i>Usado:{{=str(timedelta(seconds=uso[i]))}} de um total {{=str(timedelta(seconds=credito[i]))}} restando agora 
+
+       	{{if saldo[i] < 0:}}
+       		{{saldo[i]}}<!--saldo negativo-->
+       	{{else:}}
+			{{=str(timedelta(seconds=saldo[i]))}}<!--saldo positivo-->
+		{{pass}}
+
+       	</i></h5></div>	
        	</li>
        	{{pass}}<!--if int(saldo[i]) == 0:-->
 

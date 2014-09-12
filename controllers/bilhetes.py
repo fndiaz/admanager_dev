@@ -35,11 +35,16 @@ def query_monta(dado):
 	print 'Monta query saintes'
 	id_user = session.auth.user.id
 	query_dept=''
+	data_inicio =  dado.data_inicio +"00:00:00"
+	data_fim = dado.data_fim +"23:59:00"
+	print data_inicio
+	print data_fim
+
 		
 	query = (db.f_bilhetes_chamadas.origem.like ('%'+dado.origem+'%'))&\
 			(db.f_bilhetes_chamadas.destino.like ('%'+dado.destino+'%'))&\
-	((db.f_bilhetes_chamadas.horario >= dado.data_inicio) 
-		& (db.f_bilhetes_chamadas.horario <= dado.data_fim))
+	((db.f_bilhetes_chamadas.horario >= data_inicio) 
+		& (db.f_bilhetes_chamadas.horario <= data_fim))
 
 	if dado.tipo == 'Saintes':
 		query=query & (db.f_bilhetes_chamadas.id_destino > 0)
@@ -56,7 +61,8 @@ def query_monta(dado):
 		if (auth.has_membership(dept_nome) or auth.has_membership('administrador')) :
 			if query_dept == '':
 				query_dept=(db.f_bilhetes_chamadas.departamento == dept.departamento) |\
-							(db.f_bilhetes_chamadas.departamento == '')
+							(db.f_bilhetes_chamadas.departamento == '') |\
+							(db.f_bilhetes_chamadas.departamento == None)
 			else:
 				query_dept=query_dept | (db.f_bilhetes_chamadas.departamento == dept.departamento)
 
@@ -66,6 +72,7 @@ def query_monta(dado):
 	#print query_dept
 	#query=query & query_dept
 	#query_dept=((db.f_bilhetes_chamadas.departamento == 'Suporte Aldeia') | (db.f_bilhetes_chamadas.departamento == 'Suporte ForIP') | (db.f_bilhetes_chamadas.departamento == ''))
+	
 	query = query & query_dept
 	print query
 	return query

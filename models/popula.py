@@ -101,9 +101,11 @@ if db(db.f_submenu).isempty():
 	auth.add_group('Usuários discagem', '')
 	db.f_submenu.insert(nome="Consultar saldo", controller="prepago", funcao="show_saldos", icone="icon-chevron-right", ordem="2", menu_ref=id_prepago)
 	auth.add_group('Consultar saldo', '')
-	db.f_submenu.insert(nome="Cred Automático", controller="prepago", funcao="f_creditos_form", icone="icon-chevron-right", ordem="3", menu_ref=id_prepago)
+	db.f_submenu.insert(nome="Saldos Geral", controller="prepago", funcao="show_grid_saldos", icone="icon-chevron-right", ordem="3", menu_ref=id_prepago)
+	auth.add_group('Saldos Geral', '')
+	db.f_submenu.insert(nome="Cred Automático", controller="prepago", funcao="f_creditos_form", icone="icon-chevron-right", ordem="4", menu_ref=id_prepago)
 	auth.add_group('Cred Automático', '')
-	db.f_submenu.insert(nome="Cred Manual", controller="prepago", funcao="f_creditos_manual", icone="icon-chevron-right", ordem="4", menu_ref=id_prepago)
+	db.f_submenu.insert(nome="Cred Manual", controller="prepago", funcao="creditos_manual", icone="icon-chevron-right", ordem="5", menu_ref=id_prepago)
 	auth.add_group('Cred Manual', '')
 	##Configs
 	db.f_submenu.insert(nome="Parâmetros", controller="funcional", funcao="f_parametros_form", icone="icon-chevron-right", ordem="1", menu_ref=id_configs)

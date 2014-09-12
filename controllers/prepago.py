@@ -67,6 +67,24 @@ def show_saldos():
 	return response.render("prepago/show_saldos.html", form=form, 
 			usr=usr, saldo=saldo, porcent=porcent, credito=credito, uso=uso)
 
+@auth.requires_login()
+def show_grid_saldos():
+	response.title = 'Saldos Geral'
+	response.marca=['PréPago', 'Saldos Geral']
+
+	dict_saldo_geral={}
+	if not db(Usuariospp.nome).isempty():
+		con=db(Usuariospp).select(Usuariospp.nome)
+		for usr in con:
+			print usr.nome
+			saldo, porcent, credito, uso = calcula_saldo(usr.nome)
+			print saldo
+			dict_saldo_geral[usr.nome] = saldo
+		print dict_saldo_geral
+
+	return response.render("prepago/show_grid_saldos.html", 
+								dict_saldo_geral=dict_saldo_geral)
+
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_creditos_form():
 	response.title = 'Créditos Automatizados'

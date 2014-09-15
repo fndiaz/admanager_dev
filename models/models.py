@@ -192,12 +192,25 @@ Aplicacao = db.define_table("f_aplicacao",
 	Field("cs_chamadaexterna", "boolean", default=False),
 	Field("cs_chamadainterna", "boolean", default=False),
 	Field("cs_numero", "integer"),
-	Field("cs_excecao"),
+	Field("cs_excecao", "text"),
 	Field("voicemail_ativo", "boolean", default=False),
 	Field("voicemail_email"),
 	Field("voicemail_senha", "integer"),
 	Field("agenda_cadastro", "boolean", default=False),
 	Field("agenda_senha", "integer"),
+    migrate=False)
+
+Voicemail = db.define_table("voicemail",
+	Field("uniqueid", "id"),
+	Field("customer_id", "bigint"),
+	Field("context"),
+	Field("mailbox", "bigint"),
+	Field("password"),
+	Field("fullname"),
+	Field("email"),
+	Field("pager"),
+	Field("stamp"),
+	Field("id_ramalvirtual"),
     migrate=False)
 
 desvio={"INDISPONIVEL": "Indisponivel", "OCUPADO": "Ocupado", "NAOATENDIMENTO" : "Não Atendimento", "IMEDIATO" : "Imediato"}

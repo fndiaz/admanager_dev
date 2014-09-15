@@ -104,11 +104,21 @@ def f_ramal_virtual_form():
 
 	if form.process().accepted:
 		if id_edit is None:
-			print request.vars
-			#insert_aplicacao(request.vars.ramal_virtual.strip(' ') )
+			insert_aplicacao(request.vars.ramal_virtual.strip(' ') )
+		else:
+			update_voicemail(request.vars)
 		redirect(URL('f_ramal_virtual'))
 
 	return response.render("ramais_v/form_ramal_virtual.html", form=form)
+
+##Quando edita f_ramal_virtual_form
+def update_voicemail(dados):
+	print dados
+	query1=(Voicemail.id_ramalvirtual == dados.id)
+	if not db(query1).isempty():
+		db(query1).update(mailbox=int(dados.ramal_virtual),
+						  fullname=dados.nome)
+
 
 def insert_aplicacao(ramalv):
 	query=(db.f_ramal_virtual.ramal_virtual == ramalv)
@@ -139,14 +149,46 @@ def f_aplicacao_form():
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
+	form.element(_name='cs_excecao')['_rows'] = "4"
 
 	#form.element(_name='ciclo_conta')['_value'] = "teste"
 	if form.process().accepted:
+		insert_voicemail(request.vars)
 		redirect(URL('f_ramal_virtual'))
 	else:
 		print request.vars
 
 	return response.render("ramais_v/form_aplicacao.html", form=form)
+
+##Quando insere f_aplicacao_form
+def insert_voicemail(dados):
+	print dados
+	ramal= db(Ramal_virtual.id == dados.id_ramalvirtual).select()[0]
+	query1=(Voicemail.id_ramalvirtual == ramal.id)
+
+	if dados.voicemail_ativo == 'on':
+		if db(query1).isempty():
+			print 'vazio'
+			Voicemail.insert(customer_id=0,
+							context="default",
+							mailbox=int(ramal.ramal_virtual),
+							password=dados.voicemail_senha,
+							fullname=ramal.nome,
+							email=dados.voicemail_email,
+							pager="0",
+							id_ramalvirtual=dados.id_ramalvirtual)
+		else:
+			db(query1).update(customer_id=0,
+							context="default",
+							mailbox=int(ramal.ramal_virtual),
+							password=dados.voicemail_senha,
+							fullname=ramal.nome,
+							email=dados.voicemail_email,
+							pager="0",
+							id_ramalvirtual=dados.id_ramalvirtual)
+	else:
+		db(query1).delete()
+			
 
 ######-DIRECIONAMENTO
 @auth.requires_login()
@@ -344,6 +386,7 @@ def delete():
 	db(tabela == id_tab).delete()
 	if funcao == "f_ramal_virtual":
 		db(Aplicacao.id_ramalvirtual == id_tab).delete()
+		db(Voicemail.id_ramalvirtual == id_tab).delete()
 	redirect(URL(funcao))
 
 @auth.requires_login()

@@ -1,9 +1,15 @@
 {{extend 'layout.html'}}
 
 {{block center}}
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Escolha e habilite as aplicações que serão usadas pelo ramal.
+</div>
+
 <div class='row'>
 <div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
+
 
 <div style="display:none">
 <label>id ramalv:</label>
@@ -11,35 +17,47 @@
 <br>
 </div>
 
-<label>Cadeado:</label>
+<div class="well" style="width:400px">
+<label>Chefe Secretária Ativo:</label>
+<div>{{=form.custom.widget.cs_ativo}}</div>
+<div ></div>
+<br>
+
+<label>Chefe Secretária chamada externa:</label>
+<div>{{=form.custom.widget.cs_chamadaexterna}}</div>
+<br>
+
+<label>Chefe Secretária chamada interna:</label>
+<div>{{=form.custom.widget.cs_chamadainterna}}</div>
+<br>
+
+<label>Chefe Secretária numero:</label>
+<div>{{=form.custom.widget.cs_numero}}</div>
+<br>
+
+<div style="margin-left:0px; margin-right:130px">
+<label>Chefe Secretária exceção:</label>
+<div>{{=form.custom.widget.cs_excecao}}</div>
+</div>
+<br>
+</div><!--Well-->
+
+<div class="well" style="width:400px">
+<label>Habilitar Cadeado:</label>
 <div>{{=form.custom.widget.cadeado_ativo}}</div>
 <br>
 
 <label>Cadeado senha:</label>
 <div>{{=form.custom.widget.cadeado_senha}}</div>
 <br>
-
-<label>Cs ativo:</label>
-<div>{{=form.custom.widget.cs_ativo}}</div>
-<br>
-
-<label>Cs chamadaexterna:</label>
-<div>{{=form.custom.widget.cs_chamadaexterna}}</div>
-<br>
-
-<label>Cs chamadainterna:</label>
-<div>{{=form.custom.widget.cs_chamadainterna}}</div>
-<br>
-
-<label>Cs numero:</label>
-<div>{{=form.custom.widget.cs_numero}}</div>
-<br>
+</div><!--Well-->
 
 </div><!--col-lg-->
 
 <div class="coluna_form_direita_b0">
 
-<label>Voicemail:</label>
+<div class="well" style="width:400px">
+<label> Habilitar Voicemail:</label>
 <div>{{=form.custom.widget.voicemail_ativo}}</div>
 <br>
 
@@ -50,7 +68,11 @@
 <label>Voicemail senha:</label>
 <div>{{=form.custom.widget.voicemail_senha}}</div>
 <br>
+</div>
 
+
+
+<div class="well" style="width:400px">
 <label>Agenda cadastro</label>
 <div>{{=form.custom.widget.agenda_cadastro}}</div>
 <br>
@@ -58,6 +80,8 @@
 <label>Agenda senha</label>
 <div>{{=form.custom.widget.agenda_senha}}</div>
 <br>
+</div>
+
 </div><!--col-lg-3-->
 
 </div><!--row-->
@@ -79,7 +103,16 @@
 
 {{block jquery}}
 
+<script src="{{=URL(a='admanager', c='static', f='js')}}/livevalidation.js" type="text/javascript"></script>
 <script type="text/javascript">
+
+//Validation
+var voicemail_senha = new LiveValidation( "f_aplicacao_voicemail_senha", { validMessage: " ", wait: 5 } );
+voicemail_senha.add( Validate.Numericality);
+voicemail_senha.add( Validate.Length, { is: 4 } );
+
+var voicemail_email = new LiveValidation("f_aplicacao_voicemail_email", { validMessage: " ", wait: 5 } );
+voicemail_email.add( Validate.Email );
 
 $("#act-Extensões").addClass("chevron opened");
 $("#dsp-Extensões").css("display", "block");

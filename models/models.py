@@ -168,7 +168,7 @@ Departamentos = db.define_table("f_departamentos",
     migrate=False)
 
 Ramal_virtual = db.define_table("f_ramal_virtual",
-	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX", "DAHDI", "KHOMP", "QUEUE", "FAX"])),
+	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX", "DAHDI", "KHOMP", "QUEUE", "FAX", "LOCAL"])),
 	Field("ramal_fisico"),
 	Field("id_departamento", db.f_departamentos, requires=IS_IN_DB(db(db.f_departamentos.mostrar == True),'f_departamentos.id',"%(departamento)s")),
 	Field("ramal_virtual"),
@@ -312,6 +312,12 @@ db.define_table("queue_members",
 db.define_table("f_fax",
 	Field("nome"),
 	Field("email"),
+	Field("numero"),
+	format="%(nome)s",
+	migrate=False)
+
+db.define_table("f_local",
+	Field("nome"),
 	Field("numero"),
 	format="%(nome)s",
 	migrate=False)

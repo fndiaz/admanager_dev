@@ -30,3 +30,7 @@ Filas e fax /queues
 Relatótios e gravações /bilhetes
 	-busca chamadas
 	-escutar ligações
+
+Módulos Pré Pago /prepago
+	-prepago usuario
+	-prepago automatico

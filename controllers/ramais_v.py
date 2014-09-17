@@ -326,30 +326,40 @@ def ajax_fisico():
 	print 'entrou'
 	print request.vars
 	if (request.vars['tec'] == 'SIP') or (request.vars['tec'] == 'IAX'):
-		ramal_virtual = db(db.f_ramal_virtual)._select(db.f_ramal_virtual.ramal_fisico) 
+		if request.vars['tec'] == 'SIP':
+			ramal_virtual = db(db.f_ramal_virtual.tecnologia == 'SIP')._select(db.f_ramal_virtual.ramal_fisico)
+		if request.vars['tec'] == 'IAX':
+			ramal_virtual = db(db.f_ramal_virtual.tecnologia == 'IAX')._select(db.f_ramal_virtual.ramal_fisico)
 		query = (db.fisico_sip_iax.tecnologia == request.vars['tec'])&\
 				(db.fisico_sip_iax.tronco == False)&\
 				(~db.fisico_sip_iax.usuario.belongs(ramal_virtual))
-				 
 		con = db(query).select(db.fisico_sip_iax.usuario,orderby=db.fisico_sip_iax.usuario)
 		print con
 
 	if (request.vars['tec'].lower() == 'dahdi') or (request.vars['tec'].lower() == 'khomp'):
-		porta = db(db.f_ramal_virtual)._select(db.f_ramal_virtual.ramal_fisico)
+		if request.vars['tec'].lower() == 'dahdi':
+			porta = db(db.f_ramal_virtual.tecnologia == 'DAHDI')._select(db.f_ramal_virtual.ramal_fisico)
+		if request.vars['tec'].lower() == 'khomp':
+			porta = db(db.f_ramal_virtual.tecnologia == 'KHOMP')._select(db.f_ramal_virtual.ramal_fisico)
 		query = (db.fisico_dahdi_khomp.tecnologia == request.vars['tec'].lower())&\
 				(~db.fisico_dahdi_khomp.porta.belongs(porta))
 		con = db(query).select(db.fisico_dahdi_khomp.porta,orderby=db.fisico_dahdi_khomp.porta)
 		print con
 
 	if request.vars['tec'] == 'QUEUE':
-		fila = db(db.f_ramal_virtual)._select(db.f_ramal_virtual.ramal_fisico) 
+		fila = db(db.f_ramal_virtual.tecnologia == 'QUEUE')._select(db.f_ramal_virtual.ramal_fisico) 
 		query = (~db.queue.name.belongs(fila))
 		con = db(query).select(db.queue.name,orderby=db.queue.name)
 
 	if request.vars['tec'] == 'FAX':
-		fila = db(db.f_ramal_virtual)._select(db.f_ramal_virtual.ramal_fisico) 
+		fila = db(db.f_ramal_virtual.tecnologia == 'FAX')._select(db.f_ramal_virtual.ramal_fisico) 
 		query = (~db.f_fax.numero.belongs(fila))
 		con = db(query).select(db.f_fax.numero,orderby=db.f_fax.numero)
+
+	if request.vars['tec'] == 'LOCAL':
+		loc = db(db.f_ramal_virtual.tecnologia == 'LOCAL')._select(db.f_ramal_virtual.ramal_fisico) 
+		query = (~db.f_local.numero.belongs(loc))
+		con = db(query).select(db.f_local.numero,orderby=db.f_local.numero)
 	
 	return con.as_json()
 

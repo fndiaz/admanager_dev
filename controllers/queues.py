@@ -104,25 +104,7 @@ def queue_members_form():
 
 	return response.render("queue/form_queue_members.html", form=form)
 
-@auth.requires_login()
-def delete():
-	print request.vars
-	funcao 	=	request.vars['tabela']
-	id_tab	=	request.vars['id_tab']
-	if funcao 	== "queue":
-		tabela 	=	 db.queue.id
-		funcao  = 	 'queue'
-	if funcao 	== "queue_members":
-		tabela 	=	 db.queue_members.uniqueid
-		funcao  = 	 'queue_members'
-	
-	db(tabela == id_tab).delete()
-	if funcao == 'queue_members':
-		redirect(URL(a='admanager', c='queues', f='queue_members', 
-							vars={'id_queue':request.vars.id_queue}))
-	else:
-		redirect(URL(funcao))
-
+#Popula físico na fila
 def busca_fisico():
 	print 'entrou'
 	query1 = (db.f_ramal_virtual.ramal_virtual == request.vars['ramal'])&\
@@ -161,5 +143,58 @@ def f_fax_form():
 		redirect(URL('f_fax'))
 
 	return response.render("queue/form_fax.html", form=form)
+
+def f_local():
+	response.title='Local'
+	response.marca=['Extensões', 'Local']
+	editor = permissao()
+	url = URL('admanager', 'queues', 'f_local_form')
+	
+	con = db(db.f_local).select()
+
+	return response.render("queue/show_local.html", 
+						url=url, editor=editor, con=con)
+
+def f_local_form():
+	response.title = 'Local'
+	response.marca=['Extensões', 'Local', 'Adiciona Local']
+	id_edit	= request.vars['id_edit']
+	
+	if id_edit is None:
+		form 	=	SQLFORM(db.f_local)
+	else:
+		form 	=	SQLFORM(db.f_local, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process().accepted:
+		redirect(URL('f_local'))
+
+	return response.render("queue/form_local.html", form=form)
+
+@auth.requires_login()
+def delete():
+	print request.vars
+	funcao 	=	request.vars['tabela']
+	id_tab	=	request.vars['id_tab']
+	if funcao 	== "queue":
+		tabela 	=	 db.queue.id
+		funcao  = 	 'queue'
+	if funcao 	== "queue_members":
+		tabela 	=	 db.queue_members.uniqueid
+		funcao  = 	 'queue_members'
+	if funcao 	== "f_fax":
+		tabela 	=	 db.f_fax.id
+	if funcao 	== "f_local":
+		tabela 	=	 db.f_local.id
+	
+	db(tabela == id_tab).delete()
+	if funcao == 'queue_members':
+		redirect(URL(a='admanager', c='queues', f='queue_members', 
+							vars={'id_queue':request.vars.id_queue}))
+	else:
+		redirect(URL(funcao))
+
 
 

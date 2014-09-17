@@ -136,6 +136,13 @@ function popula_options(tec){
         });//each 
       }//if fax
 
+    if (tec == 'LOCAL'){
+      $.each(retorno, function(i, value){
+        $("select#f_ramal_virtual_ramal_fisico").append(
+          "<option value="+retorno[i].numero+">"+retorno[i].numero+"</option>"); 
+        });//each 
+      }//if local
+
   }//success
 });//ajax
 }//function popula

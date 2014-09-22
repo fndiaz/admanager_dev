@@ -23,6 +23,7 @@ def f_usuarios_form():
 		form 	=	SQLFORM(db.f_usuarios)
 	else:
 		form 	=	SQLFORM(db.f_usuarios, id_edit)
+		form.element(_name='nome')['_readonly'] = "readonly"
 
 	for input in form.elements():
 		input['_class'] = 'form-control'

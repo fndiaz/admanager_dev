@@ -1,5 +1,5 @@
 # coding=UTF-8
-### Queue-Fax
+### Queue-Fax-Local
 from datetime import datetime
 
 @auth.requires_login()
@@ -195,6 +195,56 @@ def delete():
 							vars={'id_queue':request.vars.id_queue}))
 	else:
 		redirect(URL(funcao))
+
+@auth.requires_login()
+def meetme():
+	response.title='Áudio Conferência - Meetme'
+	response.marca=['Extensões', 'Conferência']
+	editor = permissao()
+	url = URL('admanager', 'queues', 'meetme_form')
+	
+	con = db(db.meetme).select()
+
+	return response.render("queue/show_meetme.html", 
+						url=url, editor=editor, con=con)
+
+@auth.requires_login()
+def meetme_form():
+	response.title = 'Áudio Conferência - Meetme'
+	response.marca=['Extensões', 'Conferência', 'Adiciona Conferência']
+	id_edit	= request.vars['id_edit']
+
+	if id_edit is None:
+		form = SQLFORM(db.meetme)
+	else:
+		form = SQLFORM(db.meetme, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+	form.element(_name='members')['_rows'] = "4"
+	form.element(_name='atributo')['_rows'] = "4"
+	form.custom.widget.starttime['_class'] = "datetime form-control"
+	form.custom.widget.starttime['_autocomplete'] = "off"
+	form.custom.widget.endtime['_class'] = "datetime form-control"
+	form.custom.widget.endtime['_autocomplete'] = "off"
+
+	if form.process().accepted:
+		insert_atributo(request.vars)
+		redirect(URL('meetme'))
+
+	return response.render("queue/form_meetme.html", form=form)
+
+def insert_atributo(submit):
+	print submit
+	atributo=submit.atr_extras
+	dict_atr={'atr1':'1', 'atrq':'q', 'atrr':'r', 'atr_m':'M', 'atri':'i'}
+
+	#adiciona checkbox aos atributos
+	for item in dict_atr:
+		if submit[item] == 'on':
+			atributo+=dict_atr[item]
+
+	db(Meetme.confno == submit.confno).update(atributo=atributo)
 
 
 

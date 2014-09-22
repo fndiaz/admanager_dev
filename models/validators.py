@@ -140,6 +140,12 @@ db.f_fax.nome.requires = IS_NOT_EMPTY()
 db.f_fax.email.requires = IS_EMAIL()
 db.f_fax.numero.requires = IS_NOT_EMPTY()
 
+#Meetme
+db.meetme.confno.requires = [IS_NOT_IN_DB(db, 'meetme.confno'), IS_ALPHANUMERIC()]
+db.meetme.pin.requires = IS_EMPTY_OR(IS_MATCH("[0-9]+", error_message=T("somente números")))
+db.meetme.adminpin.requires = IS_EMPTY_OR(IS_MATCH("[0-9]+", error_message=T("somente números")))
+db.meetme.maxusers.requires = IS_NOT_EMPTY()
+
 #########################################################################
 ## Prepago
 #########################################################################

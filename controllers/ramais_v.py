@@ -320,6 +320,12 @@ def link_fisico():
 	if (request.vars['tec'] == 'FAX'):
 		id_fis=db(db.f_fax.numero == request.vars.fisico).select(db.f_fax.id)[0].id
 		redirect(URL(a='admanager',c='queues',f='f_fax_form',vars=dict(id_edit=id_fis)))
+	if (request.vars['tec'] == 'LOCAL'):
+		id_fis=db(db.f_local.numero == request.vars.fisico).select(db.f_local.id)[0].id
+		redirect(URL(a='admanager',c='queues',f='f_local_form',vars=dict(id_edit=id_fis)))
+	if (request.vars['tec'] == 'MEETME'):
+		id_fis=db(db.meetme.confno == request.vars.fisico).select(db.meetme.id)[0].id
+		redirect(URL(a='admanager',c='queues',f='meetme_form',vars=dict(id_edit=id_fis)))
 
 
 def ajax_fisico():
@@ -360,6 +366,12 @@ def ajax_fisico():
 		loc = db(db.f_ramal_virtual.tecnologia == 'LOCAL')._select(db.f_ramal_virtual.ramal_fisico) 
 		query = (~db.f_local.numero.belongs(loc))
 		con = db(query).select(db.f_local.numero,orderby=db.f_local.numero)
+
+	if request.vars['tec'] == 'MEETME':
+		met = db(db.f_ramal_virtual.tecnologia == 'MEETME')._select(db.f_ramal_virtual.ramal_fisico)
+		query = (~db.meetme.confno.belongs(met))
+		con = db(query).select(db.meetme.confno,orderby=db.meetme.confno)
+		print con
 	
 	return con.as_json()
 

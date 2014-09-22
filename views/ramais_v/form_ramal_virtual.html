@@ -143,6 +143,13 @@ function popula_options(tec){
         });//each 
       }//if local
 
+    if (tec == 'MEETME'){
+      $.each(retorno, function(i, value){
+        $("select#f_ramal_virtual_ramal_fisico").append(
+          "<option value="+retorno[i].confno+">"+retorno[i].confno+"</option>"); 
+        });//each 
+      }//if meetme
+
   }//success
 });//ajax
 }//function popula

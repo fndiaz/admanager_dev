@@ -1,0 +1,116 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Coloque o mouse sobre o ícone de interrogação para entender os atributos.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<label>Nome da sala:</label>
+<div>{{=form.custom.widget.confno}}</div>
+<br>
+
+<label>Data Início:</label>
+<div>{{=form.custom.widget.starttime}}</div>
+<br>
+
+<label>Data Fim:</label>
+<div>{{=form.custom.widget.endtime}}</div>
+<br>
+
+<label>Pin:</label>
+<div>{{=form.custom.widget.pin}}</div>
+<br>
+
+<label>Pin admin:</label>
+<div>{{=form.custom.widget.adminpin}}</div>
+<br>
+
+<div style="display:none">
+<div style="margin-left:0px; margin-right:130px">
+<label>Membros:</label>
+<div>{{=form.custom.widget.members}}</div>
+<br>
+</div>
+</div>
+
+<label>Máximo de usuários:</label>
+<div>{{=form.custom.widget.maxusers}}</div>
+<br>
+
+</div><!--col-lg-->
+
+<div class="coluna_form_direita_b0">
+
+<div style="margin-left:0px; margin-right:130px">
+
+<label>Mensagem primeiro membro:</label> <i id="i-1" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.atr1}}</div>
+<br>
+
+<label>Modo silencioso:</label> <i id="i-q" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.atrq}}</div>
+<br>
+
+<label>Gravação:</label> <i id="i-r" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.atrr}}</div>
+<br>
+
+<label>Music on hold:</label> <i id="i-m" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.atr_m}}</div> 
+<br>
+
+<label>Anunciar usuário:</label> <i id="i-i" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.atri}}</div>
+<br>
+
+<label> Mais atributos:</label>
+<div>{{=form.custom.widget.atr_extras}}</div>
+<br>
+</div>
+
+</div><!--col-lg-3-->
+
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="meetme" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+//Help
+$("#i-1").popover({trigger: "hover",title: 'Mensagem primeiro membro', content: "Desabilita anúncio para o primeiro membro a entrar na sala 'Você é a única pessoa nesta sala de conferência'.", placement: 'top' })
+
+$("#i-q").popover({trigger: "hover",title: 'Modo silencioso', content: "Desabilita anúncios da sala de conferência.", placement: 'top' })
+
+$("#i-r").popover({trigger: "hover",title: 'Gravação', content: "Habilita gravação da conferência.", placement: 'top' })
+
+$("#i-m").popover({trigger: "hover",title: 'Música em espera', content: "Habilita música em espera.", placement: 'top' })
+
+$("#i-i").popover({trigger: "hover",title: 'Anúncio de usuário', content: "Anuncia quando usuário entrar na sala.", placement: 'top' })
+
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#Áudio-Conferência").addClass("active");
+
+</script>
+
+{{end}}

@@ -168,7 +168,7 @@ Departamentos = db.define_table("f_departamentos",
     migrate=False)
 
 Ramal_virtual = db.define_table("f_ramal_virtual",
-	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX", "DAHDI", "KHOMP", "QUEUE", "FAX", "LOCAL"])),
+	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX", "DAHDI", "KHOMP", "QUEUE", "FAX", "LOCAL", "MEETME"])),
 	Field("ramal_fisico"),
 	Field("id_departamento", db.f_departamentos, requires=IS_IN_DB(db(db.f_departamentos.mostrar == True),'f_departamentos.id',"%(departamento)s")),
 	Field("ramal_virtual"),
@@ -359,6 +359,25 @@ Creditos = db.define_table("f_creditos",
 	Field("ddd_celular"),
 	Field("ddi"),
 	Field("f0300"),
+	migrate=False)
+
+Meetme = db.define_table("meetme",
+	Field("confno", "string", length=80),
+	Field("starttime", "datetime"),
+	Field("endtime", "datetime"),
+	Field("pin", "string", length=20),
+	Field("opts", "string", length=100),
+	Field("adminpin", "string", length=20),
+	Field("adminopts", "string", length=100),
+	Field("members", "integer", default=0, widget=SQLFORM.widgets.text.widget),
+	Field("maxusers", "integer"),
+	Field("atributo", length=20, widget=SQLFORM.widgets.text.widget),
+	Field("atr1", "boolean"),
+	Field("atrq", "boolean"),
+	Field("atrr", "boolean"),
+	Field("atr_m", "boolean"),
+	Field("atri", "boolean"),
+	Field("atr_extras"),
 	migrate=False)
 
 ####--Menus Permissões

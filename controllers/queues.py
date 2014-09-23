@@ -188,6 +188,8 @@ def delete():
 		tabela 	=	 db.f_fax.id
 	if funcao 	== "f_local":
 		tabela 	=	 db.f_local.id
+	if funcao 	== "meetme":
+		tabela 	=	 db.meetme.id
 	
 	db(tabela == id_tab).delete()
 	if funcao == 'queue_members':

@@ -25,6 +25,8 @@ db.f_troncos.prefixo.requires = IS_EMPTY_OR(IS_MATCH("^[2-9][0-9][0-9][0-9]$", e
 db.f_troncos_fisicos.dispositivo.requires = IS_NOT_EMPTY()
 
 #Destinos
+dest = ["LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI", "0800", "0300", "EMERGENCIA", "RAMAL"]
+db.f_destinos.tipo_chamada.requires = IS_IN_SET(dest)
 db.f_destinos.tipo_chamada.requires = IS_NOT_EMPTY()
 db.f_destinos.expressao.requires = IS_NOT_EMPTY()
 db.f_destinos.destino.requires = IS_NOT_EMPTY()
@@ -97,9 +99,6 @@ db.f_grupo_destinos.id_destinos.requires = IS_IN_DB(db(db.f_destinos.mostrar == 
 #IS_IN_DB(db,'f_destinos.id',"%(tipo_chamada)s",multiple=True)
 #db.f_grupo_destinos.grupo_destino.requires = IS_NOT_EMPTY()
 
-#Destinos
-dest = ["LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI", "0800", "0300"]
-db.f_destinos.tipo_chamada.requires = IS_IN_SET(dest)
 
 #Departamentos
 db.f_departamentos.departamento.requires = [

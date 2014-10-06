@@ -80,7 +80,7 @@ def dia_semana():
 	return dict_diasemana
 
 def peers_fop2():
-	arq = open('/var/local/fop2/buttons.cfg','w')
+	arq = open('/usr/local/fop2/buttons.cfg','w')
 	#Escrevendo troncos
 	troncos = db(Troncos.mostrar == True).select()
 	arq.write('####TRONCOS####\n')

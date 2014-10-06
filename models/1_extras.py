@@ -79,4 +79,29 @@ def dia_semana():
 	lista_diasemana=[('mon','Seg'),('tue','Ter'),('wed','Qua'),('thu','Qui'),('fri','Sex'),('sat','Sáb'),('sun','Dom')]
 	return dict_diasemana
 
+def peers_fop2():
+	arq = open('/var/local/fop2/buttons.cfg','w')
+	#Escrevendo troncos
+	troncos = db(Troncos.mostrar == True).select()
+	arq.write('####TRONCOS####\n')
+	for tronco in troncos:
+		arq.write('[%s]\n' %(tronco.dispositivo))
+		arq.write('type=trunk\n')
+		arq.write('label=%s\n' %(tronco.tronco))
+		t_fisicos = db(Troncos_fisicos.id_tronco == tronco.id).select()
+		for t_fisico in t_fisicos:
+			arq.write('channel=%s\n' %(t_fisico.dispositivo))
+		arq.write('\n')
 
+	#Escrevendo ramais
+	ramais = db(Ramal_virtual.mesa_fop2 == True).select()
+	arq.write('####EXTENSIONS####\n')
+	for ramal in ramais:
+		arq.write('[%s/%s]\n' %(ramal.tecnologia, ramal.ramal_fisico))
+		if ramal.tecnologia == 'QUEUE':
+			arq.write('type=queue\n')
+		else:
+			arq.write('type=extension\n')
+		arq.write('extension=%s\n' %(ramal.ramal_virtual))
+		arq.write('label=%s\n' %(ramal.nome))
+		arq.write('context=ramais\n\n')

@@ -33,6 +33,7 @@ def f_troncos_form():
 
 	#form.element(_name='ciclo_conta')['_value'] = "teste"
 	if form.process().accepted:
+		peers_fop2()
 		redirect(URL('f_troncos'))
 	elif form.errors:
 		response.alerta_erro="Erros no formulário"
@@ -71,6 +72,7 @@ def f_troncos_fisicos_form():
 		input['_class'] = 'form-control'
 
 	if form.process().accepted:
+		peers_fop2()
 		redirect(URL('f_troncos_fisicos'))
 
 	return response.render("funcional/form_troncos_fisicos.html", 

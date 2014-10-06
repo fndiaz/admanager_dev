@@ -107,6 +107,7 @@ def f_ramal_virtual_form():
 			insert_aplicacao(request.vars.ramal_virtual.strip(' ') )
 		else:
 			update_voicemail(request.vars)
+		peers_fop2()
 		redirect(URL('f_ramal_virtual'))
 
 	return response.render("ramais_v/form_ramal_virtual.html", form=form)

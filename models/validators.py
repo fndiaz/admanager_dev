@@ -110,7 +110,7 @@ db.f_ramal_virtual.ramal_virtual.requires = [
 IS_MATCH("[0-9]+", error_message='somente números'),
 IS_NOT_IN_DB(db, 'f_ramal_virtual.ramal_virtual')
 ]
-db.f_ramal_virtual.nome.requires = IS_ALPHANUMERIC()
+#db.f_ramal_virtual.nome.requires = IS_ALPHANUMERIC()
 db.f_ramal_virtual.chamadas_simultaneas.requires = IS_INT_IN_RANGE(1,21)
 
 ##Desvios

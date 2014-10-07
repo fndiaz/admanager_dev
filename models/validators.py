@@ -27,9 +27,11 @@ db.f_troncos_fisicos.dispositivo.requires = IS_NOT_EMPTY()
 #Destinos
 dest = ["LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI", "0800", "0300", "EMERGENCIA", "RAMAL"]
 db.f_destinos.tipo_chamada.requires = IS_IN_SET(dest)
-db.f_destinos.expressao.requires = IS_NOT_EMPTY()
 db.f_destinos.destino.requires = IS_NOT_EMPTY()
 db.f_destinos.tamanho_max.requires = IS_NOT_EMPTY()
+db.f_destinos.expressao.requires = [
+IS_NOT_EMPTY(),
+IS_NOT_IN_DB(db, 'f_destinos.expressao') ]
 
 ##Tarifacao
 db.f_tarifacao.tarifacao.requires = IS_NOT_EMPTY()

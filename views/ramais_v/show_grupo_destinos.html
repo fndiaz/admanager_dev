@@ -21,7 +21,7 @@
             <td>{{=dado.grupo_destino}}</td>
             <td>
                 {{for item in dado.id_destinos:}}
-                {{=db(db.f_destinos.id == item).select(db.f_destinos.tipo_chamada)[0].tipo_chamada}}<br>
+                {{=db(db.f_destinos.id == item).select(db.f_destinos.destino)[0].destino}}<br>
                 {{pass}}
             </td>
             <td>

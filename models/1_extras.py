@@ -106,4 +106,4 @@ def peers_fop2():
 		arq.write('label=%s\n' %(ramal.nome))
 		arq.write('context=ramais\n\n')
 
-	commands.getoutput("/etc/init.d/fop2 reload")
+	commands.getoutput("sudo /etc/init.d/fop2 reload")

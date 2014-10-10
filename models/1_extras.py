@@ -23,9 +23,9 @@ def escreve_sip_iax():
 		if ramal.tecnologia == 'SIP':
 			texto = sip
 			print 'escrevendo SIP/%s' %(ramal.usuario)
-		if ramal.tecnologia == 'IAX':
+		if (ramal.tecnologia == 'IAX') or (ramal.tecnologia == 'IAX2'):
 			texto = iax
-			print 'escrevendo IAX/%s' %(ramal.usuario)
+			print 'escrevendo IAX2/%s' %(ramal.usuario)
 	
 		texto.write('[%s]\n' %(ramal.usuario))
 		texto.write('type=%s\n' %(ramal.type_f))

@@ -310,7 +310,7 @@ def f_ddr_form():
 def link_fisico():
 	print 'link_fisico'
 	print request.vars
-	if (request.vars['tec'] == 'SIP') or (request.vars['tec'] == 'IAX'):
+	if (request.vars['tec'] == 'SIP') or (request.vars['tec'] == 'IAX') or (request.vars['tec'] == 'IAX2'):
 		id_fis=db(db.fisico_sip_iax.usuario == request.vars.fisico).select(db.fisico_sip_iax.id)[0].id
 		redirect(URL(a='admanager',c='ramais',f='fisico_sip_iax_form',vars=dict(id_edit=id_fis)))
 	if (request.vars['tec'] == 'DAHDI') or (request.vars['tec'] == 'KHOMP'):
@@ -332,11 +332,11 @@ def link_fisico():
 def ajax_fisico():
 	print 'entrou'
 	print request.vars
-	if (request.vars['tec'] == 'SIP') or (request.vars['tec'] == 'IAX'):
+	if (request.vars['tec'] == 'SIP') or (request.vars['tec'] == 'IAX2'):
 		if request.vars['tec'] == 'SIP':
 			ramal_virtual = db(db.f_ramal_virtual.tecnologia == 'SIP')._select(db.f_ramal_virtual.ramal_fisico)
-		if request.vars['tec'] == 'IAX':
-			ramal_virtual = db(db.f_ramal_virtual.tecnologia == 'IAX')._select(db.f_ramal_virtual.ramal_fisico)
+		if request.vars['tec'] == 'IAX2':
+			ramal_virtual = db(db.f_ramal_virtual.tecnologia == 'IAX2')._select(db.f_ramal_virtual.ramal_fisico)
 		query = (db.fisico_sip_iax.tecnologia == request.vars['tec'])&\
 				(db.fisico_sip_iax.tronco == False)&\
 				(~db.fisico_sip_iax.usuario.belongs(ramal_virtual))

@@ -108,7 +108,7 @@ function popula_options(tec){
     success: function(retorno){
     var options = "";
 
-    if (tec == 'SIP' || tec == 'IAX'){
+    if (tec == 'SIP' || tec == 'IAX2'){
       $.each(retorno, function(i, value){
         $("select#f_ramal_virtual_ramal_fisico").append(
           "<option value="+retorno[i].usuario+">"+retorno[i].usuario+"</option>"); 

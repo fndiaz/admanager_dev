@@ -469,6 +469,7 @@ def escreve_localnet():
 	if dado.endereco_ip_externo != '':
 		arq.write('externip=%s\n' %(dado.endereco_ip_externo))
 	arq.close()
+	commands.getoutput("sudo asterisk -rx 'module reload chan_sip.so'")
 
 
 

@@ -279,6 +279,7 @@ def f_parametros_form():
 	if form.process(hideerror=True).accepted:
 		escreve_sip_iax()
 		escreve_smtp()
+		escreve_localnet()
 		session.alerta_sucesso = 'Parâmetros salvos com sucesso!'
 		redirect(URL('f_parametros_form'))
 
@@ -455,6 +456,23 @@ def escreve_smtp():
 	arq2.write("SMTP_AUTH_USER = '%s' \n" %(dado.usuario_smtp))
 	arq2.write("SMTP_AUTH_PASS = '%s' \n" %(dado.senha_smtp))
 	arq2.close()
+
+def escreve_localnet():
+	dado=db(db.f_parametros).select()[0]
+	arq = open('/aldeia/etc/asterisk/confs/sip_localnet_admanager.conf', 'w')
+
+	ips=db(db.f_parametros).select(db.f_parametros.faixa_ip_interna)[0].faixa_ip_interna
+
+	for ip in str(ips).split('\n'):
+		if ip != '':
+			arq.write('localnet=%s\n' %(ip))
+	if dado.endereco_ip_externo != '':
+		arq.write('externip=%s\n' %(dado.endereco_ip_externo))
+	arq.close()
+
+
+
+
 
 
 

@@ -361,7 +361,7 @@ def escreve_tronco():
 			if tronco.tecnologia == 'SIP':
 				arq_sip.write('register=> %s:%s@%s/%s\n' 
 				%(tronco.usuario, tronco.secret, tronco.host_f, tronco.usuario))
-			if tronco.tecnologia == 'IAX':
+			if (tronco.tecnologia == 'IAX') or (tronco.tecnologia == 'IAX2'):
 				arq_iax.write('register=> %s:%s@%s\n' 
 				%(tronco.usuario, tronco.secret, tronco.host_f))
 	arq_sip.close()

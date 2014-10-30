@@ -7,9 +7,11 @@
                 <thead>
                         <tr>
                                 <th>Origem</th>
+                                <th>Nome</th>
                                 <th>Destino</th>
                                 <th>Data</th>
                                 <th>Departamento</th>
+                                <th>Status</th>
                                 <th>Tempo</th>
                               {{if auth.has_membership("gravacao_perm") or (auth.has_membership('administrador')):}}
                                 <th>Gravações</th>
@@ -18,8 +20,21 @@
 
 		<tbody>
 			{{for dado in con:}}
+
+            <!--Definindo cor por status-->
+            {{
+                if dado.status == 'ANSWER':
+                    classe = 'label label-success'
+                elif dado.status == 'CONTINUE':
+                    classe = 'label label-warning'
+                else:
+                  classe = 'label label-important'
+                pass
+                
+            }}
                         <tr>
                                 <td>{{=dado.origem}}</td>
+                                <td>{{=dado.nome_origem}}</td>
                                 <td>{{=dado.destino}}</td>
                                 <td>{{
                                       #hora=dado.horario.astimezone(timezone('America/Sao_Paulo'))
@@ -28,6 +43,7 @@
                                     }}
                                 </td>
                                 <td>{{=dado.departamento}}</td>
+                                <td><span class="{{=classe}}"><b>{{=dado.status}}</b></span></td>
                                 <td>{{=time.strftime('%H:%M:%S', time.gmtime(dado.tempo))}}</td>
                               {{if (auth.has_membership("gravacao_perm")) or (auth.has_membership('administrador')):}}
                                 <td>{{if dado.gravacao == True:}}

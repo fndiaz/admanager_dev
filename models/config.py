@@ -82,7 +82,7 @@ def notifica(form):
 if request.is_local:
 	uploadfolder='/home/fernando/web2py/applications/admanager/static/images/avatar'
 else:
-	uploadfolder='/var/www/web2pyapplications/admanager/static/images/avatar'
+	uploadfolder='/var/www/web2py/applications/admanager/static/images/avatar'
 
 #fields
 auth.settings.extra_fields['auth_user'] = [

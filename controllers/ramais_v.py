@@ -399,6 +399,10 @@ def delete():
 		tabela	= 	db.f_desvios.id
 		funcao	= 	"f_desvios"
 
+	if funcao	==	"f_ddr":
+		tabela	= 	db.f_ddr.id
+		funcao	= 	"f_ddr"
+
 	if funcao	== "f_grupo_destinos":
 		tabela	= 	db.f_grupo_destinos.id
 		if trata_grupo_destino(funcao, id_tab) == False:

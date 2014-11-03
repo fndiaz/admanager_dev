@@ -380,6 +380,11 @@ Meetme = db.define_table("meetme",
 	Field("atr_extras"),
 	migrate=False)
 
+Callback = db.define_table("f_callback",
+	Field("numero"),
+	Field("nome"),
+	migrate=False)
+
 ####--Menus Permissões
 db.define_table('f_menu',
 	Field("id"),

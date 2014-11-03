@@ -162,6 +162,13 @@ db.f_creditos.ddi.requires = IS_INT_IN_RANGE(0,900000)
 db.f_creditos.f0300.requires = IS_INT_IN_RANGE(0,900000)
 
 
+#########################################################################
+## Listas
+#########################################################################
+#callback
+db.f_callback.nome.requires = IS_NOT_EMPTY()
+db.f_callback.numero.requires = IS_NOT_EMPTY()
+
 
 
 #########################################################################

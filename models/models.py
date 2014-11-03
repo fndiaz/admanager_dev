@@ -259,7 +259,7 @@ db.define_table("fisico_dahdi_khomp",
 
 ##Queues
 estrategia = ["ringall", "roundrobin", "leastrecent", "fewestcalls", "random", "rrmemory"]
-db.define_table("queue",
+Queue = db.define_table("queue",
 	Field("name"),
 	Field("strategy", requires=IS_IN_SET(estrategia), default='ringall'),
 	Field("musiconhold", default='default'),
@@ -299,7 +299,7 @@ db.define_table("queue",
 	format="%(name)s",
 	migrate=False)
 
-db.define_table("queue_members",
+Queue_members = db.define_table("queue_members",
 	Field("uniqueid"),
 	Field("queue_name"),
 	Field("interface"),

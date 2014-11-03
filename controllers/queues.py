@@ -25,12 +25,18 @@ def queue_form():
 		form 	=	SQLFORM(db.queue)
 	else:
 		form 	=	SQLFORM(db.queue, id_edit)
+		qname =	Queue[id_edit].name
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
 
 	#form.element(_name='ciclo_conta')['_value'] = "teste"
 	if form.process().accepted:
+		if  id_edit != None:
+			##Altera queu_members e ramal virtual
+			db(db.queue_members.queue_name == qname).update(queue_name=request.vars.name)
+			db((db.f_ramal_virtual.tecnologia == 'QUEUE')&\
+		   	   (db.f_ramal_virtual.ramal_fisico == qname)).update(ramal_fisico=request.vars.name)
 		redirect(URL('queue'))
 
 	return response.render("queue/form_queue.html", form=form)
@@ -181,6 +187,7 @@ def delete():
 	if funcao 	== "queue":
 		tabela 	=	 db.queue.id
 		funcao  = 	 'queue'
+		qname 	= 	Queue[id_tab].name
 	if funcao 	== "queue_members":
 		tabela 	=	 db.queue_members.uniqueid
 		funcao  = 	 'queue_members'
@@ -192,6 +199,11 @@ def delete():
 		tabela 	=	 db.meetme.id
 	
 	db(tabela == id_tab).delete()
+	if funcao == 'queue':
+		##Deleta queu_members e ramal virtual
+		db(db.queue_members.queue_name == qname).delete()
+		db((db.f_ramal_virtual.tecnologia == 'QUEUE')&\
+		   (db.f_ramal_virtual.ramal_fisico == qname)).delete()
 	if funcao == 'queue_members':
 		redirect(URL(a='admanager', c='queues', f='queue_members', 
 							vars={'id_queue':request.vars.id_queue}))

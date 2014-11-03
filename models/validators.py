@@ -128,7 +128,8 @@ db.f_desvios.horario_fim.requires = IS_NOT_EMPTY()
 ## Queues
 #########################################################################
 #Queue
-db.queue.name.requires = [IS_NOT_EMPTY(), IS_ALPHANUMERIC()]
+db.queue.name.requires = [IS_NOT_IN_DB(db, 'queue.name'),
+							IS_NOT_EMPTY(), IS_ALPHANUMERIC()]
 
 #Queue Member
 db.queue_members.queue_name.requires = IS_NOT_EMPTY()

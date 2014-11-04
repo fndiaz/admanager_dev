@@ -30,3 +30,16 @@ def f_callback_form():
 		redirect(URL('f_callback'))
 
 	return response.render("listas/form_callback.html", form=form)
+
+@auth.requires_login()
+def delete():
+	print request.vars
+	funcao 	=	request.vars['tabela']
+	id_tab	=	request.vars['id_tab']
+
+	if funcao	== "f_callback":
+		tabela 	=	Callback.id
+		funcao	= 	"f_callback"
+
+	db(tabela == id_tab).delete()
+	redirect(URL(funcao))

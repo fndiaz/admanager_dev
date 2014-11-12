@@ -16,11 +16,11 @@ def discos():
 		uso = psutil.disk_usage(item.mountpoint)
 		temp={}
 		#populando temp
-		temp['device']=item.device
+		temp['device']=item.device 
 		temp['fstype']=item.fstype
-		temp['total']=uso.total
-		temp['used']=uso.used
-		temp['free']=uso.free
+		temp['total']=(uso.total /1024) / 1024
+		temp['used']=(uso.used /1024) / 1024
+		temp['free']=(uso.free /1024) / 1024
 		temp['percent']=uso.percent
 		#completando dicionario '/'
 		dict_partition[item.mountpoint]=temp
@@ -31,19 +31,19 @@ def memoria():
 	dict_mem={}
 	mem = psutil.virtual_memory()
 	temp={}
-	temp['total']=mem.total
-	temp['used']=mem.used
-	temp['free']=mem.free
-	temp['buffers']=mem.buffers
-	temp['cached']=mem.cached
+	temp['total']=	(mem.total /1024) / 1024
+	temp['used']=	(mem.used /1024) /1024
+	temp['free']=	(mem.free /1024) /1024
+	temp['buffers']=(mem.buffers /1024) /1024
+	temp['cached']=	(mem.cached /1024) /1024
 	temp['percent']=mem.percent
 	dict_mem['virtual_memory']=temp
 
 	mems = psutil.swap_memory()
 	temp={}
-	temp['total']=mems.total
-	temp['used']=mems.used
-	temp['free']=mems.free
+	temp['total']=(mems.total /1024) / 1024
+	temp['used']=(mems.used /1024) / 1024
+	temp['free']=(mems.free /1024) / 1024
 	temp['percent']=mems.percent
 	dict_mem['swap_memory']=temp
 

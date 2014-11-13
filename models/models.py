@@ -134,7 +134,7 @@ db.define_table("f_portabilidade",
 	format="%(usuario)s",
     migrate=False)
 
-db.define_table("f_bilhetes_chamadas",
+Bilhetes = db.define_table("f_bilhetes_chamadas",
 	Field("id_tronco", db.f_troncos),
 	Field("origem"),
 	Field("destino"),
@@ -153,6 +153,17 @@ db.define_table("f_bilhetes_chamadas",
 	Field("arquivo_gravacao", "string"),
     format="%(origem)s",
     migrate=False)
+
+Rastreamento = db.define_table("f_rastreamento",
+	Field("channel"),
+	Field("linked_id"),
+	Field("id_acao", "integer"),
+	Field("horario"),
+	Field("origem"),
+	Field("destino"),
+	Field("valor"),
+	format="%(channel)s",
+	migrate=False)
 
 Grupo_destinos = db.define_table("f_grupo_destinos",
 	Field("id_destinos", "list:reference db.f_destinos"),

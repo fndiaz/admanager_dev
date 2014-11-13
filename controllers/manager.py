@@ -54,10 +54,36 @@ def load():
 	load = os.getloadavg()
 	temp['l1']=load[0]
 	temp['l2']=load[1]
-	temp['l3']=load[0]
+	temp['l3']=load[2]
 
 	return(temp)
 
+def chamadas_json():
+	num = request.vars.num
+	if num is None: num='z'
+
+	query=(db.f_bilhetes_chamadas.origem.like ('%'+num+'%'))or\
+		  (db.f_bilhetes_chamadas.destino.like ('%'+num+'%'))
+
+	con=db(query).select(Bilhetes.horario, 
+						 Bilhetes.origem, 
+						 Bilhetes.destino, 
+						 Bilhetes.linked_id, 
+					     orderby=~Bilhetes.horario, 
+					     limitby=(0,10))
+
+	j = con.as_json()
+	print con
+	return response.json(con)
+
+def rastreio_json():
+	linkedid = request.vars.linkedid
+
+	query=(db.f_rastreamento.linked_id == linkedid)
+	con=db(query).select()
+
+	print con
+	return response.json(con)
 
 
 

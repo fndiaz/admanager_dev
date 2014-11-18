@@ -195,6 +195,9 @@ def delete():
 	if funcao	== "f_callback":
 		tabela 	=	Callback.id
 		funcao	= 	"f_callback"
+	if funcao == "f_listas":
+		tabela = Listas.id
+		funcao = "f_listas"
 
 	db(tabela == id_tab).delete()
 	redirect(URL(funcao))

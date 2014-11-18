@@ -401,7 +401,7 @@ Listas = db.define_table("f_listas",
 	Field("descricao"),
 	Field("categoria", requires=IS_IN_SET(['Departamento', 'Ramal', 'Global', 'Entrante'])),
 	Field("objeto"),
-	Field("tipo", requires=IS_IN_SET(['Whitelist', 'Blacklist', 'teste teste'])),
+	Field("tipo", requires=IS_IN_SET(['Whitelist', 'Blacklist'])),
 	migrate=False)
 
 ####--Menus Permissões

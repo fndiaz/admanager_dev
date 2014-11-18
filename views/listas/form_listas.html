@@ -1,0 +1,136 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione um item na Lista
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<div>
+<label>Número:</label>
+<div>{{=form.custom.widget.numero}}</div>
+<br>
+</div>
+
+<label>Descrição:</label>
+<div>{{=form.custom.widget.descricao}}</div>
+<br>
+
+<label>Categoria:</label>
+<div>{{=form.custom.widget.categoria}}</div>
+<br>
+
+<div id="objeto">
+<label>Objeto:</label>
+<div>
+<select class="form-control" id="f_listas_objeto" name="objeto"><option class="form-control" value="">
+{{if request.vars.ed_objt != None:}}
+<option value="{{=request.vars.ed_objt}}" selected>{{=request.vars.ed_objt}}</option>
+{{pass}}
+</select>
+</div>
+<br>
+</div>
+
+<label>Tipo:</label>
+<div>{{=form.custom.widget.tipo}}</div>
+<br>
+
+</div><!--col-lg-->
+
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="f_listas" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{if request.vars._formkey == None: 
+formekey=''
+pass}}
+
+{{block jquery}}
+<script>
+
+function getParam(n){ //funcao get variaveis url
+return (location.search.match(new RegExp(n + '=([^?&=]+)')) || [])[1] || '';
+}
+
+function popula_options(tec){
+  //alert(tec)
+
+  $.ajax({
+    type: "POST",
+    url: "ajax_listas",
+    data: {tec: $("#f_listas_categoria").val()},
+    dataType: "json",
+    success: function(retorno){
+    var options = "";
+
+    if (tec == 'Departamento'){
+    	$('#objeto').show('fadein');
+      	$.each(retorno, function(i, value){
+        	$("select#f_listas_objeto").append(
+          	"<option value='"+retorno[i].departamento+"''>"+retorno[i].departamento+"</option>"); 
+        });//each 
+      }//if queue
+
+    if (tec == 'Ramal'){
+    	$('#objeto').show('fadein');
+      	$.each(retorno, function(i, value){
+        	$("select#f_listas_objeto").append(
+          	"<option value="+ retorno[i].ramal_virtual +">"+retorno[i].ramal_virtual+"</option>"); 
+        });//each 
+      }//if fax
+
+    if (tec == 'Global'){
+    	$('#f_listas_objeto').html('');//limpa options
+      	$('#objeto').hide('fadein');
+      }//if fax
+
+    if (tec == 'Entrante'){
+    	$('#f_listas_objeto').html('');//limpa options
+      	$('#objeto').hide('fadein');
+      }//if fax
+
+  }//success
+});//ajax
+}//function popula
+
+var id_edit = getParam('id_edit'); //pega request id
+if(id_edit != ''){
+	alert('edit')
+  var tec = $("#f_listas_categoria").val();
+  popula_options(tec)
+}
+
+
+$("#f_listas_categoria").change(function(){//change tecnologia
+  $('#f_listas_objeto').html('');//limpa options
+  var tec = $("#f_listas_categoria").val();
+  popula_options(tec)
+});//change tecnologia
+
+//Menu
+$("#act-Funcional").addClass("chevron opened");
+$("#dsp-Funcional").css("display", "block");
+$("#Listas").addClass("active");
+
+
+</script>
+
+{{end}}

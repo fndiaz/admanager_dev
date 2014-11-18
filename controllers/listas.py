@@ -1,3 +1,56 @@
+######-Listas
+@auth.requires_login()
+def f_listas():
+	response.title = 'Listas'
+	response.marca=['Extensões', 'Listas']
+	editor = permissao()
+	url = URL('admanager', 'listas', 'f_listas_form')
+
+	con = db(Listas).select(orderby=Listas.id)
+	
+	return response.render("listas/show_listas.html",  
+					url=url, editor=editor, con=con)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def f_listas_form():
+	response.title = 'Listas'
+	response.marca=['Extensões', 'Listas', 'Adiciona Lista']
+	id_edit	= request.vars['id_edit']
+	
+	if id_edit is None:
+		form 	=	SQLFORM(Listas)
+	else:
+		form 	=	SQLFORM(Listas, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+	form.custom.widget.numero['_placeholder'] = "exemplo: 01699999999"
+
+	if form.process().accepted:
+		redirect(URL('f_listas'))
+	else:
+		print request.vars
+
+	return response.render("listas/form_listas.html", form=form)
+
+
+def ajax_listas():
+	print request.vars
+	if request.vars.tec == 'Departamento':
+		con = db(Departamentos.mostrar == True).select(Departamentos.departamento, orderby=Departamentos.departamento)
+		#con = con.as_json()
+	elif request.vars.tec == 'Ramal':
+		con = db(Ramal_virtual.ramal_virtual).select(Ramal_virtual.ramal_virtual, orderby=Ramal_virtual.ramal_virtual)
+		#con = con.as_json()
+	else:
+		con={}
+
+	print con
+
+	return response.json(con)
+
+
+
 ######-CallBack
 @auth.requires_login()
 def f_callback():

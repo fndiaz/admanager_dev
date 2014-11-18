@@ -72,8 +72,6 @@ def chamadas_json():
 					     orderby=~Bilhetes.horario, 
 					     limitby=(0,10))
 
-	j = con.as_json()
-	print con
 	return response.json(con)
 
 def rastreio_json():
@@ -82,7 +80,7 @@ def rastreio_json():
 	query=(db.f_rastreamento.linked_id == linkedid)
 	con=db(query).select()
 
-	print con
+	#j = con.as_json()
 	return response.json(con)
 
 

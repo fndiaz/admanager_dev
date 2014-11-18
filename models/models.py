@@ -396,6 +396,14 @@ Callback = db.define_table("f_callback",
 	Field("nome"),
 	migrate=False)
 
+Listas = db.define_table("f_listas",
+	Field("numero"),
+	Field("descricao"),
+	Field("categoria", requires=IS_IN_SET(['Departamento', 'Ramal', 'Global', 'Entrante'])),
+	Field("objeto"),
+	Field("tipo", requires=IS_IN_SET(['Whitelist', 'Blacklist', 'teste teste'])),
+	migrate=False)
+
 ####--Menus Permissões
 db.define_table('f_menu',
 	Field("id"),

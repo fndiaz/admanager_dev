@@ -120,7 +120,9 @@ if db(db.f_portabilidade).isempty():
 
 id_funcional= db(db.f_menu.nome == 'Funcional').select()[0].id
 if db(db.f_submenu.nome == 'CallBack').isempty():
-	print '>>>>'
 	db.f_submenu.insert(nome="CallBack", controller="listas", funcao="f_callback", icone="icon-chevron-right", ordem="11", menu_ref=id_funcional)
 	auth.add_group('CallBack', '')
+if db(db.f_submenu.nome == 'Listas').isempty():
+	db.f_submenu.insert(nome="Listas", controller="listas", funcao="f_listas", icone="icon-chevron-right", ordem="12", menu_ref=id_funcional)
+	auth.add_group('Listas', '')
 

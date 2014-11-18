@@ -169,6 +169,9 @@ db.f_creditos.f0300.requires = IS_INT_IN_RANGE(0,900000)
 db.f_callback.nome.requires = IS_NOT_EMPTY()
 db.f_callback.numero.requires = IS_NOT_EMPTY()
 
+#Listas
+db.f_listas.numero.requires = IS_NOT_EMPTY()
+db.f_listas.descricao.requires = IS_NOT_EMPTY()
 
 
 #########################################################################

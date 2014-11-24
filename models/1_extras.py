@@ -94,7 +94,7 @@ def peers_fop2():
 		arq.write('\n')
 
 	#Escrevendo ramais
-	ramais = db(Ramal_virtual.mesa_fop2 == True).select()
+	ramais = db(Ramal_virtual.mesa_fop2 == True).select(orderby=Ramal_virtual.ramal_virtual)
 	arq.write('####EXTENSIONS####\n')
 	for ramal in ramais:
 		arq.write('[%s/%s]\n' %(ramal.tecnologia, ramal.ramal_fisico))

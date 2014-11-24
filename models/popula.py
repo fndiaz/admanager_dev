@@ -125,10 +125,10 @@ if db(db.f_submenu.nome == 'Listas').isempty():
 ##Menu Extensões
 id_extensoes= db(db.f_menu.nome == 'Extensões').select()[0].id
 if db(db.f_submenu.nome == 'Áudio Conferência').isempty():
-	db.f_submenu.insert(nome="Áudio Conferência", controller="queues", funcao="meetme", icone="icon-chevron-right", ordem="6", menu_ref=id_extensoes)
+	db.f_submenu.insert(nome="Áudio Conferência", controller="queues", funcao="meetme", icone="icon-list-alt", ordem="6", menu_ref=id_extensoes)
 	auth.add_group('Áudio Conferência', '')
 if db(db.f_submenu.nome == 'Fax').isempty():
-	db.f_submenu.insert(nome="Fax", controller="queues", funcao="f_fax", icone="icon-chevron-right", ordem="7", menu_ref=id_extensoes)
+	db.f_submenu.insert(nome="Fax", controller="queues", funcao="f_fax", icone="icon-list-alt", ordem="7", menu_ref=id_extensoes)
 	auth.add_group('Fax', '')
 
 

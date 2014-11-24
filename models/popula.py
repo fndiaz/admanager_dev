@@ -113,11 +113,7 @@ if db(db.f_submenu).isempty():
 	db.f_submenu.insert(nome="Portabilidade", controller="funcional", funcao="f_portabilidade_form", icone="icon-chevron-right", ordem="1", menu_ref=id_configs)
 	auth.add_group('Portabilidade', '')
 
-
-if db(db.f_portabilidade).isempty():
-	db.f_portabilidade.insert(endereco='sippulse.com.br',usuario='adaldeia',senha='senha',ativo=False)
-
-
+##Menu Funcional
 id_funcional= db(db.f_menu.nome == 'Funcional').select()[0].id
 if db(db.f_submenu.nome == 'CallBack').isempty():
 	db.f_submenu.insert(nome="CallBack", controller="listas", funcao="f_callback", icone="icon-chevron-right", ordem="11", menu_ref=id_funcional)
@@ -125,4 +121,18 @@ if db(db.f_submenu.nome == 'CallBack').isempty():
 if db(db.f_submenu.nome == 'Listas').isempty():
 	db.f_submenu.insert(nome="Listas", controller="listas", funcao="f_listas", icone="icon-chevron-right", ordem="12", menu_ref=id_funcional)
 	auth.add_group('Listas', '')
+
+##Menu Extensões
+id_extensoes= db(db.f_menu.nome == 'Extensões').select()[0].id
+if db(db.f_submenu.nome == 'Áudio Conferência').isempty():
+	db.f_submenu.insert(nome="Áudio Conferência", controller="queues", funcao="meetme", icone="icon-chevron-right", ordem="6", menu_ref=id_extensoes)
+	auth.add_group('Áudio Conferência', '')
+if db(db.f_submenu.nome == 'Fax').isempty():
+	db.f_submenu.insert(nome="Fax", controller="queues", funcao="f_fax", icone="icon-chevron-right", ordem="7", menu_ref=id_extensoes)
+	auth.add_group('Fax', '')
+
+
+##Adiciona dado Portabilidade
+if db(db.f_portabilidade).isempty():
+	db.f_portabilidade.insert(endereco='sippulse.com.br',usuario='adaldeia',senha='senha',ativo=False)
 

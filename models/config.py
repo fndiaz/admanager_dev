@@ -108,8 +108,8 @@ response.meta.keywords= "chave, outra, e outra"
 
 
 
-#if not 'ano' in session:
-#    session.ano = '0'
+if not 'dict_operadora' in session:
+    session.dict_operadora = {}
 
 #if not 'mes' in session:
 #    session.mes = '0'

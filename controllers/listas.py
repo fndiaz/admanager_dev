@@ -115,6 +115,7 @@ def form_consulta_port():
 
 @auth.requires_login()
 def csv_read(arquivo):
+	print 'csv_read'
 	import csv, urllib, httplib2
 	i=0
 	numero=''
@@ -165,14 +166,18 @@ def csv_read(arquivo):
 	for item in dict_nome:
 		if dict_nome[item] !=0:
 			dict_operadora[item]=dict_nome[item]
-	print dict_operadora
+	session.dict_operadora = dict_operadora
 	return dict_operadora
 
 @auth.requires_login()
 def json_csv():
-	print 'json'
 	print request.vars
- 	dict_operadora = csv_read(request.vars.param)
+ 	#dict_operadora = csv_read(request.vars.param)
+ 	if request.vars.param == 'None': 
+ 		dict_operadora = {}
+ 	else:
+ 		dict_operadora = session.dict_operadora
+
  	colunas = [{"label":"Operadora","type":"string"},
 			{"label":"Quantidade","type":"number"}]
 

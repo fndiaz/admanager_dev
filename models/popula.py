@@ -130,6 +130,9 @@ if db(db.f_submenu.nome == 'Áudio Conferência').isempty():
 if db(db.f_submenu.nome == 'Fax').isempty():
 	db.f_submenu.insert(nome="Fax", controller="queues", funcao="f_fax", icone="icon-list-alt", ordem="7", menu_ref=id_extensoes)
 	auth.add_group('Fax', '')
+if db(db.f_submenu.nome == 'Local').isempty():
+	db.f_submenu.insert(nome="Local", controller="queues", funcao="f_local", icone="icon-list-alt", ordem="6", menu_ref=id_extensoes)
+	auth.add_group('Local', '')
 
 
 ##Adiciona dado Portabilidade

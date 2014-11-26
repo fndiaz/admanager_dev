@@ -10,7 +10,7 @@ db.f_empresa.empresa.requires = IS_NOT_EMPTY()
 ##Troncos
 db.f_troncos.tronco.requires = IS_NOT_EMPTY()
 db.f_troncos.dispositivo.requires = IS_NOT_EMPTY()
-db.f_troncos.chamadas_simultaneas.requires = IS_INT_IN_RANGE(1,101)
+db.f_troncos.chamadas_simultaneas.requires = IS_INT_IN_RANGE(0,101)
 db.f_troncos.qtde_max_minutos.requires = IS_INT_IN_RANGE(0,999999999, 
 								error_message="entre com 0 ou um número")
 db.f_troncos.transbordo.requires = IS_EMPTY_OR(IS_IN_DB(db(db.f_troncos.mostrar == True),'f_troncos.id',"%(tronco)s"))

@@ -296,8 +296,11 @@ def membership():
     return response.render("initial/show_grid.html", grid=grid)
 
 def log():
-	form = auth.user
-	return response.render("initial/log.html", form=form)
+	#form = auth.user
+	response.title = 'Comunicação com o Opera'
+	escreve_prov()
+
+	return response.render("initial/log.html")
 	
 def download():
 	return response.download(request, db)
@@ -515,3 +518,5 @@ def delete_role(nome, tipo):
 				id_role	= db(db.auth_group.role == dado.nome).select(db.auth_group.id)
 				print id_role
 				auth.del_group(id_role[0])
+
+

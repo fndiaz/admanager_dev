@@ -83,6 +83,11 @@ def rastreio_json():
 	#j = con.as_json()
 	return response.json(con)
 
+def rastreio_json2():
+	con=db(Rastreamento).select(Rastreamento.linked_id,groupby=Rastreamento.linked_id, limitby=(0,10))
+
+	return response.json(con)
+
 
 
 

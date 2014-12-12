@@ -1,0 +1,79 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione o mac address do aparelho, e defina sua configuração de rede.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+<label>Equipamento:</label>
+<div>{{=form.custom.widget.id_equipamento}}</div>
+<br>
+
+<div>
+<label>Rede:</label>
+<div>{{=form.custom.widget.id_rede}}</div>
+</div>
+<br>
+
+<div>
+<label>Mac:</label>
+<div>{{=form.custom.widget.mac}}</div>
+</div>
+<br>
+
+<div>
+<label>IP:</label>
+<div>{{=form.custom.widget.ip}}</div>
+</div>
+<br>
+
+<div>
+<label>Máscara:</label>
+<div>{{=form.custom.widget.mascara}}</div>
+</div>
+<br>
+
+<div>
+<label>Gateway:</label>
+<div>{{=form.custom.widget.gateway}}</div>
+</div>
+<br>
+
+<div>
+<label>VLan:</label>
+<div>{{=form.custom.widget.vlan}}</div>
+</div>
+<br>
+
+</div><!--col-lg-->
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="prov_mac" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Provisioanemto").addClass("chevron opened");
+$("#dsp-Provisionamento").css("display", "block");
+$("#Mac").addClass("active");
+
+</script>
+
+{{end}}

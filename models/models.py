@@ -243,7 +243,7 @@ db.define_table("f_direcionamento",
     migrate=False)
 
 ####--SIP/IAX
-db.define_table("fisico_sip_iax",
+Fisico = db.define_table("fisico_sip_iax",
 	Field("usuario"),
 	Field("secret"),
 	Field("tecnologia", requires=IS_IN_SET(["SIP", "IAX2"])),
@@ -403,6 +403,40 @@ Listas = db.define_table("f_listas",
 	Field("objeto"),
 	Field("tipo", requires=IS_IN_SET(['Whitelist', 'Blacklist'])),
 	migrate=False)
+
+##Provisionamento
+Prov_rede = db.define_table("prov_rede",
+	Field("proxy", length=30),
+	Field("dns", length=30),
+	Field("ntp", length=30),
+	Field("nome", length=30),
+	format 	=	"%(nome)s",
+	migrate=False)
+
+Prov_equipamento = db.define_table("prov_equipamento",
+	Field("fabricante", length=30),
+	Field("modelo", length=30),
+	Field("linha", "integer", notnull=True, length=2),
+	format	=	"%(modelo)s",
+	migrate=False)
+
+Prov_mac = db.define_table("prov_mac",
+	Field("id_equipamento", db.prov_equipamento),
+	Field("id_rede", db.prov_rede),
+	Field("mac", length=30),
+	Field("ip", length=30),
+	Field("mascara", length=30),
+	Field("gateway", length=30),
+	Field("vlan", length=30),
+	format	=	"%(mac)s",
+	migrate=False)
+
+Prov_ramal 	= 	db.define_table("prov_ramal",
+	Field("id_mac", db.prov_mac),
+	Field("ramal"),
+	Field("linha", "integer", length=11),
+	migrate=False)
+
 
 ####--Menus Permissões
 db.define_table('f_menu',

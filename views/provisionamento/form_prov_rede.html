@@ -1,0 +1,62 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione as configurações de rede do Provisionamentoooo.
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+<label>Nome:</label>
+<div>{{=form.custom.widget.nome}}</div>
+<br>
+
+<div>
+<label>Proxy:</label>
+<div>{{=form.custom.widget.proxy}}</div>
+</div>
+<br>
+
+<div>
+<label>DNS:</label>
+<div>{{=form.custom.widget.dns}}</div>
+</div>
+<br>
+
+<div>
+<label>NTP:</label>
+<div>{{=form.custom.widget.ntp}}</div>
+</div>
+<br>
+
+
+</div><!--col-lg-->
+</div><!--row-->
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="prov_rede" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+$("#act-Provisioanemto").addClass("chevron opened");
+$("#dsp-Provisionamento").css("display", "block");
+$("#Rede").addClass("active");
+
+</script>
+
+{{end}}

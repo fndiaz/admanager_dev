@@ -134,8 +134,41 @@ if db(db.f_submenu.nome == 'Local').isempty():
 	db.f_submenu.insert(nome="Local", controller="queues", funcao="f_local", icone="icon-list-alt", ordem="6", menu_ref=id_extensoes)
 	auth.add_group('Local', '')
 
+##Menu Provisionamento
+if db(db.f_menu.nome == 'Provisionamento').isempty():
+		db.f_menu.insert(nome="Provisionamento", controller="", funcao="", icone="icon-exchange", ordem="6", submenu=True)
+		auth.add_group('Provisionamento', '')
+
+id_provisionamento= db(db.f_menu.nome == 'Provisionamento').select()[0].id
+if db(db.f_submenu.nome == 'Rede').isempty():
+	db.f_submenu.insert(nome="Rede", controller="provisionamento", funcao="prov_rede", icone="icon-list-alt", ordem="1", menu_ref=id_provisionamento)
+	auth.add_group('Rede', '')
+if db(db.f_submenu.nome == 'Rede').isempty():
+	db.f_submenu.insert(nome="Rede", controller="provisionamento", funcao="prov_rede", icone="icon-list-alt", ordem="1", menu_ref=id_provisionamento)
+	auth.add_group('Rede', '')
+if db(db.f_submenu.nome == 'Equipamento').isempty():
+	db.f_submenu.insert(nome="Equipamento", controller="provisionamento", funcao="prov_equipamento", icone="icon-list-alt", ordem="2", menu_ref=id_provisionamento)
+	auth.add_group('Equipamento', '')
+if db(db.f_submenu.nome == 'Mac').isempty():
+	db.f_submenu.insert(nome="Mac", controller="provisionamento", funcao="prov_mac", icone="icon-list-alt", ordem="3", menu_ref=id_provisionamento)
+	auth.add_group('Mac', '')
+if db(db.f_submenu.nome == 'Ramal').isempty():
+	db.f_submenu.insert(nome="Ramal", controller="provisionamento", funcao="prov_ramal", icone="icon-list-alt", ordem="4", menu_ref=id_provisionamento)
+	auth.add_group('Ramal', '')
+
+
 
 ##Adiciona dado Portabilidade
 if db(db.f_portabilidade).isempty():
 	db.f_portabilidade.insert(endereco='sippulse.com.br',usuario='adaldeia',senha='senha',ativo=False)
+
+##Adiciona dado prov_equipamento Portabilidade
+if db(db.prov_equipamento.modelo == 'SPA2102').isempty():
+	db.prov_equipamento.insert(fabricante="Linksys", modelo="SPA2102", linha='2')
+if db(db.prov_equipamento.modelo == 'SPA122').isempty():
+	db.prov_equipamento.insert(fabricante="Linksys", modelo="SPA122", linha='2')
+if db(db.prov_equipamento.modelo == 'PAP2').isempty():
+	db.prov_equipamento.insert(fabricante="Linksys", modelo="PAP2", linha='2')
+if db(db.prov_equipamento.modelo == 'T20').isempty():
+	db.prov_equipamento.insert(fabricante="Yealink", modelo="T20", linha='6')
 

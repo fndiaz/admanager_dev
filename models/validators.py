@@ -175,6 +175,24 @@ db.f_listas.descricao.requires = IS_NOT_EMPTY()
 
 
 #########################################################################
+## Provisionamento
+#########################################################################
+#prov_rede
+db.prov_rede.nome.requires = IS_NOT_EMPTY()
+db.prov_rede.dns.requires = IS_NOT_EMPTY()
+db.prov_rede.ntp.requires = IS_NOT_EMPTY()
+db.prov_rede.proxy.requires = IS_NOT_EMPTY()
+
+#prov_equipamento
+db.prov_equipamento.modelo.requires = [IS_NOT_EMPTY(), IS_UPPER()]
+
+#prov_mac
+db.prov_mac.mac.requires = [IS_NOT_EMPTY(), IS_LOWER(), 
+	IS_LENGTH(minsize=12, maxsize=12, error_message=T("12 caracteres")),]
+db.prov_mac.vlan.requires = IS_EMPTY_OR( IS_IN_SET(['1','2','3','4','5','6','7','8','9']) )
+
+
+#########################################################################
 ## Validadores
 #########################################################################
 

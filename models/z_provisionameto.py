@@ -5,6 +5,7 @@
 #########################################################################
 
 def escreve_prov():
+	os.system("rm -f /var/www/provisionamento/*.cfg")
 	query = (Prov_mac.id_equipamento == Prov_equipamento.id)&\
 			(Prov_mac.id_rede == Prov_rede.id) & (Prov_mac.id == Prov_ramal.id_mac)
 

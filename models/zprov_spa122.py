@@ -223,7 +223,7 @@ def escreve_spa122(dado):
 		query=(x.ramal == Ramal_virtual.ramal_virtual) & (Ramal_virtual.ramal_fisico == Fisico.usuario)
 		if db(query).isempty():
 			arq.write('####RAMAL %s NAO EXISTE#####\n' %(x.ramal))
-			return False
+			return (False, x.ramal)
 		aut=db(query).select(Fisico.usuario, Fisico.secret, Ramal_virtual.nome)
 		print x
 		print aut[0]

@@ -204,9 +204,25 @@ def delete():
 	if funcao == "prov_mac":
 		tabela = Prov_mac.id
 		funcao = "prov_mac"
+		mac    = db(Prov_mac.id == id_tab).select()[0]['mac']
 	if funcao == "prov_ramal":
 		tabela = Prov_ramal.id
 		funcao = "prov_ramal"
 
 	db(tabela == id_tab).delete()
+	
+	if funcao == 'prov_ramal':
+		status, obs = escreve_prov()
+		if status == False:
+			print 'erro %s' %(obs)
+			session.alerta_erro = 'Nem tudo funcionou como devia ramal %s não existe!' %(obs)
+		else:
+			session.alerta_sucesso = 'Provisionamento gerado!'
+		
+	if funcao == 'prov_mac':
+		if status == False:
+			print 'erro %s' %(obs)
+			session.alerta_erro = 'Nem tudo funcionou como devia ramal %s não existe!' %(obs)
+		else:
+			session.alerta_sucesso = 'Provisionamento gerado!'
 	redirect(URL(funcao))

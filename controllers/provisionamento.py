@@ -220,6 +220,7 @@ def delete():
 			session.alerta_sucesso = 'Provisionamento gerado!'
 		
 	if funcao == 'prov_mac':
+		status, obs = escreve_prov()
 		if status == False:
 			print 'erro %s' %(obs)
 			session.alerta_erro = 'Nem tudo funcionou como devia ramal %s não existe!' %(obs)

@@ -21,7 +21,7 @@ def escreve_t20(dado):
 		print x
 		print aut[0]
 
-		arq.write('[account]\n')
+		arq.write('[ account ]\n')
 		arq.write('path=/yealink/config/voip/sipAccount0.cfg\n')
 		arq.write('Enable = 1\n')
 		arq.write('DisplayName = %s\n' %(aut[0].f_ramal_virtual['nome']))
@@ -36,6 +36,10 @@ def escreve_t20(dado):
 		arq.write('OutboundHost =\n')
 		arq.write('OutboundPort = 5060\n')
 		arq.write('EnableSTUN = 0\n\n')
+
+	arq.write('[ sipserver1 ]\n')
+	arq.write('path = /yealink/config/voip/sipAccount0.cfg\n')
+	arq.write('server = %s\n' %(dado.prov_rede.proxy))
 	
 	arq.write('Transport = 0\n')
 	arq.write('BakOutboundHost = \n')

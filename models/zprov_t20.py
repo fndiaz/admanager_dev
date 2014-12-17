@@ -39,7 +39,7 @@ def escreve_t20(dado):
 
 	arq.write('[ sipserver1 ]\n')
 	arq.write('path = /yealink/config/voip/sipAccount0.cfg\n')
-	arq.write('server = %s\n' %(dado.prov_rede.proxy))
+	arq.write('server = %s\n\n' %(dado.prov_rede.proxy))
 	
 	arq.write('Transport = 0\n')
 	arq.write('BakOutboundHost = \n')

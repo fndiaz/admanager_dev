@@ -430,11 +430,16 @@ def escreve_smtp():
 	arq1 = open('/etc/ssmtp/ssmtp.conf', 'w')
 	arq2 = open('/usr/local/etc/email/email.conf', 'w')
 
+	if dado.endereco_smtp.find('.') != -1:
+		endereco=dado.endereco_smtp[dado.endereco_smtp.find('.') +1:]
+	else:
+		endereco=dado.endereco_smtp
+
 	if dado.usuario_smtp != "":
 		arq1.write("root=%s \n" %(dado.usuario_smtp))
 		arq1.write("mailhub=%s:%s \n" %(dado.endereco_smtp, dado.porta_smtp))
-		arq1.write("rewriteDomain=%s \n" %(dado.usuario_smtp.split('@')[1]))
-		arq1.write("hostname=%s \n" %(dado.usuario_smtp.split('@')[1]))
+		arq1.write("rewriteDomain=%s \n" %(endereco))
+		arq1.write("hostname=%s \n" %(endereco))
 		if dado.tls_smtp == True:
 			arq1.write("UseTLS=Yes \n")
 		else:

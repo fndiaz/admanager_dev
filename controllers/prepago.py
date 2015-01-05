@@ -194,7 +194,7 @@ def calcula_data():
 		if dia < int(dia_c):
 			date_x = date_now.replace(day=int(dia_c), hour=00, minute=00, second=00)
 			tm_date_x = time.mktime(date_x.timetuple())
-			tm_date_ant = tm_date_x-(30*86400)
+			tm_date_ant = tm_date_x-(31*86400)
 			date_ant = datetime.fromtimestamp(tm_date_ant)
 			dict_date['date_ant'] = date_ant
 			return dict_date
@@ -209,6 +209,7 @@ def calcula_saldo(usr):
 	dict_uso = {}
 	dict_porcent = {}
 	date=calcula_data()
+	print date
 	#TIRAR REPLACE--------------------------------------*****
 	#date_ant = date['date_ant'].replace(month=07).strftime("%Y-%m-%d %H:%M:%S")
 	#date_now = date['date_now'].replace(month=07).strftime("%Y-%m-%d %H:%M:%S")

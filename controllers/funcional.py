@@ -231,7 +231,7 @@ def f_horario_form():
 	if id_horario is None:
 		form 	=	SQLFORM(db.f_horario)
 	else:
-		form 	=	SQLFORM(db.f_rotas, id_horario)
+		form 	=	SQLFORM(db.f_horario, id_horario)
 
 	for input in form.elements():
 		input['_class'] = 'form-control'

@@ -16,9 +16,9 @@ db.f_troncos.qtde_max_minutos.requires = IS_INT_IN_RANGE(0,999999999,
 db.f_troncos.transbordo.requires = IS_EMPTY_OR(IS_IN_DB(db(db.f_troncos.mostrar == True),'f_troncos.id',"%(tronco)s"))
 db.f_troncos.ddd.requires = IS_EMPTY_OR(IS_MATCH("[0-9][0-9]", error_message="entre com um número de dois dígitos"))
 db.f_troncos.csp.requires = IS_EMPTY_OR(IS_MATCH("[0-9][0-9]", error_message="entre com um número de dois dígitos"))
-db.f_troncos.chave.requires = IS_EMPTY_OR(IS_MATCH("^[0-9][0-9][0-9][0-9]$", error_message="entre com um número de quatro dígitos"))
+db.f_troncos.chave.requires = IS_EMPTY_OR(IS_MATCH("^[0-9]", error_message="entre com um número chave"))
 db.f_troncos.ciclo_conta.requires = IS_EMPTY_OR(IS_IN_SET(dia_mes()))
-db.f_troncos.prefixo.requires = IS_EMPTY_OR(IS_MATCH("^[2-9][0-9][0-9][0-9]$", error_message="digite um prefixo válido"))
+db.f_troncos.prefixo.requires = IS_EMPTY_OR(IS_MATCH("^[0-9]", error_message="digite um prefixo válido"))
 
 
 #Troncos Físicos
@@ -113,7 +113,7 @@ IS_MATCH("[0-9]+", error_message='somente números'),
 IS_NOT_IN_DB(db, 'f_ramal_virtual.ramal_virtual')
 ]
 #db.f_ramal_virtual.nome.requires = IS_ALPHANUMERIC()
-db.f_ramal_virtual.chamadas_simultaneas.requires = IS_INT_IN_RANGE(1,21)
+db.f_ramal_virtual.chamadas_simultaneas.requires = IS_INT_IN_RANGE(0,21)
 
 ##Desvios
 #dias={"mon": "Segunda Feira", "tue": "Terça Feira", "wed" : "Quarta Feira", "thu" : "Quinta Feira", "fri" : "Sexta Feira", "sat" : "Sábado", "sun" : "Domingo"}

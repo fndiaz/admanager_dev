@@ -14,6 +14,8 @@
             <th>Expressão</th>
             <th>Destino</th>
             <th>Tamanho</th>
+            <th>Tarifação</th>
+            <th>Portab.</th>
             <th></th>
         </tr>
     </thead>
@@ -24,6 +26,19 @@
             <td>{{=dado.expressao}}</td>
             <td>{{=dado.destino}}</td>
             <td>{{=dado.tamanho_max}}</td>
+
+            {{if dado.tarifado is True:}}
+            <td><input checked="checked" disabled="disabled" type="checkbox"></td>
+            {{else:}}
+            <td><input disabled="disabled" type="checkbox"></td>
+            {{pass}}
+
+            {{if dado.portabilidade is True:}}
+            <td><input checked="checked" disabled="disabled" type="checkbox"></td>
+            {{else:}}
+            <td><input disabled="disabled" type="checkbox"></td>
+            {{pass}}
+
             <td>
             {{if editor == 1:}}
                 <a href="{{=url}}?id_destino={{=dado.id}}">

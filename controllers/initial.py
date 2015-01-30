@@ -456,6 +456,7 @@ def insert_permissao_menu():
 	##Faz o loop retornando departamentos
 	depta=db(db.f_departamentos).select(db.f_departamentos.departamento)
 	for dept in depta:
+		#logger.debug("dept:%s" %(dept))
 		nome = 'dept_%s' %(dept.departamento) 
 		query = (db.auth_group.role == nome)
 		id_grupo = db(query).select()[0].id

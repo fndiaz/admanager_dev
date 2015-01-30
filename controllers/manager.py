@@ -62,17 +62,34 @@ def chamadas_json():
 	num = request.vars.num
 	if num is None: num='z'
 
-	query=(db.f_bilhetes_chamadas.origem.like ('%'+num+'%'))or\
+	query=(db.f_bilhetes_chamadas.origem.like ('%'+num+'%'))|\
 		  (db.f_bilhetes_chamadas.destino.like ('%'+num+'%'))
 
-	con=db(query).select(Bilhetes.horario, 
+	con=db(query)._select(Bilhetes.horario, 
 						 Bilhetes.origem, 
 						 Bilhetes.destino, 
 						 Bilhetes.linked_id, 
 					     orderby=~Bilhetes.horario, 
 					     limitby=(0,10))
 
-	return response.json(con)
+	query2=(Rastreamento.origem.like ('%'+num+'%'))|\
+		   (Rastreamento.destino.like ('%'+num+'%'))
+	con2=db(query2)._select(Rastreamento.horario,
+						   Rastreamento.origem,
+						   Rastreamento.destino,
+						   Rastreamento.linked_id,
+						   distinct=Rastreamento.linked_id,
+						   orderby=~Rastreamento.linked_id|Rastreamento.horario,
+						   limitby=(0,10)
+						   )
+
+	soma=0
+	for dado in con2:
+		soma+=1
+	print soma
+
+
+	return response.json(con2)
 
 def rastreio_json():
 	linkedid = request.vars.linkedid

@@ -88,7 +88,6 @@ def chamadas_json():
 		soma+=1
 	print soma
 
-
 	return response.json(con2)
 
 def rastreio_json():

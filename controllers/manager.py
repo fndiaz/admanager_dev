@@ -74,7 +74,7 @@ def chamadas_json():
 
 	query2=(Rastreamento.origem.like ('%'+num+'%'))|\
 		   (Rastreamento.destino.like ('%'+num+'%'))
-	con2=db(query2)._select(Rastreamento.horario,
+	con2=db(query2).select(Rastreamento.horario,
 						   Rastreamento.origem,
 						   Rastreamento.destino,
 						   Rastreamento.linked_id,

@@ -62,15 +62,16 @@ def chamadas_json():
 	num = request.vars.num
 	if num is None: num='z'
 
+	##Antigo nao esta em uso####################################
 	query=(db.f_bilhetes_chamadas.origem.like ('%'+num+'%'))|\
 		  (db.f_bilhetes_chamadas.destino.like ('%'+num+'%'))
-
-	con=db(query)._select(Bilhetes.horario, 
+	con=db(query).select(Bilhetes.horario, 
 						 Bilhetes.origem, 
 						 Bilhetes.destino, 
 						 Bilhetes.linked_id, 
 					     orderby=~Bilhetes.horario, 
 					     limitby=(0,10))
+	################################################################
 
 	query2=(Rastreamento.origem.like ('%'+num+'%'))|\
 		   (Rastreamento.destino.like ('%'+num+'%'))
@@ -82,7 +83,7 @@ def chamadas_json():
 						   orderby=~Rastreamento.linked_id|Rastreamento.horario,
 						   limitby=(0,10)
 						   )
-
+	#debug qtd registros
 	soma=0
 	for dado in con2:
 		soma+=1

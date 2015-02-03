@@ -24,6 +24,8 @@
 	<link href="{{=URL(a='admanager', c='static', f='css')}}/print.css" rel="stylesheet" type="text/css" media="print"/>
 	<!-- end: CSS -->
 	
+	<!-- ICons FontAwesome -->
+	<link href="{{=URL(a='admanager', c='static', f='font-awesome-4.2.0/css')}}/font-awesome.css" rel="stylesheet">
 
 	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
@@ -66,6 +68,23 @@
 			<!-- start: Header Menu -->
 			<div class="nav-no-collapse header-nav">
 				<ul class="nav navbar-nav pull-right">
+
+					<!--botao agenda-->
+					<li class="dropdown hidden-xs">
+							<a class="btn" href="{{=URL(a='agenda', c='initial', f='principal')}}">
+							<i style="color:white" class="fa fa-phone fa-lg"></i>
+							<span class="number"></span>
+						</a>
+					</li>
+
+					<!--botao download-->
+					<li class="dropdown hidden-xs">
+							<a class="btn" href="{{=URL(a='admanager', c='funcional', f='f_download')}}">
+							<i class="icon-download-alt"></i>
+							<span class="number"></span>
+						</a>
+					</li>
+
 					<!--<li class="dropdown hidden-xs">
 						<a class="btn dropdown-toggle" data-toggle="dropdown" href="ui-sliders-progress.html#">
 							<i class="icon-warning-sign"></i>

@@ -476,6 +476,14 @@ def escreve_localnet():
 	arq.close()
 	commands.getoutput("sudo asterisk -rx 'module reload chan_sip.so'")
 
+def f_download():
+	response.title = 'Área de Download'
+	
+	return response.render("funcional/download_area.html")
+
+
+
+
 
 
 

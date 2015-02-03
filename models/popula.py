@@ -139,6 +139,12 @@ if db(db.f_menu.nome == 'Provisionamento').isempty():
 		db.f_menu.insert(nome="Provisionamento", controller="", funcao="", icone="icon-exchange", ordem="6", submenu=True)
 		auth.add_group('Provisionamento', '')
 
+##Menu Configs
+id_configs 	= db(db.f_menu.nome == 'Configs').select()[0].id
+if db(db.f_submenu.nome == 'Download').isempty():
+	db.f_submenu.insert(nome="Download", controller="funcional", funcao="f_download", icone="icon-chevron-right", ordem="3", menu_ref=id_configs)
+	auth.add_group('Download', '')
+
 id_provisionamento= db(db.f_menu.nome == 'Provisionamento').select()[0].id
 if db(db.f_submenu.nome == 'Rede').isempty():
 	db.f_submenu.insert(nome="Rede", controller="provisionamento", funcao="prov_rede", icone="icon-list-alt", ordem="1", menu_ref=id_provisionamento)

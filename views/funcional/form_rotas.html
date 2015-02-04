@@ -3,56 +3,57 @@
 {{block center}}
 <div class="alert alert-info">
 <button type="button" class="close" data-dismiss="alert">×</button>
-<strong>Dica!</strong> Defina qual tronco será usado para determinado destino nas chamadas.
+<strong></strong> Defina as rotas de saída utilizadas pelo PABX.
 </div>
 
 <div class='row'>
 <div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
-<label>Rota:</label>
+<label>Digito da rota:</label> <i id="i-rota" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.rota}}</div>
 <br>
 
-<label>Tronco:</label> 
+<label>Tronco:</label> <i id="i-tronco" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.id_tronco}}</div>
 <br>
 
-<label>Prioridade:</label> 
+<label>Prioridade:</label> <i id="i-prioridade" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.prioridade}}</div>
 <br>
 
-<label>Destino:</label> 
+<label>Destino:</label> <i id="i-destino" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.id_destino}}</div>
 <br>
 
-<label>Tarifação:</label> 
+<label>Tarifação:</label> <i id="i-tarifacao" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.id_tarifacao}}</div>
 <br>
 
-<label>Adicionar CSP (cód. operadora):</label> 
+<label>Adicionar CSP:</label>  <i id="i-csp" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.add_csp}}</div>
 <br>
 
 </div><!--col-lg-7-->
 
 <div class="coluna_form_direita_b0">
-<label>Adiciona antes:</label> 
-<div>{{=form.custom.widget.adiciona_antes}}</div>
-<br>
 
-<label>Adiciona depois:</label> 
-<div>{{=form.custom.widget.adiciona_depois}}</div>
-<br>
-
-<label>Exclui antes:</label> 
+<label>Exclui antes:</label> <i id="i-exclui" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.exclui_antes}}</div>
 <br>
 
-<label>Empresas que utilizarão a rota:</label> 
+<label>Adiciona antes:</label> <i id="i-add-antes" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.adiciona_antes}}</div>
+<br>
+
+<label>Adiciona depois:</label> <i id="i-add-depois" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.adiciona_depois}}</div>
+<br>
+
+<label>Empresas que utilizarão a rota:</label> <i id="i-add-empresas" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.id_empresa}}</div>
 <br>
 
-<label>horario:</label> 
+<label>horario:</label> <i id="i-horario" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.id_horario}}</div>
 <br>
 
@@ -82,6 +83,28 @@ $("#act-Funcional").addClass("chevron opened");
 $("#dsp-Funcional").css("display", "block");
 $("#Rotas").addClass("active");
 
+//HELP
+$("#i-rota").popover({trigger: "hover",title: 'Digito da rota', content: "Escolha com qual digito esta rota irá iniciar.", placement: 'top' })
+
+$("#i-tronco").popover({trigger: "hover",title: 'Tronco', content: "Defina o tronco que a rota irá utilizar para completar a ligação.", placement: 'right' })
+
+$("#i-prioridade").popover({trigger: "hover",title: 'Prioridade', content: "Defina a prioridade que essa rota tem sobre outras com o mesmo destino. Serve para alternar entre rotas.", placement: 'right' })
+
+$("#i-destino").popover({trigger: "hover",title: 'Destino', content: "Selecione os detinos que serão utilizados pela rota. Para marcar mais de um destino segure a tecla 'Crt'", placement: 'right' })
+
+$("#i-tarifacao").popover({trigger: "hover",title: 'Tarifação', content: "Defina a tarifação para a rota. Fase de testes!", placement: 'right' })
+
+$("#i-csp").popover({trigger: "hover",title: 'Código Operadora', content: "Adicionar código da operadora 'csp' na rota.", placement: 'top' })
+
+$("#i-exclui").popover({trigger: "hover",title: 'Excluir Antes', content: "Exclui número de digitos antes de realizar a ligação.", placement: 'top' })
+
+$("#i-add-antes").popover({trigger: "hover",title: 'Adiciona Antes', content: "Adiciona números no início da rota.", placement: 'top' })
+
+$("#i-add-depois").popover({trigger: "hover",title: 'Adiciona Depois', content: "Adiciona números no final da rota.", placement: 'top' })
+
+$("#i-add-empresas").popover({trigger: "hover",title: 'Empresas', content: "Selecione as empresas que poderão utilizar a rota. Para marcar mais de uma empresa segure a tecla 'Crt'.", placement: 'top' })
+
+$("#i-horario").popover({trigger: "hover",title: 'Horário', content: "Escolha o horário de funcionamento da rota.", placement: 'top' })
 
 </script>
 

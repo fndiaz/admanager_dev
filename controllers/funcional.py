@@ -30,6 +30,8 @@ def f_troncos_form():
 	for input in form.elements():
 		input['_class'] = 'form-control'
 	form.element(_name='habilitado')['_class'] = "checkbox"
+	form.element(_name='chamadas_simultaneas')['_type'] = "number"
+	form.element(_name='qtde_max_minutos')['_type'] = "number"
 
 	#form.element(_name='ciclo_conta')['_value'] = "teste"
 	if form.process().accepted:
@@ -105,6 +107,7 @@ def f_destinos_form():
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
+		form.element(_name='tamanho_max')['_type'] = "number"
 
 	if form.process().accepted:
 		escreve_destino()
@@ -205,6 +208,7 @@ def f_rotas_form():
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
+		form.element(_name='prioridade')['_type'] = "number"
 	if form.process().accepted:
 		redirect(URL('f_rotas'))
 
@@ -480,13 +484,3 @@ def f_download():
 	response.title = 'Área de Download'
 	
 	return response.render("funcional/download_area.html")
-
-
-
-
-
-
-
-
-
-

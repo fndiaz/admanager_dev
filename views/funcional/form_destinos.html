@@ -9,11 +9,11 @@
 <div class='row'>
 <div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
-<label>Tipo Chamada:</label>
+<label>Tipo Chamada:</label> <i id="i-t_chamada" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.tipo_chamada}}</div>
 <br>
 
-<label>Expressão:</label> 
+<label>Expressão:</label> <i id="i-expressao" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.expressao}}</div>
 <br>
 
@@ -21,15 +21,15 @@
 <div>{{=form.custom.widget.destino}}</div>
 <br>
 
-<label>Tamanho:</label> 
+<label>Tamanho da expressão:</label> <i id="i-tamanho" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.tamanho_max}}</div>
 <br>
 
-<label>Tarifado:</label> 
+<label>Destino Tarifado:</label> <i id="i-tarifado" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.tarifado}}</div>
 <br>
 
-<label>Portabilidade:</label> 
+<label>Consulta Portabilidade:</label> <i id="i-portabilidade" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.portabilidade}}</div>
 <br>
 
@@ -62,6 +62,16 @@
 $("#act-Funcional").addClass("chevron opened");
 $("#dsp-Funcional").css("display", "block");
 $("#Destinos").addClass("active");
+
+$("#i-tamanho").popover({trigger: "hover",title: 'Tamanho da expressão', content: "Informe o tamanho da expressão.", placement: 'top' })
+
+$("#i-tarifado").popover({trigger: "hover",title: 'Habilitar Tarifação', content: "Clique para habilitar tarifação para o destino.", placement: 'top' })
+
+$("#i-portabilidade").popover({trigger: "hover",title: 'Habilitar Consultas', content: "Clique para habilitar consultas a operadoras de celular.", placement: 'top' })
+
+$("#i-t_chamada").popover({trigger: "hover",title: 'Tipo de chamada', content: "Defina qual será o tipo da chamada.", placement: 'top' })
+
+$("#i-expressao").popover({trigger: "hover",title: 'Expressão', content: "Monte uma expressão que case com o destino.", placement: 'top' })
 
 </script>
 

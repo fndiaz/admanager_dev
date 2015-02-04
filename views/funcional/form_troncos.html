@@ -23,66 +23,66 @@
 <div class='row'>
 <div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
-<label>Tronco:</label>
+<label>Nome do Tronco:</label> <i id="i-tronco" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.tronco}}</div>
 <br>
 
-<label>Dispositivo:</label> 
+<label>Dispositivo:</label> <i id="i-dispositivo" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.dispositivo}}</div>
 <br>
 
-<label>Cham Simultaneas:</label> 
+<label>Cham Simultâneas:</label> <i id="i-ch_simul" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.chamadas_simultaneas}}</div>
 <br>
 
-<label>Max Minutos:</label> 
+<label>Max Minutos:</label> <i id="i-max_minutos" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.qtde_max_minutos}}</div>
 <br>
 
-<label>Transbordo:</label> 
+<label>Transbordo de ligações:</label> <i id="i-transbordo" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.transbordo}}</div>
 <br>
 
-<label>Empresa</label>
+<label>Empresa</label> <i id="i-empresa" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.id_empresa}}</div>
 <br>
 
-<label>Ramal principal</label>
+<label>Ramal principal</label> <i id="i-ramal_prin" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.ramal_principal}}</div>
 <br>
 
 </div><!--esquerda-->
 
 <div class="coluna_form_direita_b0">
-<label>Ddd:</label> 
+<label> Código ddd:</label> <i id="i-ddd" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.ddd}}</div>
 <br>
 
-<label>Csp:</label> 
+<label>Código da operadora (Csp):</label> <i id="i-csp" class="icon-question-sign"></i> 
 <div>{{=form.custom.widget.csp}}</div>
 <br>
 
-<label>Prefixo:</label> 
+<label>Número prefixo:</label> <i id="i-prefixo" class="icon-question-sign"></i> 
 <div>{{=form.custom.widget.prefixo}}</div>
 <br>
 
-<label>Chave:</label> 
+<label>Número Chave:</label> <i id="i-chave" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.chave}}</div>
 <br>
 
-<label>Ciclo da conta:</label> 
+<label>Ciclo da conta:</label> <i id="i-ciclo_conta" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.ciclo_conta}}</div>
 <br>
 
-<label>Habilitado:</label><br>
+<label>Habilitar Tronco:</label> <i id="i-habilitar" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.habilitado}}</div>
 <br>
 
-<label>Ura:</label><br>
+<label>Utilizar Ura:</label> <i id="i-ura" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.ura}}</div>
 <br>
 
-<label>Add zero:</label><br>
+<label>Tronco (E1):</label> <i id="i-add_zero" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.add_zero}}</div>
 <br>
 
@@ -145,6 +145,37 @@ $( "#f_troncos_chave" ).focusout(function() {
   var text = $("#f_troncos_chave").val()
   $("#text_chave").text( text );
 });
+
+//HELP
+$("#i-tronco").popover({trigger: "hover",title: 'Nome do tronco', content: "Digite o nome da operadora ou da interligação.", placement: 'top' })
+
+$("#i-dispositivo").popover({trigger: "hover",title: 'Dispositivo', content: "Dispositivos E1, SIP ou outros. khomp/Gpstn, SIP/ctb.", placement: 'top' })
+
+$("#i-ch_simul").popover({trigger: "hover",title: 'Chamadas Simultâneas', content: "Escolha quantas chamadas o Tronco pode realizar ao mesmo tempo, (número de canais do tronco).", placement: 'top' })
+
+$("#i-max_minutos").popover({trigger: "hover",title: 'Minutos de ligações', content: "Campo para determinar quantidade máxima de minutos que operadora pode utilizar. Use '0' para deixar ilimitado.", placement: 'top' })
+
+$("#i-transbordo").popover({trigger: "hover",title: 'Transbordo', content: "Em caso de exceder a quantidade máxima de minutos ou canais lotados, a chamada transborda para Tronco selecionado.", placement: 'top' })
+
+$("#i-empresa").popover({trigger: "hover",title: 'Empresa', content: "Selecione a empresa que irá utilizar o Tronco.", placement: 'right' })
+
+$("#i-ramal_prin").popover({trigger: "hover",title: 'Ramal Telefonista', content: "Esse é o ramal por onde chegarão as chamadas do Tronco.", placement: 'top' })
+
+$("#i-ddd").popover({trigger: "hover",title: 'Prefixo regional', content: "Digite o código da área de acordo com sua região.", placement: 'top' })
+
+$("#i-csp").popover({trigger: "hover",title: 'Código operadora', content: "Digite o código da operadora a ser utilizado.", placement: 'top' })
+
+$("#i-prefixo").popover({trigger: "hover",title: 'Número prefixo', content: "Digite os quatro primeiors números do Tronco.", placement: 'top' })
+
+$("#i-chave").popover({trigger: "hover",title: 'Número chave', content: "Digite os quatro últimos números do Tronco.", placement: 'top' })
+
+$("#i-ciclo_conta").popover({trigger: "hover",title: 'Ciclo da conta', content: "Dia do mês do fechamento da conta.", placement: 'top' })
+
+$("#i-habilitar").popover({trigger: "hover",title: 'Habilitar tronco', content: "Marque para habilitar o Tronco.", placement: 'top' })
+
+$("#i-ura").popover({trigger: "hover",title: 'Utilizar ura', content: "Habilita Ura para o número do Tronco.", placement: 'top' })
+
+$("#i-add_zero").popover({trigger: "hover",title: 'Tronco E1', content: "Habilite esta opção se o Tronco for E1", placement: 'top' })
 
 </script>
 

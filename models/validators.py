@@ -39,7 +39,9 @@ db.f_tarifacao.passo.requires = IS_NOT_EMPTY()
 db.f_tarifacao.valor.requires = IS_NOT_EMPTY()
 
 ##Rotas
-db.f_rotas.rota.requires = IS_NOT_EMPTY()
+db.f_rotas.rota.requires = IS_IN_SET(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+db.f_rotas.prioridade.requires = IS_NOT_EMPTY()
+db.f_rotas.exclui_antes.requires = IS_EMPTY_OR( IS_IN_SET(['1', '2', '3', '4', '5', '6', '7', '8', '9']) )
 #db.f_rotas.id_tronco.requires = IS_IN_DB(db, 'f_troncos.id', '%(tronco)s',
 #					error_message=T("valor inválido"))
 db.f_rotas.id_tarifacao.requires = IS_IN_DB(db, 'f_tarifacao.id', '%(tarifacao)s', 

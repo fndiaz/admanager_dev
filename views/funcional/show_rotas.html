@@ -12,13 +12,14 @@
         <tr>
             <th>Rota</th>
             <th>Tronco</th>
-            <th>Prioridade</th>
+            <th>Prior.</th>
             <th>Destino</th>
-            <th>Exclui antes</th>
-            <th>Add antes</th>
-            <th>Add depois</th>
-            <th>Empresa</th>
+            <th>Exclui</th>
+            <th>Add</th>
             <th>CSP</th>
+            <th>Expressão</th>
+            <th>Add d</th>
+            <th>Empresa</th>
             <th>#</th>
         </tr>
     </thead>
@@ -41,6 +42,18 @@
             <td>{{=dado.exclui_antes}}</td>
             {{pass}}
             <td>{{=dado.adiciona_antes}}</td>
+
+            {{if dado.add_csp is True:}}
+            <td><input checked="checked" disabled="disabled" type="checkbox"></td>
+            {{else:}}
+            <td><input disabled="disabled" type="checkbox"></td>
+            {{pass}}
+
+            <td>
+                {{for item in dado.id_destino:}}
+                {{=db(db.f_destinos.id == item).select(db.f_destinos.expressao)[0].expressao}}<br>
+                {{pass}}
+            </td>
             <td>{{=dado.adiciona_depois}}</td>
             <td>
                 {{for item in dado.id_empresa:}}
@@ -48,11 +61,7 @@
                 {{pass}}
             </td>
             <!--<td>{{=db(db.f_tarifacao.id == dado.id_tarifacao).select(db.f_tarifacao.tarifacao)[0].tarifacao}}</td>-->
-            {{if dado.add_csp is True:}}
-            <td><input checked="checked" disabled="disabled" type="checkbox"></td>
-            {{else:}}
-            <td><input disabled="disabled" type="checkbox"></td>
-            {{pass}}
+
 
             <td>
             {{if editor == True:}}

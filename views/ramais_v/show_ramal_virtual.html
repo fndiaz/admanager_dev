@@ -2,13 +2,33 @@
 
 {{block center}}
 
+<div class="col-lg-12 col-md-12 col-sm-12">
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+Legendas:&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-calendar-o"></i> -> Agenda
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-lock"></i> -> Cadeado
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-desktop"></i> -> Mesa Fop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-envelope-o"></i> -> Voicemail
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-volume-up"></i> -> Gravação
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-paper-plane"></i> -> Desvio Imediato
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-paper-plane-o"></i> -> Outros Desvios<br>
+              
+</div>
+</div><!--/col-->
+
 {{if editor == True:}}
 <div class="direita">
    <button type="button" class="btn btn-primary" onclick=location.href="{{=url}}" >Adicionar</button>
 </div>
 <br><br>
 {{pass}}
-
 
 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered dataTable no-footer" id="tabela" role="grid" aria-describedby="example_info" aria-sort="descending">
                 <thead>
@@ -71,31 +91,7 @@
                 </tbody>
         </table>
 
-<div class='row'>
-<br>
-<div class="col-sm-6">
-<div class="well">
-<p>Legendas:</p>
-<i class="fa fa-calendar-o"></i> -> Agenda
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;
-<i class="fa fa-lock"></i> -> Cadeado
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;
-<i class="fa fa-desktop"></i> -> Mesa Fop
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;
-<i class="fa fa-envelope-o"></i> -> Voicemail <br>
-<i class="fa fa-volume-up"></i> -> Gravação
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<i class="fa fa-paper-plane"></i> -> Desvio Imediato
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<i class="fa fa-paper-plane-o"></i> -> Outros Desvios<br>
 
-</div>
-</div>
-
-</div>
 
 {{end}}
 

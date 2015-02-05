@@ -18,7 +18,7 @@
                                 <th>Usuário</th>
                                 <th>Nome</th>
                                 <th>Departamento</th>
-                                <th>Extras</th>
+                                <th>Aplicações</th>
                                 <th>#</th>
                         </tr>
 
@@ -49,10 +49,14 @@
                                 </td>
                                 <td>{{=dado.f_ramal_virtual.nome}}</td>
                                 <td>{{=dado.f_departamentos.departamento}}</td>
-                                <td><a href="f_aplicacao_form?id_edit={{=dado.f_ramal_virtual.id}}">
-                                <i class=" icon-asterisk"></i></a></td>
+                                <td>
+                                    {{include 'includes/aplicacao_ramal_virtual.html'}}
+                                </td>
                                 <td>
                                 {{if editor == True:}}
+                                <a href="f_aplicacao_form?id_edit={{=dado.f_ramal_virtual.id}}">
+                                <i class=" icon-asterisk"></i></a>  &nbsp;&nbsp;
+
                                 <a href="{{=url}}?ramal_porta={{=dado.f_ramal_virtual.ramal_fisico}}&id_edit={{=dado.f_ramal_virtual.id}}">
                                 <i class=" icon-edit"></i></a> &nbsp;&nbsp;
 
@@ -67,6 +71,31 @@
                 </tbody>
         </table>
 
+<div class='row'>
+<br>
+<div class="col-sm-6">
+<div class="well">
+<p>Legendas:</p>
+<i class="fa fa-calendar-o"></i> -> Agenda
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+<i class="fa fa-lock"></i> -> Cadeado
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;
+<i class="fa fa-desktop"></i> -> Mesa Fop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;
+<i class="fa fa-envelope-o"></i> -> Voicemail <br>
+<i class="fa fa-volume-up"></i> -> Gravação
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-paper-plane"></i> -> Desvio Imediato
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-paper-plane-o"></i> -> Outros Desvios<br>
+
+</div>
+</div>
+
+</div>
 
 {{end}}
 

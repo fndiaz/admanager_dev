@@ -11,12 +11,12 @@
 <div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
 
-<label>Tecnologia:</label>
+<label>Tecnologia:</label> <i id="i-tecnologia" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.tecnologia}}</div>
 <br>
 
 {{print '-%s-' %(request.vars.id_edit)}}
-<label>Ramal Físico:</label>
+<label>Físico:</label> <i id="i-ramal_fisico" class="icon-question-sign"></i>
 <select class="form-control" id="f_ramal_virtual_ramal_fisico" name="ramal_fisico">
 {{if request.vars.ramal_porta != None:}}
 <option value="{{=request.vars.ramal_porta}}">{{=request.vars.ramal_porta}}</option></select>
@@ -25,23 +25,20 @@
 </select>
 <br>
 
-<label>Ramal Virtual:</label>
+<label>Número:</label> <i id="i-ramal_virtual" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.ramal_virtual}}</div>
 <br>
 
-<label>Nome:</label>
+<label>Nome:</label> <i id="i-nome" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.nome}}</div>
 <br>
 
-<label>Adicionar na mesa:</label>
+<label><i class="fa fa-desktop"></i>&nbsp; 
+Mesa:</label> <i id="i-mesa" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.mesa_fop2}}</div>
 <br>
 
-<label>Gravação:</label>
-<div>{{=form.custom.widget.gravacao}}</div>
-<br>
-
-<label>Chamadas Simultânes:</label>
+<label>Chamadas Simultânes:</label> <i id="i-ch_simul" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.chamadas_simultaneas}}</div>
 <br>
 
@@ -49,29 +46,39 @@
 
 <div class="coluna_form_direita_b0">
 
-<label>Departamento:</label>
+<label>Departamento:</label> <i id="i-departamento" class="fa fa-exclamation-triangle"></i>
 <div>{{=form.custom.widget.id_departamento}}</div>
 <br>
 
-<label>Grupo Destinos:</label>
+<label>Grupo Destinos:</label> <i id="i-g_destinos" class="fa fa-exclamation-triangle"></i>
 <div>{{=form.custom.widget.id_grupo_destinos}}</div>
 <br>
 
-<label>Bina Interno:</label>
+<label>Bina Interno:</label> <i id="i-bina_i" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.bina_interno}}</div>
 <br>
 
-<label>Bina Externo:</label>
+<label>Bina Externo:</label> <i id="i-bina_e" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.bina_externo}}</div>
 <br>
 
-<label>Atribuir lista blacklist:</label>
-<div>{{=form.custom.widget.blacklist}}</div>
+<label><i class="fa fa-volume-up"></i>&nbsp;
+Gravação:</label> <i id="i-gravacao" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.gravacao}}</div>
 <br>
 
+<div style="display:none"><!--SEM USO-->
+<label><i class="fa fa-file-text-o"></i>&nbsp;
+Atribuir números blacklist:</label> <i id="i-blacklist" class="icon-question-sign"></i>
+<div>{{=form.custom.widget.blacklist}}</div>
+<br>
+</div>
+
+<div style="display:none"><!--SEM USO-->
 <label>Crédito:</label>
 <div>{{=form.custom.widget.credito}}</div>
 <br>
+</div>
 
 </div><!--col-lg-3-->
 
@@ -171,6 +178,31 @@ $("#f_ramal_virtual_tecnologia").change(function(){//change tecnologia
 $("#act-Extensões").addClass("chevron opened");
 $("#dsp-Extensões").css("display", "block");
 $("#Ramais").addClass("active");
+
+//HELP
+$("#i-tecnologia").popover({trigger: "hover",title: 'Tecnologia', content: "Selecione o tipo de Tecnologia que será usada pela extensão.", placement: 'top' })
+
+$("#i-ramal_fisico").popover({trigger: "hover",title: 'Físico', content: "Selecione o físico correspondente, caso esteja em branco é necessário criar de acordo com a tecnologia escolhida.", placement: 'right' })
+
+$("#i-ramal_virtual").popover({trigger: "hover",title: 'Número', content: "Defina o número do Ramal.", placement: 'right' })
+
+$("#i-nome").popover({trigger: "hover",title: 'Nome', content: "Defina o nome do Ramal.", placement: 'right' })
+
+$("#i-numero").popover({trigger: "hover",title: 'Número', content: "Defina o número do Ramal.", placement: 'right' })
+
+$("#i-mesa").popover({trigger: "hover",title: 'Mesa Fop2', content: "Habilite para que o ramal apareça na Mesa.", placement: 'right' })
+
+$("#i-gravacao").popover({trigger: "hover",title: 'Gravar Ligações', content: "Habilite para gravar as ligações do Ramal.", placement: 'right' })
+
+$("#i-ch_simul").popover({trigger: "hover",title: 'Chamadas Simultâneas', content: "Define quantas chamadas o ramal pode realizar ou receber ao mesmo tempo.", placement: 'top' })
+
+$("#i-departamento").popover({trigger: "hover",title: 'Departamento', content: "É importante lembrar que o atalho para puxar ligações '*55', só funciona com ramais do mesmo Departamento.", placement: 'top' })
+
+$("#i-g_destinos").popover({trigger: "hover",title: 'Grupo de Destino', content: "O ramal somente irá conseguir realizar ligações para destinos que estiverem definidos no grupo.", placement: 'top' })
+
+$("#i-bina_i").popover({trigger: "hover",title: 'Bina interno', content: "Define o número bina para chamdas internas deste ramal.", placement: 'top' })
+
+$("#i-blacklist").popover({trigger: "hover",title: 'B', content: "Define o número bina para chamdas externas deste ramal.", placement: 'top' })
 
 </script>
 

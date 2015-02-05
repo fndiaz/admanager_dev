@@ -90,7 +90,7 @@ def f_ramal_virtual():
 
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_ramal_virtual_form():
-	response.title = 'Ramal Virtual'
+	response.title = 'Ramal'
 	response.marca=['Extensões', 'Ramal Virtual', 'Adiciona Ramal Virtual']
 	id_edit	= request.vars['id_edit']
 	
@@ -101,6 +101,7 @@ def f_ramal_virtual_form():
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
+	form.element(_name='chamadas_simultaneas')['_type'] = "number"
 
 	if form.process().accepted:
 		if id_edit is None:

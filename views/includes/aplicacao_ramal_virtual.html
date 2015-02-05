@@ -1,0 +1,56 @@
+<!--Agenda-->
+{{
+	query=(dado.f_ramal_virtual.id == Aplicacao.id_ramalvirtual) & (Aplicacao.agenda_senha != None)
+	 if not db(query).isempty():}}
+	<i class="fa fa-calendar-o"></i>&nbsp;
+	 {{pass
+}}
+
+<!--Cadeado-->
+{{
+	query=(dado.f_ramal_virtual.id == Aplicacao.id_ramalvirtual) & (Aplicacao.cadeado_ativo == True)
+	 if not db(query).isempty():}}
+	<i class="fa fa-lock"></i>&nbsp;
+	 {{pass
+}}
+
+<!--Mesa-->
+{{
+	query=(dado.f_ramal_virtual.id == Ramal_virtual.id) & (Ramal_virtual.mesa_fop2 == True)
+	 if not db(query).isempty():}}
+	<i class="fa fa-desktop"></i>&nbsp;
+	 {{pass
+}}
+
+<!--Voicemail-->
+{{
+	query=(dado.f_ramal_virtual.id == Aplicacao.id_ramalvirtual) & (Aplicacao.voicemail_ativo == True)
+	 if not db(query).isempty():}}
+	<i class="fa fa-envelope-o"></i>&nbsp;
+	 {{pass
+}}
+
+
+<!--Gravação-->
+{{
+	query=(dado.f_ramal_virtual.id == Ramal_virtual.id) & (Ramal_virtual.gravacao == True)
+	 if not db(query).isempty():}}
+	<i class="fa fa-volume-up"></i>
+	 {{pass
+}}
+
+<!--Desvio Imediato-->
+{{
+	query=(dado.f_ramal_virtual.id == Desvios.id_ramalvirtual) & (Desvios.tipo_desvio == 'IMEDIATO')
+	 if not db(query).isempty():}}
+	<i class="fa fa-paper-plane"></i>&nbsp;
+	 {{pass
+}}
+
+<!--Desvio outros-->
+{{
+	query=(dado.f_ramal_virtual.id == Desvios.id_ramalvirtual) & (Desvios.tipo_desvio != 'IMEDIATO')
+	 if not db(query).isempty():}}
+	<i class="fa fa-paper-plane-o"></i>&nbsp;
+	 {{pass
+}}

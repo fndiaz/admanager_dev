@@ -437,6 +437,15 @@ Prov_ramal 	= 	db.define_table("prov_ramal",
 	Field("linha", "integer", length=11),
 	migrate=False)
 
+##Feriado
+Feriados = db.define_table("f_feriados",
+	Field("id"),
+	Field("dia"),
+	Field("mes"),
+	Field("acao"),
+	Field("descricao"),
+	migrate=False)
+
 
 ####--Menus Permissões
 db.define_table('f_menu',

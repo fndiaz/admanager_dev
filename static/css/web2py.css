@@ -436,3 +436,12 @@ textarea.LV_invalid_field:active,
 .fieldWithErrors textarea.LV_invalid_field {
     border: 1px solid #CC0000;
 }
+
+.box-horizontal { 
+    float: left; 
+    padding: 0px; 
+    /*width: 290px;*/ 
+    /* height: 150px;  
+    background-color: #F00; */ 
+    margin: 0 10px
+}

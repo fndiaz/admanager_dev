@@ -11,27 +11,27 @@
 <div class="coluna_form_esquerda_b0">
 {{=form.custom.begin}}
 
-<label>Nome:</label>
+<label>Nome:</label> <i id="i-nome" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.name}}</div>
 <br>
 
-<label>Estratégia:</label>
+<label>Estratégia:</label> <i id="i-estrategia" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.strategy}}</div>
 <br>
 
-<label>Musiconhold:</label>
+<label>Música de espera:</label> <i id="i-musiconhold" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.musiconhold}}</div>
 <br>
 
-<label>Ringuse:</label>
+<label>Ringuse:</label> <i id="i-ringuse" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.ringinuse}}</div>
 <br>
 
-<label>Retry:</label>
+<label>Retry:</label> <i id="i-retry" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.retry}}</div>
 <br>
 
-<label>Timeoutrestart:</label>
+<label>Timeoutrestart:</label> <!--<i id="i-timeoutrestart" class="icon-question-sign"></i>-->
 <div>{{=form.custom.widget.timeoutrestart}}</div>
 <br>
 
@@ -39,28 +39,28 @@
 
 <div class="coluna_form_direita_b0">
 
-<label>Timeout:</label>
+<label>Timeout:</label> <i id="i-timeout" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.timeout}}</div>
 <br>
 
-<label>Joinempty:</label>
+<label>Joinempty:</label> <i id="i-jointempty" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.joinempty}}</div>
 <br>
 
 
-<label>Leavewhenempty:</label>
+<label>Leavewhenempty:</label> <i id="i-leavewhenempty" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.leavewhenempty}}</div>
 <br>
 
-<label>Wrapuptime:</label>
+<label>Wrapuptime:</label> <i id="i-wrapuptime" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.wrapuptime}}</div>
 <br>
 
-<label>Maxlen:</label>
+<label>Maxlen:</label> <i id="i-maxlen" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.maxlen}}</div>
 <br>
 
-<label>Eventwhencalled:</label>
+<label>Eventwhencalled:</label> <i id="i-eventwhencalled" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.eventwhencalled}}</div>
 <br>
 </div><!--col-lg-3-->
@@ -182,6 +182,31 @@
 $("#act-Extensões").addClass("chevron opened");
 $("#dsp-Extensões").css("display", "block");
 $("#Filas").addClass("active");
+
+//HELP
+$("#i-nome").popover({trigger: "hover",title: 'Nome da Fila', content: "Defina o nome da Fila.", placement: 'right' })
+
+$("#i-estrategia").popover({trigger: "hover",title: 'Estratégia', content: "A estratégia define a sequência que os ramais da fila irão tocar.", placement: 'right' })
+
+$("#i-musiconhold").popover({trigger: "hover",title: 'Música de espera', content: "Defina sua própria música de espera.", placement: 'right' })
+
+$("#i-ringuse").popover({trigger: "hover",title: 'Ringuse', content: "Faz tocar a segunda linha dos membros mesmo estando ocupados.", placement: 'right' })
+
+$("#i-retry").popover({trigger: "hover",title: 'Ringuse', content: "É o tempo em segundos que o sistema aguardará para chamar os agentes novamente depois do Timeout.", placement: 'right' })
+
+$("#i-timeout").popover({trigger: "hover",title: 'Timeout', content: "É o tempo em segundos que os ramais disponiveis irão tocar após ser considerado timeout.", placement: 'right' })
+
+$("#i-maxlen").popover({trigger: "hover",title: 'Limite de chamdas', content: "Define o número de chamdas que podem entrar na fila. Use 0 pra ilimitado!", placement: 'top' })
+
+$("#i-jointempty").popover({trigger: "hover",title: 'Jointemptys', content: "Define se os chamadores podem entrar em uma fila sem membros conectados ou indisponíveis.", placement: 'top' })
+
+$("#i-leavewhenempty").popover({trigger: "hover",title: 'Leavewhenempty', content: "Define se os chamadores se mantêm em uma fila sem membros conectados ou indisponíveis.", placement: 'top' })
+
+$("#i-wrapuptime").popover({trigger: "hover",title: 'Wrapuptime', content: "O intervalo de tempo após o agente ter terminado uma chamada antes que o sistema vai passar outra chamada para próximo agente.", placement: 'top' })
+
+$("#i-eventwhencalled").popover({trigger: "hover",title: 'Wrapuptime', content: "Habilita gerenciador de monitoramento.", placement: 'top' })
+
+
 
 </script>
 

@@ -321,6 +321,36 @@ def f_ura_form():
 
 	return response.render("funcional/form_ura.html", form=form)
 
+######-FERAIDOS
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def f_feriados_form():
+	response.title = 'Feriados'
+	response.marca=['Funcional', 'Feriados', 'Adiciona Feriado']
+	id_edit = request.vars['id_edit']
+	editor 	= 	permissao()
+	url 	=	URL('admanager', 'funcional', 'f_feriados_form')
+
+	if id_edit is None:
+		form 	=	SQLFORM(db.f_feriados, formstyle='divs')
+	else:
+		form 	=	SQLFORM(db.f_feriados, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+	form.element(_name='dia')['_type'] = "number"
+	form.element(_name='dia')['_style'] = "width : 100px"
+	form.element(_name='mes')['_style'] = "width : 100px"
+	form.element(_name='acao')['_style'] = "width : 450px"
+	form.element(_name='descricao')['_style'] = "width : 250px"
+
+	con = db(Feriados).select()
+
+	if form.process(hideerror=True).accepted:
+		redirect(URL('f_feriados_form'))
+
+	return response.render("funcional/form_feriados.html", form=form, con=con, 
+															url=url, editor=editor)
+
 ######-PORTABILIDADE
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_portabilidade_form():
@@ -366,6 +396,9 @@ def delete():
 			redirect(URL(funcao))
 	if funcao 	== 	"f_ura":
 		tabela 	=	db.f_ura.id
+	if funcao 	== 	"f_feriados":
+		tabela 	=	db.f_feriados.id
+		funcao  = 	'f_feriados_form'
 
 	db(tabela == id_tab).delete()
 	if funcao == "f_destinos":

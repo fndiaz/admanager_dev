@@ -122,7 +122,7 @@ if db(db.f_submenu.nome == 'Listas').isempty():
 	db.f_submenu.insert(nome="Listas", controller="listas", funcao="f_listas", icone="icon-chevron-right", ordem="12", menu_ref=id_funcional)
 	auth.add_group('Listas', '')
 if db(db.f_submenu.nome == 'Feriados').isempty():
-	db.f_submenu.insert(nome="Feriados", controller="funcional", funcao="f_feriados_form", icone="icon-chevron-right", ordem="7", menu_ref=id_funcional)
+	db.f_submenu.insert(nome="Feriados", controller="funcional", funcao="f_feriados_form", icone="icon-chevron-right", ordem="9", menu_ref=id_funcional)
 	auth.add_group('Feriados', '')
 
 ##Menu Extensões

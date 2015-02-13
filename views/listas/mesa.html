@@ -1,0 +1,97 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class='row'>
+	<div id='col-mesa' class="col-lg-12">
+
+<!--<button class="btn btn-success" type="button" style="margin:10px">
+  Messages <span class="badge">4</span>
+</button>-->
+
+
+
+</div><!--col-->
+</div><!--row-->
+
+{{end}}
+
+
+
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+//$('<button class="btn btn-danger" type="button" style="margin:10px">Messages <span class="badge">4</span>').appendTo('#col-mesa');
+
+var n_loop = 1
+poll()
+
+function poll() {
+$.ajax({
+	type: "get",
+    url: "ajax_mesa",
+    dataType: "json",
+    success: function(retorno){
+
+    //Consulta url mal sucedida
+    if (retorno[1] == 'failed'){
+        alert(retorno)
+
+    }
+    //Consulta bem sucedida, entra em loop
+    else{
+    //alert(n_loop)
+
+    if (n_loop == 1){
+        n_loop+=1
+        jQuery.each( retorno, function( i, val ) { //for Master
+    	   //alert(val['status']);
+    	   if (val['status'] == 'OK'){
+    		  var nome_classe = 'btn btn-success'
+    	   }
+    	   else{
+    		  var nome_classe = 'btn btn-danger'
+    	   }
+
+    	   $('<button>', {
+    		  html: 'Ramal '+ i +' ',
+    		  id: 'bt'+i,
+   			  type: 'button',
+    		  title: val['objectname'],
+    		  style : 'margin:10px',
+    		  'class': nome_classe,
+		      }).appendTo('#col-mesa');
+
+		    $("#bt"+i).popover({trigger: "hover", content: 'Status: '+val['status']+'<br>IP: '+val['ipaddress']+'<br>Tecnologia: '+val['channeltype'], placement: 'top', html: "true" })
+        });//for Master
+    }//if loop 1
+    else{
+        jQuery.each( retorno, function( i, val ) { //for Master
+            
+            if (val['status'] == 'OK'){
+                var nome_classe = 'btn btn-success'
+            }
+            else{
+                var nome_classe = 'btn btn-danger'
+            }
+
+            $('#bt'+i).attr('data-content', 'Status: '+val['status']+'<br>IP: '+val['ipaddress']+'<br>Tecnologia: '+val['channeltype']);
+            $('#bt'+i).attr('class', nome_classe)
+
+        });//for master
+    }
+
+
+    setTimeout(poll, 1000);
+    }//else loop
+
+  }//success
+});//ajax
+}//function poll
+
+</script>
+
+{{end}}

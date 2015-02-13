@@ -206,3 +206,28 @@ def delete():
 
 	db(tabela == id_tab).delete()
 	redirect(URL(funcao))
+
+
+def mesa():
+	ajax_mesa()
+
+	return response.render("listas/mesa.html")
+
+def ajax_mesa():
+    import pprint
+    from pyajam import Pyajam
+
+    ajam = Pyajam(username='python', password='123456')
+    con = ajam.peers()
+    dict_final={}
+    ramal = db(Ramal_virtual).select(Ramal_virtual.ramal_virtual, Ramal_virtual.ramal_fisico)
+    print ramal
+
+    for dado in con:
+        for rm in ramal:
+            if rm.ramal_fisico == dado['objectname']:
+                print dado['objectname']
+                dict_final[rm.ramal_virtual]=dado
+
+    return response.json(dict_final)
+

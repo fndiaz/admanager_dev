@@ -517,3 +517,10 @@ def f_download():
 	response.title = 'Área de Download'
 	
 	return response.render("funcional/download_area.html")
+
+@auth.requires_login()
+def insert_aplicacao():
+	#insert aplicacao
+	con = db(db.f_ramal_virtual).select(db.f_ramal_virtual.id)
+	for dado in con:
+		print dado.id

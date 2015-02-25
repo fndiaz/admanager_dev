@@ -79,7 +79,7 @@ def escreve_pap2(dado):
 	arq.write("<Dist_Ring_Act_Code></Dist_Ring_Act_Code>\n")
 	arq.write("<Dist_Ring_Deact_Code></Dist_Ring_Deact_Code>\n")
 	arq.write("<Vertical_Service_Announcement_Codes></Vertical_Service_Announcement_Codes>\n")
-	arq.write("<Time_Zone>GMT-03:00</Time_Zone>\n")
+	arq.write("<Time_Zone>GMT-0%s:00</Time_Zone>\n" %(Parametros[1].fuso_horario[1]))
 	arq.write("<Networking_Service>Bridge</Networking_Service>\n")
 	arq.write("<Interdigit_Long_Timer>3</Interdigit_Long_Timer>\n")
 	arq.write("<Enable_WAN_Web_Server>Yes</Enable_WAN_Web_Server>\n")

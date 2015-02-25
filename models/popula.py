@@ -180,6 +180,8 @@ if db(db.prov_equipamento.modelo == 'PAP2').isempty():
 	db.prov_equipamento.insert(fabricante="Linksys", modelo="PAP2", linha='2')
 if db(db.prov_equipamento.modelo == 'T20').isempty():
 	db.prov_equipamento.insert(fabricante="Yealink", modelo="T20", linha='6')
+if db(db.prov_equipamento.modelo == '310HD').isempty():
+	db.prov_equipamento.insert(fabricante="AudioCodes", modelo="310HD", linha='1')
 
 
 #	id_rv =db(db.f_ramal_virtual).select(db.f_ramal_virtual.id)

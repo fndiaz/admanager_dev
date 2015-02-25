@@ -810,7 +810,7 @@ def escreve_spa122(dado):
 
 	arq.write("</SNMP>\n")
 	arq.write("<Time_Setup>\n")
-	arq.write("<Time_Zone>-08 1 1</Time_Zone>\n")
+	arq.write("<Time_Zone>GMT-0%s:00</Time_Zone>\n" %(Parametros[1].fuso_horario[1]))
 	arq.write("<Auto_Adjust_Clock>1</Auto_Adjust_Clock>\n")
 	arq.write("<Time_Server_Mode>manual</Time_Server_Mode> <!-- options: auto/manual -->\n")
 	arq.write("<Time_Server>%s</Time_Server>\n" %(dado.prov_rede.ntp))

@@ -231,3 +231,55 @@ def ajax_mesa():
 
     return response.json(dict_final)
 
+
+def read_xml():
+	#sem uso
+	import requests, urllib2
+	from cookielib import Cookie, CookieJar
+	from xml.etree.ElementTree import ElementTree
+
+	cj = CookieJar()
+	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+	opener.open("http://192.168.100.253:8088/asterisk/mxml?action=login&username=python&secret=123456")
+ 
+	tree = ElementTree(file=opener.open('http://192.168.100.253:8088/asterisk/mxml?action=queuestatus'))
+	#print tree
+ 
+	r = tree.getroot()
+	#print r
+ 
+	pessoa = r.find('response')
+	print pessoa.attrib
+ 
+	a=0
+	lista=[]
+	fila=[]
+	for child in r:
+		for var in child:
+			if a == 0:
+				print var.attrib['message']
+				print '>>>>>>>>>>'
+				a=a+1
+			else:
+				evento = var.attrib['event']
+				if evento == 'QueueParams':
+					if fila == []: #primeira entrada nome da fila
+						fila.append(var.attrib['queue'])
+						print var.attrib['queue']
+						print '>>>>>>>>>>'
+					else: #demais entradas noma da fila
+						lista.append(fila)
+						fila=[]
+						fila.append(var.attrib['queue'])
+						print var.attrib['queue']
+						print '>>>>>>>>>>'
+				elif evento == 'QueueMember': #entrada membros da fila
+					print var.attrib['name']
+					fila.append(var.attrib['name'])
+					#print fila
+				elif evento == 'QueueStatusComplete': #ultima entrada 
+					lista.append(fila)
+	#for lin in lista:
+	#	lista = lin
+ 
+	return response.json(lista)

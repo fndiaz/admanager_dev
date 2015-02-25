@@ -31,5 +31,9 @@ def escreve_prov():
 			status, obs = escreve_pap2(dado)
 			if status is False:
 				return status, obs
+		if dado.prov_equipamento.modelo == '310HD':
+			status, obs = escreve_310hd(dado)
+			if status is False:
+				return status, obs
 
 	return(True, 'ok')

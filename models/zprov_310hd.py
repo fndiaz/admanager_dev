@@ -161,7 +161,7 @@ def escreve_310hd(dado):
 		if db(query).isempty():
 			arq.write('####RAMAL %s NAO EXISTE#####\n' %(x.ramal))
 			return (False, x.ramal)
-		aut=db(query).select(Fisico.usuario, Fisico.secret, Ramal_virtual.nome)
+		aut=db(query).select(Fisico.usuario, Fisico.secret, Ramal_virtual.nome, Ramal_virtual.ramal_virtual)
 		print x
 		print aut[0]
 
@@ -175,7 +175,7 @@ def escreve_310hd(dado):
 		arq.write('voip/line/0/call_forward/type=NO_REPLY\n')
 		arq.write('voip/line/0/call_forward/destination=\n')
 		arq.write('voip/line/0/call_forward/active=0\n')
-		arq.write('voip/line/0/extension_display=%s\n\n' %(aut[0].f_ramal_virtual['nome']))
+		arq.write('voip/line/0/extension_display=%s\n\n' %(aut[0].f_ramal_virtual['ramal_virtual']))
 
 	arq.write('voip/audio/gain/additional_speaker_gain=3\n')
 	arq.write('voip/audio/gain/tone_signal_level=10\n')

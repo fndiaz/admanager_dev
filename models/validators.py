@@ -105,9 +105,10 @@ db.fisico_sip_iax.host_f.requires = IS_NOT_EMPTY()
 ## Ramais_v
 #########################################################################
 #Grupo Destinos
-db.f_grupo_destinos.id_destinos.requires = IS_IN_DB(db(db.f_destinos.mostrar == True),'f_destinos.id',"%(destino)s", multiple=True)
-#IS_IN_DB(db,'f_destinos.id',"%(tipo_chamada)s",multiple=True)
-#db.f_grupo_destinos.grupo_destino.requires = IS_NOT_EMPTY()
+destn = ["LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI", "0800", "0300", "EMERGENCIA", "RAMAL"]
+db.f_grupo_destinos.id_destinos.requires = IS_IN_SET(destn, multiple=True)
+#db.f_grupo_destinos.id_destinos.requires = IS_IN_DB(db(db.f_destinos.mostrar == True),'f_destinos.id',"%(destino)s", multiple=True)
+
 
 
 #Departamentos

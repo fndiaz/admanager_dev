@@ -166,7 +166,7 @@ Rastreamento = db.define_table("f_rastreamento",
 	migrate=False)
 
 Grupo_destinos = db.define_table("f_grupo_destinos",
-	Field("id_destinos", "list:reference db.f_destinos"),
+	Field("id_destinos", 'list:string'),
 	Field("grupo_destino", "string"),
 	format="%(grupo_destino)s",
     migrate=False)

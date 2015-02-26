@@ -29,6 +29,9 @@ def f_grupo_destinos_form():
 
 	if form.process().accepted:
 		redirect(URL('f_grupo_destinos'))
+	elif form.errors:
+		print 'erro'
+		print form.vars
 
 	return response.render("ramais_v/form_grupo_destinos.html", form=form)
 

@@ -21,7 +21,7 @@
             <td>{{=dado.grupo_destino}}</td>
             <td>
                 {{for item in dado.id_destinos:}}
-                {{=db(db.f_destinos.id == item).select(db.f_destinos.destino)[0].destino}}<br>
+                <span class="label label-info"><b>{{=item}}</b></span>
                 {{pass}}
             </td>
             <td>

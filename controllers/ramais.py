@@ -19,11 +19,22 @@ def fisico_sip_iax_form():
 	form.element(_name='extras')['_rows'] = "4"
 	form.element(_name='extras')['_style'] = "width:303px"
 
-	if form.process().accepted:
+	if form.process(onvalidation=valida_fisico_sip_iax_form).accepted:
 		escreve_sip_iax()
 		redirect(URL('show_sip'))
 
 	return response.render("ramais/form_sip_iax.html", form=form)
+
+def valida_fisico_sip_iax_form(form):
+	print '-----VALIDA-----'
+	print form.vars
+	if form.vars.nat == 'on' or form.vars.aut_externa == 'on':
+		if form.vars.usuario.isdigit():
+			print 'somento numeros'
+			form.errors.usuario = 'Usuário fraco'
+		if form.vars.usuario.isalpha():
+			print 'somente letras'
+			form.errors.usuario = 'Usuário fraco'
 
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def fisico_tronco_form():

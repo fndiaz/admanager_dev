@@ -167,7 +167,7 @@ def escreve_310hd(dado):
 
 		arq.write('voip/line/0/enabled=1\n')
 		arq.write('voip/line/0/id=%s\n' %(aut[0].fisico_sip_iax['usuario']))
-		arq.write('voip/line/0/description=310HD\n')
+		arq.write('voip/line/0/description=%s\n' %(aut[0].f_ramal_virtual['nome']))
 		arq.write('voip/line/0/auth_name=%s\n' %(aut[0].fisico_sip_iax['usuario']))
 		arq.write('voip/line/0/auth_password=%s\n' %(aut[0].fisico_sip_iax['secret']))
 		arq.write('voip/line/0/call_forward/enabled=1\n')

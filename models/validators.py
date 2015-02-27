@@ -25,7 +25,7 @@ db.f_troncos.prefixo.requires = IS_EMPTY_OR(IS_MATCH("^[0-9]", error_message="di
 db.f_troncos_fisicos.dispositivo.requires = IS_NOT_EMPTY()
 
 #Destinos
-dest = ["LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI", "0800", "0300", "EMERGENCIA", "RAMAL"]
+dest = ["RAMAL", "0800", "0300", "EMERGENCIA", "LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI"]
 db.f_destinos.tipo_chamada.requires = IS_IN_SET(dest)
 db.f_destinos.destino.requires = IS_NOT_EMPTY()
 db.f_destinos.tamanho_max.requires = IS_NOT_EMPTY()
@@ -105,7 +105,7 @@ db.fisico_sip_iax.host_f.requires = IS_NOT_EMPTY()
 ## Ramais_v
 #########################################################################
 #Grupo Destinos
-destn = ["LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI", "0800", "0300", "EMERGENCIA", "RAMAL"]
+destn = ["RAMAL", "0800", "0300", "EMERGENCIA", "LOCAL_FIXO", "LOCAL_CELULAR", "DDD_FIXO", "DDD_CELULAR", "DDI"]
 db.f_grupo_destinos.id_destinos.requires = IS_IN_SET(destn, multiple=True)
 #db.f_grupo_destinos.id_destinos.requires = IS_IN_DB(db(db.f_destinos.mostrar == True),'f_destinos.id',"%(destino)s", multiple=True)
 

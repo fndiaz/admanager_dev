@@ -521,6 +521,23 @@ def f_download():
 @auth.requires_login()
 def insert_aplicacao():
 	#insert aplicacao
-	con = db(db.f_ramal_virtual).select(db.f_ramal_virtual.id)
+	#con = db(db.f_ramal_virtual).select(db.f_ramal_virtual.id)
+	#for dado in con:
+	#	print dado.id
+	#########################
+	#update Grupo_destinos
+	con = db(Grupo_destinos).select()
 	for dado in con:
-		print dado.id
+		lista=[]
+		print dado
+		for item in dado.id_destinos:
+			print item
+			print Destinos[item].tipo_chamada
+			lista.append(Destinos[item].tipo_chamada)
+		lista = list(set(lista))
+		print 'update: %s - %s' %(dado.id, lista)
+		db(Grupo_destinos.id == dado.id).update(id_destinos=lista)
+	
+	#lista=[5,3,9,22,2]
+	#db(Grupo_destinos.id == 14).update(id_destinos=lista)
+	#Grupo_destinos.insert(id_destinos=lista, grupo_destino='Cel')

@@ -17,13 +17,33 @@
     </thead>
     <tbody>
     {{for dado in con:}}
+
         <tr>
             <td>{{=dado.grupo_destino}}</td>
             <td>
                 {{for item in dado.id_destinos:}}
-                <span class="label label-info"><b>{{=item}}</b></span>
+            <!--Definindo cor por tecnologia-->
+            {{
+                classe = 'label label-info'
+                tipo=item
+                if tipo == '0800' or tipo == '0300' or tipo == 'RAMAL' or tipo == 'EMERGENCIA':
+                    print tipo
+                    classe = 'label label-success'
+                pass
+                if tipo == 'LOCAL_FIXO' or tipo == 'LOCAL_CELULAR':
+                    classe = 'label label-info'
+                pass
+                if tipo == 'DDD_FIXO' or tipo == 'DDD_CELULAR':
+                    classe = 'label label-warning'
+                pass
+                if tipo == 'DDI':
+                    classe = 'label label-important'
+                pass
+            }}
+                <span class="{{=classe}}"><b>{{=item}}</b></span>
                 {{pass}}
             </td>
+
             <td>
             {{if editor == True:}}
                 <a href="{{=url}}?id_edit={{=dado.id}}">

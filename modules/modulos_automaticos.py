@@ -12,7 +12,7 @@ def update_grupo_destinos():
 			print 'update: %s - %s' %(dado.id, lista)
 			db(Grupo_destinos.id == dado.id).update(id_destinos=lista)
 	except:
-		logger.debug("module:Já Feito")
-		return ('Já Feito')
+		logger.debug("module:Jah Feito")
+		return ('Jah Feito')
 
 update_grupo_destinos()

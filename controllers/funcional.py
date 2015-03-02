@@ -337,7 +337,7 @@ def f_feriados_form():
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
-	form.element(_name='dia')['_type'] = "number"
+	#form.element(_name='dia')['_type'] = "number"
 	form.element(_name='dia')['_style'] = "width : 100px"
 	form.element(_name='mes')['_style'] = "width : 100px"
 	form.element(_name='acao')['_style'] = "width : 450px"

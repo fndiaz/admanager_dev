@@ -80,7 +80,7 @@ db.f_parametros.fuso_horario.requires = IS_IN_SET(gmt)
 db.f_parametros.credito_dia.requires = IS_EMPTY_OR(IS_IN_SET(dia_mes()))
 
 ##Feriados
-db.f_feriados.dia.requires = IS_INT_IN_RANGE(1,31)
+db.f_feriados.dia.requires = IS_IN_SET(dia_mes())
 
 mes_ano=[('Jan','Janeiro'),('Feb','Fevereiro'),('Mar','Março'),('Apr','Abril'),('May','Maio'),('Jun','Junho'),
 ('Jul','Julho'),('Aug','Agosto'),('Sep','Setembro'),('Oct','Outubro'),('Nov','Novembro'),('Dec','Dezembro')]

@@ -19,6 +19,7 @@ config = Storage(
 
 #config.db.uri = "mysql://root:yma2578k@localhost/adm"
 #config.db.uri = "sqlite://hosts.sqlite"
+#config.db.uri = "postgres:pg8000://postgres:123456@127.0.0.1/admanager_dev"
 if request.is_local:
 	config.db.uri = "postgres:pg8000://postgres:123456@127.0.0.1/admanager_dev"
 else:

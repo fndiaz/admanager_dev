@@ -544,3 +544,30 @@ def insert_aplicacao():
 	#lista=[5,3,9,22,2]
 	#db(Grupo_destinos.id == 14).update(id_destinos=lista)
 	#Grupo_destinos.insert(id_destinos=lista, grupo_destino='Cel')
+
+def testa_smtp():
+	print request.vars
+	us_smtp=request.vars.usr
+	if '@' in request.vars.usr: us_smtp = request.vars.usr
+	else: us_smtp= '%s@%s' %(request.vars.usr, request.vars.end[request.vars.end.find('.')+1::])
+	print us_smtp
+	print type(request.vars.end)
+
+	mail = auth.settings.mailer
+	mail.settings.server = '%s:%s' %(request.vars.end, request.vars.por)
+	mail.settings.sender = us_smtp
+	mail.settings.login = '%s:%s' %(request.vars.usr, request.vars.sen)
+	try:
+		if mail.send(
+			to="fndiaz02@gmail.com",
+			subject="teste conexao",
+			message="ok" 
+		) is True:
+			print 'ok'
+			return response.json([True, 'Ok'])
+		else:
+			print mail.error
+			print 'Failed'
+			return response.json([False, str(mail.error)])
+	except:
+		return response.json([False, 'Algo errado'])

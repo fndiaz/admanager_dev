@@ -17,8 +17,8 @@ config = Storage(
         mail=Storage()
         )
 
-#config.db.uri = "mysql://root:yma2578k@localhost/adm"
-#config.db.uri = "sqlite://hosts.sqlite"
+config.db.uri = "mysql://root:yma2578k@localhost/adm"
+config.db.uri = "sqlite://hosts.sqlite"
 #config.db.uri = "postgres:pg8000://postgres:123456@127.0.0.1/admanager_dev"
 if request.is_local:
 	config.db.uri = "postgres:pg8000://postgres:123456@127.0.0.1/admanager_dev"
@@ -53,6 +53,7 @@ auth.settings.registration_requires_verification = False
 auth.settings.registration_requires_approval = False
 #auth.settings.formstyle = "divs"
 auth.settings.actions_disabled = ['register']
+#auth.settings.expiration = 3600  # seconds
 
 auth.messages.logged_in = 'Bem Vindo' 
 auth.messages.logged_out = ''
@@ -62,10 +63,11 @@ auth.messages.invalid_login = 'Login Inválido'
 auth.messages.login_button = "Entrar"
 
 #mail
-mail = auth.settings.mailer
-mail.settings.server = "zmail.ad2.com.br:587"
-mail.settings.sender = "smtp_avisos@ad2.com.br"
-mail.settings.login = "smtp_avisos@ad2.com.br:ad2root"
+#mail = auth.settings.mailer
+#mail.settings.server = "mail.ad2.com.br:587"
+#mail.settings.sender = "smtp_avisos@ad2.com.br"
+#mail.settings.login = "smtp_avisos:ad2root"
+#mail.settings.tls = True
 
 
 #signals

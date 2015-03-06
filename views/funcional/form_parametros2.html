@@ -1,7 +1,8 @@
 {{extend 'layout.html'}}
 
 {{block center}}
-<div class="box-content">
+
+<div class="box-content" id="target">
 <div id="MyWizard" class="wizard" style="margin-bottom:50px">
 	<ul class="steps">
 		<li data-target="#step1" class="active"><span class="badge badge-info">1</span><span class="chevron"></span>Global</li>
@@ -18,7 +19,7 @@
 
 
 
-<form id="form_parametros" action="#" enctype="multipart/form-data" method="post">
+<form id="form_parametros" action="#" enctype="multipart/form-data" method="post" >
 <div class="step-content"><!--STEP content-->
 
 
@@ -152,7 +153,11 @@ Alguns <strong>erros</strong> foram encontrados
 <label>Start TLS:</label> 
 <div>{{=form.custom.widget.start_tls_smtp}}</div>
 <br>  
-								
+
+<button type="button" id="tst" class="btn btn-primary">Testar conexão email</button>
+<p id="con-ok" style="display:none"><i class="fa fa-check" style="color:green"></i> Conexão de email OK</p>
+<p id="con-fail" style="display:none"><i class="fa fa-times" style="color:red"></i> Erro de conexão</p>
+
 </div><!--col-lg-->
 
 </div><!--row-->
@@ -227,6 +232,8 @@ Alguns <strong>erros</strong> foram encontrados
 
 </div>
 
+
+
 {{end}}
 
 
@@ -254,6 +261,9 @@ Alguns <strong>erros</strong> foram encontrados
 
 <link href="{{=URL(a='admanager', c='static', f='css')}}/nouslider/jquery.nouislider.css" rel="stylesheet">
 <script src="{{=URL(a='admanager', c='static', f='js')}}/nouslider/jquery.nouislider.min.js"></script>
+
+<script src="{{=URL(a='admanager', c='static', f='js')}}/load/loading-overlay.js"></script>
+<link href="{{=URL(a='admanager', c='static', f='js')}}/load/loading-overlay.css" rel="stylesheet">
 
 <script>
 //Validation
@@ -346,6 +356,42 @@ $('input').keypress(function (e) {
         var code = null;
         code = (e.keyCode ? e.keyCode : e.which);                
         return (code == 13) ? false : true;
+});
+
+
+function smtp() { //func
+$('#target').loadingOverlay();
+var usr = $('#f_parametros_usuario_smtp').val();
+var end = $('#f_parametros_endereco_smtp').val();
+var sen = $('#f_parametros_senha_smtp').val();
+var por = $('#f_parametros_porta_smtp').val();
+
+$.ajax({
+method: "get",
+url: "{{=URL(a='admanager', c='funcional', f='testa_smtp')}}?usr="+ usr +"&end="+ end +"&sen="+ sen +"&por="+ por,
+dataType: "json",
+success: function(dado){ //success
+
+$("#con-ok").css("display", "none");
+$("#con-fail").css("display", "none");
+$('#target').loadingOverlay('remove');
+
+if (dado[0] == false){
+  //alert(dado[0]);
+  $("#con-fail").html("<i class='fa fa-times' style='color:red'></i> Erro de conexão<br>"+ dado[1]);
+  $("#con-fail").css("display", "block");
+}
+if (dado[0] == true){
+  $("#con-ok").css("display", "block");
+}
+
+} //success
+});//ajax 
+} //func
+
+
+$( "#tst" ).click(function() {
+  smtp();
 });
 
 </script>

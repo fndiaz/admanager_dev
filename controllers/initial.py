@@ -298,7 +298,6 @@ def membership():
 def log():
 	#form = auth.user
 	response.title = 'Comunicação com o Opera'
-	escreve_prov()
 
 	return response.render("initial/log.html")
 	

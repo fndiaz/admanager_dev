@@ -485,3 +485,13 @@ db.define_table('f_submenu',
 #	Field("id_submenu", db.f_submenu),
 #	Field("permissao", "boolean")
 #	)
+
+if Parametros[1].usuario_smtp != '' and Parametros[1].endereco_smtp != '':
+	us_smtp=Parametros[1].usuario_smtp
+	if '@' in Parametros[1].usuario_smtp: us_smtp = Parametros[1].usuario_smtp
+	else: us_smtp= '%s@%s' %(Parametros[1].usuario_smtp, Parametros[1].endereco_smtp[Parametros[1].endereco_smtp.find('.')+1::])
+	mail = auth.settings.mailer
+	mail.settings.server = '%s:%s' %(Parametros[1].endereco_smtp, Parametros[1].porta_smtp)
+	mail.settings.sender = '%s' %(us_smtp)
+	mail.settings.login = "%s:%s" %(Parametros[1].usuario_smtp, Parametros[1].senha_smtp)
+	

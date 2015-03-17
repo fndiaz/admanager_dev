@@ -336,6 +336,7 @@ def f_discagem_abreviada_form():
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
+	form.custom.widget.abreviado['_placeholder'] = "exemplo *200"
 
 	if form.process().accepted:
 		redirect(URL('f_discagem_abreviada'))

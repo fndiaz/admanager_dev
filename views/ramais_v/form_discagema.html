@@ -12,12 +12,12 @@
 {{=form.custom.begin}}
 
 <div>
-<label>Abreviado:</label>
+<label>Abreviado:</label> <i id="i-abreviado" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.abreviado}}</div>
 <br>
 </div>
 
-<label>Destino:</label>
+<label>Destino:</label> <i id="i-destino" class="icon-question-sign"></i>
 <div>{{=form.custom.widget.destino}}</div>
 <br>
 
@@ -48,6 +48,11 @@
 $("#act-Extensões").addClass("chevron opened");
 $("#dsp-Extensões").css("display", "block");
 $("#Discagem rápida").addClass("active");
+
+//HELP
+$("#i-abreviado").popover({trigger: "hover",title: 'Número Abreviado', content: "Deve estar dentro da range de *200 até *699.", placement: 'top' })
+
+$("#i-destino").popover({trigger: "hover",title: 'Número Destino', content: "Deve estar da mesma maneira como se estivesse discando pelo PABX.", placement: 'right' })
 
 </script>
 

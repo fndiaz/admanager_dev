@@ -437,6 +437,11 @@ Prov_ramal 	= 	db.define_table("prov_ramal",
 	Field("linha", "integer", length=11),
 	migrate=False)
 
+Discagem_abreviada = db.define_table("f_discagem_abreviada",
+	Field("abreviado"),
+	Field("destino"),
+	migrate=False)
+
 ##Feriado
 Feriados = db.define_table("f_feriados",
 	Field("id"),

@@ -136,6 +136,9 @@ if db(db.f_submenu.nome == 'Fax').isempty():
 if db(db.f_submenu.nome == 'Local').isempty():
 	db.f_submenu.insert(nome="Local", controller="queues", funcao="f_local", icone="icon-list-alt", ordem="6", menu_ref=id_extensoes)
 	auth.add_group('Local', '')
+if db(db.f_submenu.nome == 'Discagem Abreviada').isempty():
+	db.f_submenu.insert(nome="Discagem Abreviada", controller="ramais_v", funcao="f_discagem_abreviada", icone="icon-list-alt", ordem="8", menu_ref=id_extensoes)
+	auth.add_group('Discagem Abreviada', '')
 
 ##Menu Provisionamento
 if db(db.f_menu.nome == 'Provisionamento').isempty():

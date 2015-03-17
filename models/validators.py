@@ -133,6 +133,10 @@ db.f_desvios.dia_semana.requires = IS_IN_SET(dias,
 db.f_desvios.horario_inicio.requires = IS_NOT_EMPTY()
 db.f_desvios.horario_fim.requires = IS_NOT_EMPTY()
 
+##DA
+db.f_discagem_abreviada.abreviado.requires = IS_MATCH("^.[2-6][0-9][0-9]", error_message='número inválido')
+db.f_discagem_abreviada.destino.requires = IS_MATCH("[0-9]+", error_message='somente números')
+
 
 #########################################################################
 ## Queues

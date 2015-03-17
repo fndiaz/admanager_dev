@@ -310,6 +310,38 @@ def f_ddr_form():
 
 	return response.render("ramais_v/form_ddr.html", form=form)
 
+######-DA
+@auth.requires_login()
+def f_discagem_abreviada():
+	response.title = 'Discagem Abreviada'
+	response.marca=['Extensões', 'Discagem Abreviada']
+	editor = permissao()
+	url = URL('admanager', 'ramais_v', 'f_discagem_abreviada_form')
+
+	con = db(db.f_discagem_abreviada).select(orderby=db.f_discagem_abreviada.id)
+	
+	return response.render("ramais_v/show_discagema.html",  
+					url=url, editor=editor, con=con)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def f_discagem_abreviada_form():
+	response.title = 'Discagem Abreviada'
+	response.marca=['Extensões', 'Discagem Abreviada', 'Adiciona']
+	id_edit	= request.vars['id_edit']
+	
+	if id_edit is None:
+		form 	=	SQLFORM(db.f_discagem_abreviada)
+	else:
+		form 	=	SQLFORM(db.f_discagem_abreviada, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process().accepted:
+		redirect(URL('f_discagem_abreviada'))
+
+	return response.render("ramais_v/form_discagema.html", form=form)
+
 ######-EXTRAS
 def link_fisico():
 	print 'link_fisico'
@@ -406,6 +438,10 @@ def delete():
 	if funcao	==	"f_ddr":
 		tabela	= 	db.f_ddr.id
 		funcao	= 	"f_ddr"
+
+	if funcao	==	"f_discagem_abreviada":
+		tabela	= 	db.f_discagem_abreviada.id
+		funcao	= 	"f_discagem_abreviada"
 
 	if funcao	== "f_grupo_destinos":
 		tabela	= 	db.f_grupo_destinos.id

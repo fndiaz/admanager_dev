@@ -92,4 +92,33 @@ def trata_horario(funcao, id_tab):
 
 
 
+class MyAppBaseException(Exception):
+	def __init__(self, **kwargs):
+		print '---'
+		if 'msg' in kwargs:
+			self.msg= kwargs['msg']
+		self.msg = self.msg.format(**kwargs)
+
+class ErroObtendoDados(MyAppBaseException):
+	def __init__(self, **kwargs):
+		self.msg = "Erro {erro}, devido a {razao}"
+		self.code = 2
+		super(MyAppBaseException).__init__(**kwargs)
+
+class ErroAoComunicarComServidor(MyAppBaseException):
+	def __init__(self, **kwargs):
+		self.msg = "Não foi possível comunicar com o servidor {srv}"
+		self.code = 3
+		super().__init__(**kwargs)
+
+class ErroAoProcessar(MyAppBaseException):
+	def __init__(self, **kwargs):
+		self.msg = "Não possível realizar tarefa {tarefa}"
+		self.code = 4
+		super().__init__(**kwargs)
+
+
+
+
+
 

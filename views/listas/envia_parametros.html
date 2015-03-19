@@ -1,0 +1,26 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+<p>CRM</p>
+
+{{end}}
+
+
+{{block jquery}}
+
+<script>
+ 
+$.ajax({
+method: "post",
+url: "login_crm",
+data: "email={{=email}}&senha={{=senha}}",
+dataType: "html",
+success: function(dado){
+	alert(dado)
+}
+
+});
+
+</script>
+
+{{end}}

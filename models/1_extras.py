@@ -3,7 +3,7 @@
 #########################################################################
 ## Extras
 #########################################################################
-import time
+import time, random
 
 def permissao():
 	editor = False
@@ -107,3 +107,14 @@ def peers_fop2():
 		arq.write('context=ramais\n\n')
 
 	commands.getoutput("sudo /etc/init.d/fop2 reload")
+
+def gera_apikey():
+	caracteres = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	tamanho = 40
+	apikey = ''
+
+	for i in range(tamanho):
+		next_index = random.randrange(len(caracteres))
+		apikey = apikey + caracteres[next_index]
+
+	return apikey

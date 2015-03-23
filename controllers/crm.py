@@ -40,7 +40,7 @@ def disca_crm():
 		return response.json({"error": "api_key invalido"})
 	if escreve_outgoing(request.vars) is True:
 		disca['status']=0
-		disca['callid']='blablabla'
+		disca['callid']='/caminho_audio'
 
 		log_actions("disca_ok", "%s-%s %s" %(d.agent, d.phone, d.ts))
 		return response.json(disca)
@@ -60,7 +60,9 @@ def escreve_outgoing(dado):
 		f.write('Extension: %s\n' %(dado.phone))
 		f.write('Callerid: CRM\nMaxRetries: 1\nRetryTime: 30\nWaitTime: 60\n')
 		f.write('Set:ts=%s\n' %(dado.ts))
-		f.write('Set:callid=blablabla\n')
+		f.write('Set:callid=/caminho_audio\n')
+		f.write('Set:id_empresa=1\n')
+		f.write('Set:destino=%s\n' %(dado.phone))
 		f.close()
 		commands.getoutput("chmod 777 /tmp/000.cal")
 		commands.getoutput("cp /tmp/000.cal /var/spool/asterisk/outgoing/")
@@ -71,7 +73,7 @@ def valida_login(dado):
 	print dado
 	if dado.email != 'agente01@savol.com.br':
 		return False, 'email invalido'
-	if dado.senha != '123456':
+	if dado.senha != '1123456':
 		obs='senha incorreta'
 		return False, 'senha incorreta'
 	return True, 'login ok'

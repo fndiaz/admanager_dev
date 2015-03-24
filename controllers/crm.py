@@ -38,9 +38,13 @@ def disca_crm():
 	if request.vars.api_key != 'wmt*paMQNNMEZzq4mvqMS$kgzJBXnkKX99bxF':
 		log_actions("disca_error", "api_key invalido")
 		return response.json({"error": "api_key invalido"})
-	if escreve_outgoing(request.vars) is True:
+
+	data=datetime.now().strftime("%Y%m%d")
+	hora=datetime.now().strftime("%H%M%S")
+	caminho='%s/CRM-%s-%s-%s' %(data, d.agent, d.phone, hora)
+	if escreve_outgoing(request.vars, caminho) is True:
 		disca['status']=0
-		disca['callid']='/caminho_audio'
+		disca['callid']=caminho
 
 		log_actions("disca_ok", "%s-%s %s" %(d.agent, d.phone, d.ts))
 		return response.json(disca)
@@ -49,7 +53,7 @@ def disca_crm():
 		return response.json({'error': 'default'})
 
 
-def escreve_outgoing(dado):
+def escreve_outgoing(dado, caminho):
 	#date = datetime.fromtimestamp(1426779840)
 	#print date.strftime("%Y-%m-%d %H:%M:%S %z")
 	print dado.ts
@@ -60,7 +64,7 @@ def escreve_outgoing(dado):
 		f.write('Extension: %s\n' %(dado.phone))
 		f.write('Callerid: CRM\nMaxRetries: 1\nRetryTime: 30\nWaitTime: 60\n')
 		f.write('Set:ts=%s\n' %(dado.ts))
-		f.write('Set:callid=/caminho_audio\n')
+		f.write('Set:callid=%s\n' %caminho)
 		f.write('Set:id_empresa=1\n')
 		f.write('Set:destino=%s\n' %(dado.phone))
 		f.close()

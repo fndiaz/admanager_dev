@@ -39,10 +39,8 @@ def disca_crm():
 		log_actions("disca_error", "api_key invalido")
 		return response.json({"error": "api_key invalido"})
 
-	data=datetime.now().strftime("%Y%m%d")
-	hora=datetime.now().strftime("%H%M%S")
-	caminho='%s/CRM-%s-%s-%s' %(data, d.agent, d.phone, hora)
-	if escreve_outgoing(request.vars, caminho) is True:
+	caminho = gera_caminho(d)
+	if escreve_outgoing(d, caminho) is True:
 		disca['status']=0
 		disca['callid']=caminho
 
@@ -54,11 +52,11 @@ def disca_crm():
 
 
 def escreve_outgoing(dado, caminho):
-	#date = datetime.fromtimestamp(1426779840)
-	#print date.strftime("%Y-%m-%d %H:%M:%S %z")
-	print dado.ts
-	if dado.ts == '0':
-		f = open('/tmp/000.cal','w')
+	print '-----------gera caminho--------------'
+	try:
+		arquivo='%s.cal' %(caminho.split('/')[1])
+
+		f = open('/tmp/%s' %(arquivo),'w')
 		f.write('Channel: Local/%s@crm\n' %(dado.agent))
 		f.write('Context: crm\n')
 		f.write('Extension: %s\n' %(dado.phone))
@@ -68,9 +66,29 @@ def escreve_outgoing(dado, caminho):
 		f.write('Set:id_empresa=1\n')
 		f.write('Set:destino=%s\n' %(dado.phone))
 		f.close()
-		commands.getoutput("chmod 777 /tmp/000.cal")
-		commands.getoutput("cp /tmp/000.cal /var/spool/asterisk/outgoing/")
+		commands.getoutput("chmod 777 /tmp/%s" %(arquivo))
+		if dado.ts != '0':
+			perm=datetime.fromtimestamp(int(dado.ts)).strftime("%Y%m%d%H%M.%S")
+			commands.getoutput("touch -t %s /tmp/%s" %(perm, arquivo))
+		commands.getoutput("mv /tmp/%s /var/spool/asterisk/outgoing/" %(arquivo))
+		log_actions("arquivo gerado", arquivo)
 		return True
+	except():
+		return False
+
+def gera_caminho(d):
+	print '-----------gera caminho--------------'
+	if d.ts == '0':
+		data=datetime.now().strftime("%Y%m%d")
+		hora=datetime.now().strftime("%H%M%S")
+	else:
+		var=datetime.fromtimestamp(int(d.ts))
+		data=var.strftime("%Y%m%d")
+		hora=var.strftime("%H%M%S")
+
+	caminho ='%s/CRM-%s-%s-%s' %(data, d.agent, d.phone, hora)
+	print 'caminho:%s' %(caminho)
+	return caminho
 
 
 def valida_login(dado):

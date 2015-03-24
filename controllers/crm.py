@@ -59,7 +59,7 @@ def escreve_outgoing(dado, caminho):
 	print dado.ts
 	if dado.ts == '0':
 		f = open('/tmp/000.cal','w')
-		f.write('Channel: Local/%s@rechamada\n' %(dado.agent))
+		f.write('Channel: Local/%s@crm\n' %(dado.agent))
 		f.write('Context: crm\n')
 		f.write('Extension: %s\n' %(dado.phone))
 		f.write('Callerid: CRM\nMaxRetries: 1\nRetryTime: 30\nWaitTime: 60\n')

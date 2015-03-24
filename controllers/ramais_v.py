@@ -422,8 +422,9 @@ def delete():
 
 	if funcao 	== "f_ramal_virtual":
 		tabela 	=	 db.f_ramal_virtual.id
-		if trata_ramal_virtual(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_ramal_virtual(funcao, id_tab)
+		if resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 		funcao  = 	 'f_ramal_virtual'
 
@@ -446,8 +447,9 @@ def delete():
 
 	if funcao	== "f_grupo_destinos":
 		tabela	= 	db.f_grupo_destinos.id
-		if trata_grupo_destino(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_grupo_destino(funcao, id_tab)
+		if resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 		funcao	= 	"f_grupo_destinos"
 	
@@ -463,8 +465,9 @@ def delete_visao():
 	funcao 	=	request.vars['tabela']
 	id_tab	=	request.vars['id_tab']
 	if funcao 	== 	"f_departamentos":
-		if trata_departamento(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_departamento(funcao, id_tab)
+		if resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 		tabela 	= db.f_departamentos.id
 

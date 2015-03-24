@@ -123,12 +123,19 @@ def f_empresa():
 	editor 	= 	permissao()
 	url 	=	URL('admanager', 'funcional', 'f_empresa_form')
 	empresa	= 	db(db.f_empresa.mostrar == True).select(orderby=db.f_empresa.id)
+	if (db(Empresa.mostrar == True).count() > 1)\
+	and (auth.user.email != 'root@forip.com.br'):
+		editor=False
 
 	return response.render("funcional/show_empresa.html", 
 				url=url, editor=editor, empresa=empresa)
 
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_empresa_form():
+	if (db(Empresa.mostrar == True).count() > 1)\
+	and (auth.user.email != 'root@forip.com.br'):
+		redirect(URL('f_empresa'))
+
 	response.title = 'Empresa'
 	response.marca = ['Funcional', 'Empresa', 'Adiciona Empresa']
 	id_empresa	= 	request.vars['id_empresa']
@@ -158,11 +165,17 @@ def f_tarifacao():
 	url 	=	URL('admanager', 'funcional', 'f_tarifacao_form')
 	tarifacao 	=	db(db.f_tarifacao).select(orderby=db.f_tarifacao.id)
 
+	if auth.user.email != 'root@forip.com.br':
+		editor=False
+
 	return response.render("funcional/show_tarifacao.html", 
 				editor=editor, url=url, tarifacao=tarifacao)
 
 @auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
 def f_tarifacao_form():
+	if auth.user.email != 'root@forip.com.br':
+		redirect(URL('f_empresa'))
+
 	response.title = 'Tarifação'
 	response.marca=['Funcional', 'Tarifação', 'Adiciona Tarifação']
 	id_tarifacao=	request.vars['id_tarifacao']
@@ -361,6 +374,9 @@ def f_portabilidade_form():
 
 	for input in form.elements():
 		input['_class'] = 'form-control'
+	if auth.user.email != 'root@forip.com.br':
+		form.element(_name='ativo')['_disabled'] = 'true'
+	
 
 	if form.process().accepted:
 		session.alerta_sucesso = 'Dados salvos com sucesso!'
@@ -380,8 +396,9 @@ def delete():
 		tabela 	= 	db.f_troncos_fisicos.id
 	if funcao 	== "f_tarifacao":
 		tabela 	= 	db.f_tarifacao.id
-		if trata_tarifacao(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_tarifacao(funcao, id_tab)
+		if resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 	if funcao 	== "f_rotas":
 		tabela 	= 	db.f_rotas.id
@@ -391,8 +408,9 @@ def delete():
 		tabela 	= 	db.f_destinos.id
 	if funcao 	== 	"f_horario":
 		tabela 	= 	db.f_horario.id
-		if trata_horario(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_horario(funcao, id_tab)
+		if resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 	if funcao 	== 	"f_ura":
 		tabela 	=	db.f_ura.id
@@ -413,18 +431,21 @@ def delete_visao():
 	funcao 	=	request.vars['tabela']
 	id_tab	=	request.vars['id_tab']
 	if funcao 	== 	"f_empresa":
-		if trata_empresa(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_empresa(funcao, id_tab)
+		if  resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 		tabela 	= db.f_empresa.id
 	if funcao 	== "f_troncos":
-		if trata_tronco(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_tronco(funcao, id_tab)
+		if resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 		tabela 	=	 db.f_troncos.id
 	if funcao 	== 	"f_destinos":
-		if trata_destino(funcao, id_tab) == False:
-			session.alerta_erro = 'Erro, existe vínculo!'
+		resp=trata_destino(funcao, id_tab)
+		if resp['status'] == False:
+			session.alerta_erro = 'Erro, vínculo %s!' %(resp['tabela'])
 			redirect(URL(funcao))
 		tabela 	= 	db.f_destinos.id
 

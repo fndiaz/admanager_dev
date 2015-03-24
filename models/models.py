@@ -4,7 +4,7 @@
 ## Declaração do Banco de dados
 #########################################################################
 
-db.define_table('f_empresa',
+Empresa = db.define_table('f_empresa',
 	Field("id"),
 	Field("empresa"),
 	Field("mostrar", "boolean", default=True),

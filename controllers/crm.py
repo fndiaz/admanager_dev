@@ -12,7 +12,6 @@ def envia_parametros():
 	return response.render("listas/envia_parametros.html", 
 									email=email, senha=senha)
 
-
 def login_crm():
 	login={}
 	if request.env.request_method != "POST":
@@ -25,7 +24,7 @@ def login_crm():
 	else:
 		print gera_apikey()
 		login['email']='agente01@savol.com.br'
-		login['name']='agent01'
+		login['name']='agente01'
 		login['id']=1
 		login['api_key']='wmt*paMQNNMEZzq4mvqMS$kgzJBXnkKX99bxF'#gera_apikey()
 
@@ -35,9 +34,9 @@ def login_crm():
 def disca_crm():
 	disca={}
 	d=request.vars
-	if request.vars.api_key != 'wmt*paMQNNMEZzq4mvqMS$kgzJBXnkKX99bxF':
-		log_actions("disca_error", "api_key invalido")
-		return response.json({"error": "api_key invalido"})
+	if (d.api_key != 'wmt*paMQNNMEZzq4mvqMS$kgzJBXnkKX99bxF') or (d.agent != 'agente01'):
+		log_actions("disca_error", "api_key invalido ou agente invalido")
+		return response.json({"error": "api_key invalido ou agente invalido"})
 
 	caminho = gera_caminho(d)
 	if escreve_outgoing(d, caminho) is True:
@@ -52,7 +51,7 @@ def disca_crm():
 
 
 def escreve_outgoing(dado, caminho):
-	print '-----------gera caminho--------------'
+	print '-----------gera outgoing--------------'
 	try:
 		arquivo='%s.cal' %(caminho.split('/')[1])
 

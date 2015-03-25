@@ -35,7 +35,7 @@ def disca_crm():
 	disca={}
 	d=request.vars
 	if (d.api_key != 'wmt*paMQNNMEZzq4mvqMS$kgzJBXnkKX99bxF') or (d.agent != 'agente01'):
-		log_actions("disca_error", "api_key invalido ou agente invalido")
+		log_actions("disca_error", "api_key invalido ou agente invalido - %s" %(d))
 		return response.json({"error": "api_key invalido ou agente invalido"})
 
 	caminho = gera_caminho(d)
@@ -43,10 +43,10 @@ def disca_crm():
 		disca['status']=0
 		disca['callid']=caminho
 
-		log_actions("disca_ok", "%s-%s %s" %(d.agent, d.phone, d.ts))
+		log_actions("disca_ok", "%s" %(d))
 		return response.json(disca)
 	else:
-		log_actions("disca_error", "default")
+		log_actions("disca_error", "default - %s" %(d))
 		return response.json({'error': 'default'})
 
 
@@ -93,10 +93,10 @@ def gera_caminho(d):
 def valida_login(dado):
 	print dado
 	if dado.email != 'agente01@savol.com.br':
-		return False, 'email invalido'
+		return False, 'email invalido - %s' %(dado)
 	if dado.senha != '1123456':
 		obs='senha incorreta'
-		return False, 'senha incorreta'
+		return False, 'senha incorreta - %s' %(dado)
 	return True, 'login ok'
 
 def log_actions(status, desc):

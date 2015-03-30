@@ -1,0 +1,70 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> .
+</div>
+
+<div class='row'>
+<div class="coluna_form_esquerda_b0">
+{{=form.custom.begin}}
+
+<div>
+<label>Nome:</label>
+<div>{{=form.custom.widget.fullname}}</div>
+<br>
+</div>
+
+<label>Email:</label>
+<div>{{=form.custom.widget.email}}</div>
+<br>
+
+<label>Agente:</label>
+<div>{{=form.custom.widget.pager}}</div>
+<br>
+
+<label>Número Login:</label>
+<div>{{=form.custom.widget.mailbox}}</div>
+<br>
+
+<label>Senha:</label>
+<div>{{=form.custom.widget.password}}</div>
+<br>
+
+<div style="display:none">
+<div>{{=form.custom.widget.id_editar}}</div>
+</div>
+
+</div><!--col-lg-->
+
+</div><!--row-->
+
+
+<!--Submit-->
+<div class="row">
+<div class="botao_esquerda">
+<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>&nbsp;Enviar</button>
+</div>
+<div class="botao_direita">
+<button type="button" class="btn btn-primary" onclick=location.href="crm_agent" ><i class="icon-share-alt"></i>&nbsp;Voltar</button>
+</div>
+</div>
+<!--Submit-->
+{{=form.custom.end}}
+{{end}}
+
+
+
+{{block jquery}}
+<script type="text/javascript">
+
+//Menu
+$("#act-Extensões").addClass("chevron opened");
+$("#dsp-Extensões").css("display", "block");
+$("#").addClass("active");
+
+</script>
+
+{{end}}

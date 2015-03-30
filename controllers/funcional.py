@@ -7,7 +7,15 @@ def f_troncos():
 	response.marca=['Funcional', 'Troncos']
 	editor = permissao()
 	url = URL('admanager', 'funcional', 'f_troncos_form')
-	print editor
+
+
+	LogAcoes(evento='Login OK', 
+				agent='agent03',
+				argumentos='args'
+				).geralog()
+
+	testando(a=1,b=2,c=3)
+
 
 	troncos = db(db.f_troncos.mostrar == True).select(orderby=db.f_troncos.id)
 	

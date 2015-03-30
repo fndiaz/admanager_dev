@@ -343,6 +343,116 @@ def f_discagem_abreviada_form():
 
 	return response.render("ramais_v/form_discagema.html", form=form)
 
+######-CRM
+@auth.requires_login()
+def crm_agent():
+	response.title = 'CRM Agente'
+	response.marca=['Extensões', 'CRM Agente']
+	editor = permissao()
+	url = URL('admanager', 'ramais_v', 'crm_agent_form')
+
+	query=(Voicemail.context == 'crm')
+	con = db(query).select(orderby=Voicemail.mailbox)
+	
+	return response.render("ramais_v/show_crmagent.html",  
+					url=url, editor=editor, con=con)
+
+@auth.requires(auth.has_membership('gerenciador') or auth.has_membership('administrador'))
+def crm_agent_form():
+	id_edit	= request.vars['id_edit']
+
+	#define requires
+	if id_edit is None:
+		req_mailbox=[IS_MATCH("^[0-9][0-9][0-9][0-9]$", error_message='quarto números'),
+								   IS_NOT_IN_DB(db, 'voicemail.mailbox')]
+		req_email=[IS_EMAIL(), IS_NOT_IN_DB(db, 'voicemail.email')]
+		req_pager=[IS_NOT_EMPTY(), IS_NOT_IN_DB(db, 'voicemail.pager')]
+	else:
+		req_mailbox=IS_MATCH("^[0-9][0-9][0-9][0-9]$", error_message='quarto números')
+		req_email=IS_EMAIL()
+		req_pager=IS_NOT_EMPTY()
+
+	form = SQLFORM.factory(
+		Field("fullname", requires=IS_NOT_EMPTY()),
+		Field("email", requires=req_email),
+		Field("pager", requires=req_pager),
+		Field("password", requires=IS_MATCH("^[0-9][0-9][0-9][0-9]$", error_message='quarto números')),
+		Field("mailbox", requires=req_mailbox),
+		Field("id_editar"),
+	)
+
+	if id_edit is not None:
+		form.element(_name='fullname')['_value'] = Voicemail[id_edit].fullname
+		form.element(_name='email')['_value'] = Voicemail[id_edit].email
+		form.element(_name='pager')['_value'] = Voicemail[id_edit].pager
+		form.element(_name='password')['_value'] = Voicemail[id_edit].password
+		form.element(_name='mailbox')['_value'] = Voicemail[id_edit].mailbox
+		form.element(_name='id_editar')['_value'] = id_edit
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+
+	if form.process(onvalidation=valida_agent).accepted:
+		print 'id_edit:%s' %(id_edit)
+		if id_edit is None:
+			if insert_crmagent(request.vars) is True:
+				redirect(URL('crm_agent'))
+			session.alerta_erro = 'Erro de inclusão!'
+		else:
+			if update_crmagent(request.vars) is True:
+				redirect(URL('crm_agent'))
+			session.alerta_erro = 'Erro de inclusão!'
+
+	return response.render("ramais_v/form_crmagent.html", form=form)
+
+def valida_agent(form):
+	print 'valida'
+	if form.vars.id_editar != None:
+		query=((Voicemail.uniqueid != form.vars.id_editar) & (Voicemail.context == 'crm'))
+		con_email=db(query).select(Voicemail.email)
+		for dado in con_email:
+			if dado.email == form.vars.email:
+				form.errors.email = 'email existente'
+
+		con_mailbox=db(query).select(Voicemail.mailbox)
+		for dado in con_mailbox:
+			if dado.mailbox == int(form.vars.mailbox):
+				form.errors.mailbox = 'número existente'
+
+		con_pager=db(query).select(Voicemail.pager)
+		for dado in con_pager:
+			if dado.pager == form.vars.pager:
+				form.errors.pager = 'agente existente'
+
+
+def insert_crmagent(d):
+	print 'insert'
+	Voicemail.insert(customer_id=0,
+					context="crm",
+					password=d.password,
+					fullname=d.fullname,
+					email=d.email,
+					pager=d.pager,
+					mailbox=int(d.mailbox),
+	)
+	return True
+
+def update_crmagent(d):
+	print 'update'
+	query1=(Voicemail.uniqueid == d.id_edit)
+	if not db(query1).isempty():
+		db(query1).update(customer_id=0,
+					context="crm",
+					password=d.password,
+					fullname=d.fullname,
+					email=d.email,
+					pager=d.pager,
+					mailbox=int(d.mailbox),
+	)
+	return True
+
+
+
 ######-EXTRAS
 def link_fisico():
 	print 'link_fisico'
@@ -440,6 +550,10 @@ def delete():
 	if funcao	==	"f_ddr":
 		tabela	= 	db.f_ddr.id
 		funcao	= 	"f_ddr"
+
+	if funcao	==	"voicemail":
+		tabela	= 	db.voicemail.uniqueid
+		funcao	= 	"crm_agent"
 
 	if funcao	==	"f_discagem_abreviada":
 		tabela	= 	db.f_discagem_abreviada.id

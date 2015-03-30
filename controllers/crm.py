@@ -15,27 +15,31 @@ def envia_parametros():
 def login_crm():
 	login={}
 	if request.env.request_method != "POST":
-		log_actions("error_login", "method post failed")
+		LogAcoes(evento='Login Erro', resposta='method post failed').geralog()
 		return response.json({"error": "method post failed"})
+
 	res = valida_login(request.vars)
 	if res[0] is False:
-		log_actions("error_login", res[1])
+		LogAcoes(evento='Login Erro', resposta=res[1], argumentos=request.vars).geralog()
 		return response.json({'error': res[1]})
 	else:
-		print gera_apikey()
-		login['email']='agente01@savol.com.br'
-		login['name']='agente01'
+		query=(Voicemail.email == request.vars.email)
+		con=db(query).select()[0]
+		login['email']=con.email
+		login['name']=con.pager
 		login['id']=1
-		login['api_key']='wmt*paMQNNMEZzq4mvqMS$kgzJBXnkKX99bxF'#gera_apikey()
+		login['api_key']=api_key=gera_apikey()
+		db(query).update(api_key=api_key)
 
-		log_actions("login_ok", login['name'])
+		LogAcoes(evento='Login OK', agent=login['name'], api_key=login['api_key'], argumentos=request.vars).geralog()
 		return response.json(login)
 
 def disca_crm():
 	disca={}
 	d=request.vars
-	if (d.api_key != 'wmt*paMQNNMEZzq4mvqMS$kgzJBXnkKX99bxF') or (d.agent != 'agente01'):
-		log_actions("disca_error", "api_key invalido ou agente invalido - %s" %(d))
+	if db((Voicemail.api_key == d.api_key ) & (Voicemail.pager == d.agent)).isempty():
+		LogAcoes(evento='Disca Erro', resposta='api_key invalido ou agente invalido', 
+					agent=d.agent, api_key=d.api_key, argumentos=request.vars).geralog()
 		return response.json({"error": "api_key invalido ou agente invalido"})
 
 	caminho = gera_caminho(d)
@@ -43,10 +47,12 @@ def disca_crm():
 		disca['status']=0
 		disca['callid']=caminho
 
-		log_actions("disca_ok", "%s" %(d))
+		LogAcoes(evento='Disca Ok', resposta='ok', 
+			agent=d.agent,	api_key=d.api_key, argumentos=request.vars).geralog()
 		return response.json(disca)
 	else:
-		log_actions("disca_error", "default - %s" %(d))
+		LogAcoes(evento='Disca Erro', resposta='default', 
+			agent=d.agent, api_key=d.api_key, argumentos=request.vars).geralog()
 		return response.json({'error': 'default'})
 
 
@@ -70,7 +76,10 @@ def escreve_outgoing(dado, caminho):
 			perm=datetime.fromtimestamp(int(dado.ts)).strftime("%Y%m%d%H%M.%S")
 			commands.getoutput("touch -t %s /tmp/%s" %(perm, arquivo))
 		commands.getoutput("mv /tmp/%s /var/spool/asterisk/outgoing/" %(arquivo))
-		log_actions("arquivo gerado", arquivo)
+		LogAcoes(evento='Arquivo gerado',
+				resposta='gerado com sucesso',
+				argumentos='ts:%s' %dado.ts, 
+				agent=dado.agent).geralog()
 		return True
 	except():
 		return False
@@ -92,12 +101,18 @@ def gera_caminho(d):
 
 def valida_login(dado):
 	print dado
-	if dado.email != 'agente01@savol.com.br':
-		return False, 'email invalido - %s' %(dado)
-	if dado.senha != '1123456':
-		obs='senha incorreta'
-		return False, 'senha incorreta - %s' %(dado)
-	return True, 'login ok'
+	query=(Voicemail.email == dado.email)&\
+		  (Voicemail.password == dado.senha)&\
+		  (Voicemail.context == 'crm')
+
+	print db(Voicemail.email == dado.email).select()
+	if db((Voicemail.email == dado.email) & (Voicemail.context == 'crm')).isempty():
+		return False, 'login inexistente'
+	else:
+		if db(query).isempty():
+			return False, 'senha incorreta'
+		else:
+			return True, 'login ok'
 
 def log_actions(status, desc):
 	logger.debug("crm-action: %s - %s" %(status, desc))

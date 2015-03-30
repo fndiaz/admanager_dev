@@ -190,6 +190,8 @@
 'Produtos': 'Produtos',
 'Profile updated': 'Profile updated',
 'Python': 'Python',
+'quarto números': 'quarto números',
+'Quarto números': 'Quarto números',
 'Query:': 'Consulta:',
 'Quick Examples': 'Quick Examples',
 'Ramal': 'Ramal',

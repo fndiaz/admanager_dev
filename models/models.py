@@ -222,6 +222,8 @@ Voicemail = db.define_table("voicemail",
 	Field("pager"),
 	Field("stamp"),
 	Field("id_ramalvirtual"),
+	Field("ramal_fisico", length="20"),
+	Field("api_key", length="100"),
     migrate=False)
 
 desvio={"INDISPONIVEL": "Indisponivel", "OCUPADO": "Ocupado", "NAOATENDIMENTO" : "Não Atendimento", "IMEDIATO" : "Imediato"}
@@ -449,6 +451,16 @@ Feriados = db.define_table("f_feriados",
 	Field("mes"),
 	Field("acao"),
 	Field("descricao"),
+	migrate=False)
+
+##LogCRM
+Log_crm = db.define_table("f_log_crm",
+	Field("evento"),
+	Field("agent"),
+	Field("data_hora"),
+	Field("argumentos"),
+	Field("api_key"),
+	Field("resposta"),
 	migrate=False)
 
 

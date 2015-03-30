@@ -4,6 +4,7 @@
 ## Extras
 #########################################################################
 import time, random
+from datetime import datetime, timedelta
 
 def permissao():
 	editor = False
@@ -118,3 +119,37 @@ def gera_apikey():
 		apikey = apikey + caracteres[next_index]
 
 	return apikey
+
+class LogAcoes(object):
+
+    def __init__(self, **kwargs):
+		self.evento=''
+		self.agent=''
+		self.data_hora=datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+		self.argumentos=''
+		self.api_key=''
+		self.resposta=''
+		if 'evento' in kwargs:
+			self.evento= kwargs['evento']
+		if 'agent' in kwargs:
+			self.agent= kwargs['agent']
+		if 'argumentos' in kwargs:
+			self.argumentos= kwargs['argumentos']
+		if 'api_key' in kwargs:
+			self.api_key= kwargs['api_key']
+		if 'resposta' in kwargs:
+			self.resposta= kwargs['resposta']
+
+    def geralog(self):
+		logger.debug("crm-action: evt: %s -- res: %s -- args: %s -- agt: %s -- key: %s" 	
+		%(self.evento, self.resposta, self.argumentos, self.agent, self.api_key))
+
+		Log_crm.insert(evento=self.evento,
+					agent=self.agent,
+					data_hora=self.data_hora,
+					argumentos=self.argumentos,
+					api_key=self.api_key,
+					resposta=self.resposta,
+		)
+
+

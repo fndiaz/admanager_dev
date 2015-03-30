@@ -4,6 +4,7 @@
 ## Tratamento de dados -  DELEÇÂO
 #########################################################################
 
+
 def trata_empresa(funcao, id_tab):
 	print '--tratamento empresa--'
 	print id_tab
@@ -94,31 +95,9 @@ def trata_horario(funcao, id_tab):
 
 
 
+def testando(**kwargs):
+	print kwargs
 
-class MyAppBaseException(Exception):
-	def __init__(self, **kwargs):
-		print '---'
-		if 'msg' in kwargs:
-			self.msg= kwargs['msg']
-		self.msg = self.msg.format(**kwargs)
-
-class ErroObtendoDados(MyAppBaseException):
-	def __init__(self, **kwargs):
-		self.msg = "Erro {erro}, devido a {razao}"
-		self.code = 2
-		super(MyAppBaseException).__init__(**kwargs)
-
-class ErroAoComunicarComServidor(MyAppBaseException):
-	def __init__(self, **kwargs):
-		self.msg = "Não foi possível comunicar com o servidor {srv}"
-		self.code = 3
-		super().__init__(**kwargs)
-
-class ErroAoProcessar(MyAppBaseException):
-	def __init__(self, **kwargs):
-		self.msg = "Não possível realizar tarefa {tarefa}"
-		self.code = 4
-		super().__init__(**kwargs)
 
 
 

@@ -40,7 +40,7 @@ if db(db.f_menu).isempty():
 	db.commit()
 
 if db(db.f_menu.nome == 'CRM').isempty():
-	db.f_menu.insert(nome="CRM", controller="", funcao="", icone="halflings-icon th-list", ordem="7", submenu=True2)
+	db.f_menu.insert(nome="CRM", controller="", funcao="", icone="icon-bookmark", ordem="7", submenu=True)
 	auth.add_group('CRM', '')
 
 id_crm = db(db.f_menu.nome == 'CRM').select()[0].id

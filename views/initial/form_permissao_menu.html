@@ -75,7 +75,14 @@ if auth.has_membership(sub.nome, id_usuario):
     check_sub = "checked"
 else:
     check_sub = ""
-pass}}
+pass
+
+if (sub.nome == 'Agente') and  (auth.user.email != 'root@forip.com.br'):
+    check_sub = "disabled"
+pass
+
+}}
+
 {{if (sub.nome != 'Permissões') and (sub.nome != 'Grupos') and (sub.nome != 'Menu') and (sub.nome != 'Submenu'): }} <!--Não mostra alguns submenus -->
 <tr>         
 <td style="border:1px solid #ADC2CC">{{=sub.nome}}</td>

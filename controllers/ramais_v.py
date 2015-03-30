@@ -347,7 +347,7 @@ def f_discagem_abreviada_form():
 @auth.requires_login()
 def crm_agent():
 	response.title = 'CRM Agente'
-	response.marca=['Extensões', 'CRM Agente']
+	response.marca=['CRM', 'Agente']
 	editor = permissao()
 	url = URL('admanager', 'ramais_v', 'crm_agent_form')
 

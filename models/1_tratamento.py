@@ -95,12 +95,6 @@ def trata_horario(funcao, id_tab):
 
 
 
-def testando(**kwargs):
-	print kwargs
-
-
-
-
 
 
 

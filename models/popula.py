@@ -39,6 +39,15 @@ if db(db.f_menu).isempty():
 	auth.add_group('Configs', '')
 	db.commit()
 
+if db(db.f_menu.nome == 'CRM').isempty():
+	db.f_menu.insert(nome="CRM", controller="", funcao="", icone="halflings-icon th-list", ordem="7", submenu=True2)
+	auth.add_group('CRM', '')
+
+id_crm = db(db.f_menu.nome == 'CRM').select()[0].id
+if db(db.f_submenu.nome == 'Agente').isempty():
+	db.f_submenu.insert(nome="Agente", controller="ramais_v", funcao="crm_agent", icone="icon-list-alt", ordem="1", menu_ref=id_crm)
+	auth.add_group('Agente', '')
+
 if db(db.f_submenu).isempty():
 	id_acessos 	= db(db.f_menu.nome == 'Acessos').select()[0].id
 	id_funcional= db(db.f_menu.nome == 'Funcional').select()[0].id

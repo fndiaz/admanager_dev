@@ -204,6 +204,7 @@ def delete():
 		db(db.queue_members.queue_name == qname).delete()
 		db((db.f_ramal_virtual.tecnologia == 'QUEUE')&\
 		   (db.f_ramal_virtual.ramal_fisico == qname)).delete()
+		db(Agente_filas.id_fila == request.vars.id_tab).delete()
 	if funcao == 'queue_members':
 		redirect(URL(a='admanager', c='queues', f='queue_members', 
 							vars={'id_queue':request.vars.id_queue}))

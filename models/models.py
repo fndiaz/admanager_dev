@@ -224,6 +224,7 @@ Voicemail = db.define_table("voicemail",
 	Field("id_ramalvirtual"),
 	Field("ramal_fisico", length="20"),
 	Field("api_key", length="100"),
+	format="%(pager)s",
     migrate=False)
 
 desvio={"INDISPONIVEL": "Indisponivel", "OCUPADO": "Ocupado", "NAOATENDIMENTO" : "Não Atendimento", "IMEDIATO" : "Imediato"}
@@ -284,7 +285,8 @@ Queue = db.define_table("queue",
 	Field("leavewhenempty", requires=IS_IN_SET(["yes", "no"]), default='yes'),
 	Field("eventwhencalled", "boolean", default=True),
 	Field("wrapuptime", "integer", default=0),
-	Field("maxlen", "integer", default=100), 
+	Field("maxlen", "integer", default=100),
+	Field("crm", "boolean"), 
 
 	Field("announce"),
 	Field("context", default="ramais"),
@@ -461,6 +463,11 @@ Log_crm = db.define_table("f_log_crm",
 	Field("argumentos"),
 	Field("api_key"),
 	Field("resposta"),
+	migrate=False)
+
+Agente_filas = db.define_table("f_agente_filas",
+	Field("id_fila"),
+	Field("id_agente", requires=IS_IN_DB(db(db.voicemail.context == 'crm'),'voicemail.id',"%(pager)s")),
 	migrate=False)
 
 

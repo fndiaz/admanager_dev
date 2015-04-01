@@ -141,8 +141,8 @@ class LogAcoes(object):
 			self.resposta= kwargs['resposta']
 
     def geralog(self):
-		logger.debug("crm-action: evt: %s -- res: %s -- args: %s -- agt: %s -- key: %s" 	
-		%(self.evento, self.resposta, self.argumentos, self.agent, self.api_key))
+		logger.debug("crm_action evt: %s - res: %s - args: %s" 	
+		%(self.evento, self.resposta, self.argumentos))
 
 		Log_crm.insert(evento=self.evento,
 					agent=self.agent,

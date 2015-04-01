@@ -1,0 +1,132 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="alert alert-info">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<strong>Dica!</strong> Adicione agentes na Fila.   
+</div>
+
+{{if editor == True:}}
+<div class="direita">
+   <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Adicionar</a>
+</div>
+<br><br>
+{{pass}}
+
+
+<table class="tabela-forip">
+    <thead>
+        <tr>
+            <th>Fila</th>
+            <th>Agente</th>
+            <th>#</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{for dado in con:}}
+        <tr>
+            <td>{{=Queue[dado.id_fila].name}}</td>
+            <td>{{=Voicemail[dado.id_agente].pager}}</td>
+            <td>
+            {{if editor == True:}}
+                <a class="link" data-tabela="f_agente_filas" data-queue="{{=request.vars.id_queue}}" data-nome="{{=Voicemail[dado.id_agente].pager}}" data-value="{{=dado.id}}" href="#">
+                    <i class=" icon-trash"></i></a>
+            {{pass}}
+            </td>
+        </tr>
+    {{pass}}
+    </tbody>
+</table>
+
+<br><br>
+
+{{end}}
+
+
+
+{{block modal}} 
+<!-- Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Adicionar Agente</h4>
+        </div>
+        <div class="modal-body">
+          <p></p>
+
+{{=form.custom.begin}}
+
+<div>
+<label>Fila:</label>
+<input class="form-control" id="id_fila_man" name="id_fila_man" readonly="readonly" type="text" value="{{=Queue[request.vars.id_queue].name}}">
+<div style="display: none;">{{=form.custom.widget.id_fila}}</div>
+<br>
+</div>
+
+<div>
+<label>Agente:</label>
+<div>{{=form.custom.widget.id_agente}}</div>
+<br>
+</div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+          {{=form.custom.end}}
+        </div><!--footer-->
+      </div> 
+    </div>
+  </div>
+{{end}}
+
+
+
+
+
+
+
+{{block jquery}}
+
+<script type="text/javascript">
+
+
+//Menu
+$("#act-CRM").addClass("chevron opened");
+$("#dsp-CRM").css("display", "block");
+$("#Filas-CRM").addClass("active");
+
+//Delete
+var links = document.querySelectorAll('.link');
+for (x in links) {
+    links[x].onclick = function() { 
+    var data_attr = this.dataset;
+    //alert(data_attr.value);
+    var id   = data_attr.value;
+    var nome = data_attr.nome;
+    var tabela= data_attr.tabela;
+    var queue = data_attr.queue;
+    decisao = confirm("Tem certeza que deseja remover o item "+nome);
+        if(decisao){
+            location.href="{{=URL(a='admanager', c='ramais_v', f='delete')}}?id_tab="+id+"&tabela="+tabela+"&id_queue="+queue+";"
+        }
+    return false;
+    }
+}
+
+</script>
+
+
+
+
+{{end}}
+
+
+
+
+
+
+

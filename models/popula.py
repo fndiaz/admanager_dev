@@ -47,6 +47,9 @@ id_crm = db(db.f_menu.nome == 'CRM').select()[0].id
 if db(db.f_submenu.nome == 'Agente').isempty():
 	db.f_submenu.insert(nome="Agente", controller="ramais_v", funcao="crm_agent", icone="icon-list-alt", ordem="1", menu_ref=id_crm)
 	auth.add_group('Agente', '')
+if db(db.f_submenu.nome == 'Filas CRM').isempty():
+	db.f_submenu.insert(nome="Filas CRM", controller="ramais_v", funcao="crm_queue_members_form", icone="icon-list-alt", ordem="2", menu_ref=id_crm)
+	auth.add_group('Filas CRM', '')
 
 if db(db.f_submenu).isempty():
 	id_acessos 	= db(db.f_menu.nome == 'Acessos').select()[0].id

@@ -452,6 +452,63 @@ def update_crmagent(d):
 	return True
 
 
+@auth.requires_login()
+def crm_queue():
+	response.title = 'CRM Filas'
+	response.marca=['CRM', 'Filas']
+	editor = permissao()
+	url = URL('admanager', 'queues', 'queue_form')
+	print editor
+
+	con = db(db.queue.crm == True).select()
+	
+	return response.render("ramais_v/show_crmqueue.html",  
+					url=url, editor=editor, con=con)
+
+@auth.requires_login()
+def crm_queue_members_form():
+	#print request.vars.id_queue
+	response.title='Queue members'
+	response.marca=['Extensões', 'Filas', 'Membros da Fila', 'Adiciona Membro']
+	editor = permissao()
+	id_edit = request.vars.id_edit
+	id_queue= request.vars.id_queue
+	db.f_agente_filas.id_fila.default = id_queue
+	query=(db.voicemail.context == 'crm')
+	db.f_agente_filas.id_agente.requires = IS_IN_DB(db(query),'voicemail.id',"%(pager)s")
+
+
+	con=db(Agente_filas.id_fila == id_queue).select()
+
+	if id_edit is None:
+		form = SQLFORM(Agente_filas)
+	else:
+		form = SQLFORM(Agente_filas, id_edit)
+
+	for input in form.elements():
+		input['_class'] = 'form-control'
+	form.element(_name='id_fila')['_readonly'] = "readonly"
+
+	if form.process(onvalidation=valida_agente_fila).accepted:
+		print 'ok'
+		redirect(URL(a='admanager', c='ramais_v', f='crm_queue_members_form', 
+							vars={'id_queue':request.vars.id_queue}))
+	elif form.errors:
+		print request.vars
+		print 'no'
+
+	return response.render("ramais_v/form_crm_queuemembers.html", 
+										editor=editor, con=con, form=form)
+
+def valida_agente_fila(form):
+	print 'valida'
+	print form.vars
+	for dado in db(Agente_filas).select():
+		if (dado.id_agente == int(form.vars.id_agente)) & (dado.id_fila == int(form.vars.id_fila)):
+		   form.errors.id_agente = 'Agente já existe'
+	
+
+
 
 ######-EXTRAS
 def link_fisico():
@@ -559,6 +616,10 @@ def delete():
 		tabela	= 	db.f_discagem_abreviada.id
 		funcao	= 	"f_discagem_abreviada"
 
+	if funcao	==	"f_agente_filas":
+		tabela	= 	db.f_agente_filas.id
+		funcao 	= 	"f_agente_filas"
+
 	if funcao	== "f_grupo_destinos":
 		tabela	= 	db.f_grupo_destinos.id
 		resp=trata_grupo_destino(funcao, id_tab)
@@ -571,6 +632,10 @@ def delete():
 	if funcao == "f_ramal_virtual":
 		db(Aplicacao.id_ramalvirtual == id_tab).delete()
 		db(Voicemail.id_ramalvirtual == id_tab).delete()
+	if funcao == 'f_agente_filas':
+		print request.vars.id_queue
+		redirect(URL(a='admanager', c='ramais_v', f='crm_queue_members_form', 
+							vars={'id_queue':request.vars.id_queue}))
 	redirect(URL(funcao))
 
 @auth.requires_login()

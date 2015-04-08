@@ -117,6 +117,7 @@ Parametros = db.define_table("f_parametros",
 	Field("tempo_chamada_transf", "integer"),
 	Field("rechamada", "boolean"),
 	Field("pin_temporario", "string", length="4"),
+	Field("callback", "string", length="20"),
     format="%(empresa)s",
     migrate=False)
 

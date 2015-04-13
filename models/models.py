@@ -132,6 +132,8 @@ db.define_table("f_portabilidade",
 	Field("usuario"),
 	Field("senha"),
 	Field("ativo", "boolean"),
+	Field('tempo_timeout'),
+	Field('ddd_padrao'),
 	format="%(usuario)s",
     migrate=False)
 

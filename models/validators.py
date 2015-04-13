@@ -86,6 +86,10 @@ mes_ano=[('Jan','Janeiro'),('Feb','Fevereiro'),('Mar','Março'),('Apr','Abril'),
 ('Jul','Julho'),('Aug','Agosto'),('Sep','Setembro'),('Oct','Outubro'),('Nov','Novembro'),('Dec','Dezembro')]
 db.f_feriados.mes.requires = IS_IN_SET(mes_ano, error_message=T("escolha uma opção"))
 
+##Portabilidade 
+db.f_portabilidade.ddd_padrao.requires = IS_MATCH("^[0-9][0-9]$", error_message=T("DDD inválido"))
+db.f_portabilidade.tempo_timeout.requires = IS_MATCH("[0-9]+", error_message=T("somente números"))
+
 
 #########################################################################
 ## Ramais

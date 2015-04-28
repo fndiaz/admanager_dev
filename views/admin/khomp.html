@@ -1,0 +1,141 @@
+{{extend 'layout.html'}}
+
+{{block center}}
+
+<div class="row">
+						
+						<div class="col-lg-3 col-md-3 col-sm-3">
+							<div class="box">
+								<div class="box-header">
+									<h2><i class="icon-check"></i>EBS Khomp</h2>
+								</div>
+								<div class="box-content">
+									
+									<img src="{{=URL(a='admanager', c='static', f='images')}}/khomp.png">
+									<ul>
+										<li>Khomp E1</li>
+										<li>Status <i class="fa fa-check-circle fa-2x" style="color: green;"></i></li>
+										<li>Serial 34460</li>
+									</ul>
+
+								</div>
+								
+							</div>
+						</div><!--/col-->
+</div><!--row-->
+
+
+<table id="tkhomp" class="tabela-forip">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Modelo</th>
+            <th>Serial</th>
+            <th>Estado</th>
+            <th>Links</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <!--<tr>
+            <td>1</td>
+            <td>EBS E1</td>
+            <td>34460</td>
+            <td> <i class="fa fa-check-circle fa-2x" style="color: green;"></i> </td>
+            <td>Link1: ok<br>Link2: false</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>EBS E1</td>
+            <td>34460</td>
+            <td> <i class="fa fa-check-circle fa-2x" style="color: green;"></i> </td>
+            <td>Link1: ok</td>
+        </tr>-->
+    </tbody>
+</table>
+
+<br><br><br>
+
+{{end}}
+
+
+
+
+
+
+
+{{block jquery}}
+
+<script>
+
+//$('#tkhomp').append('<tr><td>my data</td><td>more data</td>');
+//$('#tkhomp').append('<td>ult</td></tr>');
+//$('#tkhomp tr:last').after('<td>my data</td><td>more data</td><td>more data</td>');
+//$('#tkhomp tr:last').after('<td>ult</td></tr>');
+
+count=1
+function poll() { //poll
+$.ajax({ 
+method: "get",
+url: "{{=URL(a='admanager', c='manager', f='consulta_khomp')}}",
+dataType: "json",
+success: function(lista){
+	//alert(lista);
+
+	jQuery.each( lista, function( i, val ) { //loop Master
+		var serial = lista[i]['serial']
+		if (lista[i]['status']  == '1'){
+			var icon_status="<i class='fa fa-check-circle fa-2x' style='color: green;'></i>"
+		}else{
+			var icon_status="<i class='fa fa-times-circle fa-2x' style='color: red;'></i>"
+		}
+		//alert(lista[i]['tipo']);
+		//alert(lista[i]['status']);
+		//alert(lista[i]['serial']);
+
+		if (lista[i]['tipo'] == '18'){
+			//alert('Khomp E1')
+			if (count ==1){
+				$('#tkhomp tr:last').after('<tr><td id=id-'+serial+'>'+i+'</td><td id=modelo-'+serial+'>EBS E1</td><td id=serial-'+serial+'>'+serial+'</td><td id=estado-'+serial+'></td><td id=links-'+serial+'></td></tr>');
+			}else{
+				$("#id-"+serial+"").html(i);
+				$("#modelo-"+serial+"").html('EBS E1');
+				$("#serial-"+serial+"").html(lista[i]['serial']);
+				$("#estado-"+serial+"").html(icon_status);
+				$("#links-"+serial+"").html('');
+				for (var item in lista[i]['link']) {
+					$("#links-"+serial+"").after(item+'\n');
+					var links = ''
+					links = links+'\n'
+				}
+			}
+		}
+
+		if (lista[i]['tipo'] == '21'){
+			//alert('gsm;')
+			if (count ==1){
+				$('#tkhomp tr:last').after('<tr><td id=id-'+serial+'>'+i+'</td><td id=modelo-'+serial+'>EBS GSM</td><td id=serial-'+serial+'>'+serial+'</td><td id=estado-'+serial+'></td><td id=links-'+serial+'> - </td></tr>');
+			}else{
+				$("#id-"+serial+"").html(i);
+				$("#modelo-"+serial+"").html('EBS GSM');
+				$("#serial-"+serial+"").html(lista[i]['serial']);
+				$("#estado-"+serial+"").html(icon_status);
+				$("#links-"+serial+"").html(' - ');
+			}
+		}
+
+
+
+	});//loop master
+	count=count+1
+
+}//success
+});//ajax cria tabela
+} //poll
+setInterval(poll, 1000);
+
+
+
+</script>
+
+{{end}}

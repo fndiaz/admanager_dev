@@ -30,6 +30,7 @@ Troncos = db.define_table('f_troncos',
 	Field("add_zero", "boolean"),
 	Field("id_empresa", db.f_empresa, requires=IS_IN_DB(db(db.f_empresa.mostrar == True),'f_empresa.id',"%(empresa)s")),
 	Field("mostrar", "boolean", default=True),
+	Field("msg_congestionado", "boolean"),
 	format="%(tronco)s",
 	migrate=False
 	)

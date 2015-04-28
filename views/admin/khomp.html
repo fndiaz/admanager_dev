@@ -104,10 +104,14 @@ success: function(lista){
 				$("#estado-"+serial+"").html(icon_status);
 				$("#links-"+serial+"").html('');
 				for (var item in lista[i]['link']) {
-					$("#links-"+serial+"").after(item+'\n');
-					var links = ''
-					links = links+'\n'
+					if (lista[i]['link'][item] == '0'){
+						var stat_link = 'UP'
+					}else{
+						var stat_link = 'DOWN'
+					}
+					$("#links-"+serial+"").append("Link "+item+": <b>"+stat_link+"</b><br>");	
 				}
+				
 			}
 		}
 
@@ -132,7 +136,7 @@ success: function(lista){
 }//success
 });//ajax cria tabela
 } //poll
-setInterval(poll, 1000);
+setInterval(poll, 700);
 
 
 

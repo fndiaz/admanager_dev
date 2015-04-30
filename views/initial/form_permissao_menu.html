@@ -81,6 +81,10 @@ if (sub.nome == 'Agente') and  (auth.user.email != 'root@forip.com.br'):
     check_sub = "disabled"
 pass
 
+if (sub.nome == 'Filas CRM') and  (auth.user.email != 'root@forip.com.br'):
+    check_sub = "disabled"
+pass
+
 }}
 
 {{if (sub.nome != 'Permissões') and (sub.nome != 'Grupos') and (sub.nome != 'Menu') and (sub.nome != 'Submenu'): }} <!--Não mostra alguns submenus -->

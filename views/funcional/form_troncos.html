@@ -19,6 +19,14 @@
 <div id="text_prefixo" style="float:left; position:relative;">PREFIXO-</div>
 <div id="text_chave">CHAVE</div>
 </div>-->
+<style type="text/css">
+.popteste {
+    max-width: 800px;
+    margin: 0 auto;
+    position: fixed;
+    top: 10px;
+}
+</style>
 
 <div class='row'>
 <div class="coluna_form_esquerda_b0">
@@ -181,7 +189,7 @@ $("#i-ura").popover({trigger: "hover",title: 'Utilizar ura', content: "Habilita 
 
 $("#i-add_zero").popover({trigger: "hover",title: 'Tronco E1', content: "Habilite esta opção se o Tronco for E1", placement: 'top' })
 
-$("#i-congestion").popover({trigger: "hover",title: 'Congestionado', content: "Habilite audio para mensagem de ligação congestionada.", placement: 'top' })
+$("#i-congestion").popover({trigger: "hover",title: 'Congestionado', content: "Habilite audio para mensagem de ligação congestionada.", placement: 'top', container: 'popbody' })
 
 </script>
 

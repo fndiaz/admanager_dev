@@ -2,9 +2,9 @@
 
 {{block center}}
 
-<div class="row">
+<div id="superior" class="row">
 						
-						<div class="col-lg-3 col-md-3 col-sm-3">
+						<!--<div class="col-lg-3 col-md-3 col-sm-3">
 							<div class="box">
 								<div class="box-header">
 									<h2><i class="icon-check"></i>EBS Khomp</h2>
@@ -21,7 +21,7 @@
 								</div>
 								
 							</div>
-						</div><!--/col-->
+						</div>--><!--/col-->
 </div><!--row-->
 
 
@@ -97,6 +97,8 @@ success: function(lista){
 			//alert('Khomp E1')
 			if (count ==1){
 				$('#tkhomp tr:last').after('<tr><td id=id-'+serial+'>'+i+'</td><td id=modelo-'+serial+'>EBS E1</td><td id=serial-'+serial+'>'+serial+'</td><td id=estado-'+serial+'></td><td id=links-'+serial+'></td></tr>');
+
+				$('#superior').append("<div class='col-lg-3 col-md-3 col-sm-3'><div class='box'><div class='box-header'><h2><i class='icon-check'></i>EBS Khomp</h2></div><div class='box-content'><img src='{{=URL(a='admanager', c='static', f='images')}}/khomp.png'><ul><li>Khomp E1</li><li>Serial: "+serial+" </li></ul><div></div></div>");
 			}else{
 				$("#id-"+serial+"").html(i);
 				$("#modelo-"+serial+"").html('EBS E1');
@@ -119,6 +121,8 @@ success: function(lista){
 			//alert('gsm;')
 			if (count ==1){
 				$('#tkhomp tr:last').after('<tr><td id=id-'+serial+'>'+i+'</td><td id=modelo-'+serial+'>EBS GSM</td><td id=serial-'+serial+'>'+serial+'</td><td id=estado-'+serial+'></td><td id=links-'+serial+'> - </td></tr>');
+
+				$('#superior').append("<div class='col-lg-3 col-md-3 col-sm-3'><div class='box'><div class='box-header'><h2><i class='icon-check'></i>EBS Khomp</h2></div><div class='box-content'><img src='{{=URL(a='admanager', c='static', f='images')}}/khomp.png'><ul><li>Khomp GSM</li><li>Serial: "+serial+" </li></ul><div></div></div>");
 			}else{
 				$("#id-"+serial+"").html(i);
 				$("#modelo-"+serial+"").html('EBS GSM');

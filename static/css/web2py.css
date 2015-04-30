@@ -445,3 +445,11 @@ textarea.LV_invalid_field:active,
     background-color: #F00; */ 
     margin: 0 10px
 }
+
+
+
+.popbody {
+    height: 1000px;
+    padding:10px;
+    text-align:center;
+}

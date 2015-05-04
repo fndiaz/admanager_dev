@@ -291,6 +291,7 @@ def f_parametros_form():
 	form.custom.widget.tempo_chamada_externa['_placeholder'] = "em segundos"
 	form.custom.widget.tempo_chamada_interna['_placeholder'] = "em segundos"
 	form.custom.widget.faixa_ip_interna['_placeholder'] = "Exemplo: 192.168.1.2/255.255.255.0"
+	form.custom.widget.senha_smtp['_type'] = "password"
 
 	if form.process(hideerror=True).accepted:
 		escreve_sip_iax()
@@ -375,6 +376,7 @@ def f_portabilidade_form():
 		input['_class'] = 'form-control'
 	if auth.user.email != 'root@forip.com.br':
 		form.element(_name='ativo')['_disabled'] = 'true'
+	form.custom.widget.senha['_type'] = "password"
 	
 
 	if form.process().accepted:
